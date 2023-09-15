@@ -14,9 +14,9 @@ Data Needed: At a minimum, we need the names of Pokemon and some other data abou
 
 
 Team Member Contributions: 
-Matt W - mdwelker: Created the wireframe for Create New Team and contributed to the Project Proposal (name section here idk which part you did). Also came up with the core idea of the website.
+Matt W - mdwelker: Created the wireframe for Create New Team and contributed to the Project Proposal . Also came up with the core idea of the website.
 
-Dean BenMoshe - dbenmos: Contributed to the Project Proposal (name section here idk which part you did). Created the title of the website.
+Dean BenMoshe - dbenmos: Created the Project Proposal and most of its contents. Created the title of the website.
 
 Casey Dockery - cbdocke2: Created the wireframes for the Home Page, View Other Teams pages, and edit/remove team page. Added to the proposal document the links to the images and fonts as well as the information about viewing/editing teams.
 
