@@ -18,7 +18,7 @@ Matt W - mdwelker: Created the wireframe for Create New Team and contributed to 
 
 Dean BenMoshe - dbenmos: Created the Project Proposal and most of its contents. Created the title of the website.
 
-Casey Dockery - cbdocke2: Created the wireframes for the Home Page, View Other Teams pages, and edit/remove team page. Added to the proposal document the links to the images and fonts as well as the information about viewing/editing teams.
+Casey Dockery - cbdocke2: Created the wireframes for the Home Page, View Other Teams pages, and edit/remove team page. Added to the proposal document the links to the images and fonts as well as the information about viewing/editing teams. Since I am pursuing a Graphic Commun=ications minor, I will be doing a lot of the styling.
 
 
 
