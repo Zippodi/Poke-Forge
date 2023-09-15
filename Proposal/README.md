@@ -14,7 +14,7 @@ Data Needed: At a minimum, we need the names of Pokemon and some other data abou
 
 
 Team Member Contributions: 
-Matt W - mdwelker: Created the wireframe for Create New Team and contributed to the Project Proposal . Also came up with the core idea of the website.
+Matt W - mdwelker: Created the wireframe for Create New Team and contributed to the Project Proposal, wrote the “data needed” portion of the proposal. Also came up with the core idea of the website.
 
 Dean BenMoshe - dbenmos: Created the Project Proposal and most of its contents. Created the title of the website.
 
