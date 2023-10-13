@@ -1,0 +1,6 @@
+.DS_*
+api/node_modules/
+*.log
+*.gz
+*/.DS_*
+api/.env
