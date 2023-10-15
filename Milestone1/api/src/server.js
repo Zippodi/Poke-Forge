@@ -18,6 +18,7 @@ app.use(express.static(staticPath));
 //use routes
 app.use('/api/auth', auth);
 app.use('/api/pokemon', pokemon);
+app.use('/api/moves', moves);
 app.use('/api/teams', teams);
 
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
