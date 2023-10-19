@@ -5,6 +5,8 @@ exports.auth = (req, res, next) => {
   if (!authenticated) {
     // return res.redirect(303, "/api/auth/login");
     return res.status(401).json({ "authenticated": false });
+  } else {
+    req.user = { id: 1, username: "testuser" };
   }
   next();
 }

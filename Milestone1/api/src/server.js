@@ -12,9 +12,6 @@ const app = express();
 const PORT = process.env.PORT;
 app.use(express.json());
 
-const staticPath = path.join(__dirname, '..', '..', 'frontend', 'src', 'static');
-app.use(express.static(staticPath));
-
 //use routes
 app.use('/api/auth', auth);
 app.use('/api/pokemon', pokemon);
