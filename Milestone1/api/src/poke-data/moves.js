@@ -73,24 +73,38 @@ router.get("/category/:category", (req, res) => {
   }
 });
 
-//takes 4 queries m1,m2,m3, and m4 for the names of the 4 moves to test. must have m1, other 3 are optional
+/**
+ * takes a query m for the names of 1-4 moves to test
+ * Examples: 
+ * - ?m=earthquake
+ * - ?m=earthquake&m=earthpower&m=dig&m=bulldoze
+ * Returns how well a Pokemon with the specified moves could hit Pokemon of different types
+ */
 router.get("/attack/effectiveness", (req, res) => {
-  const m1 = req.query.m1;
-  if (!m1) {
+  const moveNames = req.query.m;
+  if (!moveNames) {
     return res.status(400).json({ "error": "must specify a move" });
   }
-  const m2 = req.query.m2;
-  const m3 = req.query.m3;
-  const m4 = req.query.m4;
-  const moveTypes = [];
-  for (const m of [m1, m2, m3, m4]) {
+  const movesArr = Array.isArray(moveNames) ? moveNames : [moveNames];
+  if (movesArr.length > 4) {
+    return res.status(400).json({ "error": "can specify a maximum of 4 moves" });
+  }
+  let moveTypes = [];
+  for (const m of movesArr) {
     if (!m) {
       continue;
     }
-    if (!moves[m.toLowerCase()]) {
+    const moveData = moves[m.toLowerCase()];
+    if (!moveData) {
       return res.status(400).json({ "error": "invalid move given" });
     }
-    moveTypes.push(moves[m.toLowerCase()].type);
+    if (moveData.power != 0) {
+      moveTypes.push(moves[m.toLowerCase()].type);
+    }
+  }
+  if (moveTypes.length === 0) {
+    let ret = types.typeList.reduce((pre, cur) => Object.assign(pre, { [cur]: 0 }), {});
+    return res.status(200).json({ "effectiveness": ret });
   }
   let obj = types.getMoveEffectiveness(moveTypes);
   if (!obj) {

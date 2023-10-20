@@ -62,7 +62,7 @@ exports.getDefensesJson = (type1, type2 = undefined) => {
 }
 This states that a Pokemon with a normal move and fighting move can hit normal types for super effective, cant hit ghost types, etc.
 NOTE: returns false if nothing passed or a string that is not a type is passed*/
-exports.getMoveEffectiveness = (...moveTypes) => {
+exports.getMoveEffectiveness = (moveTypes) => {
   if (moveTypes.length < 1) {
     return false;
   }

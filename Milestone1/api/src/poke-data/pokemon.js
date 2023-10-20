@@ -53,7 +53,7 @@ router.get('/type/:type', (req, res) => {
 });
 
 //get weaknesses of this pokemon
-router.get('/:name/weaknesses', (req, res) => {
+router.get('/effectiveness/:name', (req, res) => {
   const name = req.params.name.toLowerCase();
   if (!pokemon[name]) {
     return res.status(400).json({ "error": "pokemon with specified name not found" });

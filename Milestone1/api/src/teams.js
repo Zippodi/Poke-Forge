@@ -107,7 +107,8 @@ router.get('/', (req, res) => {
 router.post('/create', (req, res) => {
   validateTeam(req).then(result => {
     //save team to database
-    res.status(200).json({ "success": true });
+    const teamid = 5;
+    res.status(200).json({ "team": 5 });
   }).catch(error => {
     res.status(400).json({ "error": error });
   });
@@ -196,7 +197,7 @@ async function validateTeam(req) {
           reject(`${p.name} is not a valid Pokemon name`);
         }
         //valid held item check
-        if (p.item !== null && !items[p.item]) {
+        if (p.item && !items[p.item]) {
           reject(`${p.item} is not a valid item`);
         }
         //valid ability check
