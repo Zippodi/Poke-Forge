@@ -113,7 +113,7 @@ For `GET /attack/effectiveness`, examples of valid use are:
 - `/attack/effectiveness?m=earthquake`
 - `/attack/effectiveness?m=shadowball&m=psychic&m=darkpulse&m=yawn`
 
-The return is a JSON that answers the question: "If a Pokemon knew these moves, what types could they hit, not hit, hit for super effectiveness, and hit but no effectively?".
+The return is a JSON that answers the question: "If a Pokemon knew these moves, what types could they hit, not hit, hit for super effectiveness, and hit but not effectively?".
 - Moves with 0 power are not counted in this metric. If all moves given have 0 power then the JSON returned will show all types as immune
 - OHKO moves and other undetermined power moves are treated as normal moves of their type for now, special treatment might be implemented later
 
