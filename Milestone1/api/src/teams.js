@@ -191,6 +191,10 @@ async function validateTeam(req) {
       reject("Invalid request");
     }
     if (body.pokemon && Array.isArray(body.pokemon)) {
+      //between 1-6 pokemon
+      if (body.pokemon.length < 1 || body.pokemon.length > 6) {
+        reject(`Must specify between 1-6 pokemon`);
+      }
       body.pokemon.forEach((p) => {
         //valid pokemon name check
         if (!pokemon[p.name]) {
