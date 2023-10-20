@@ -11,6 +11,12 @@ router.use(a.auth);
 //data
 const pokemon = require("../_data/pokemon.json");
 const types = require("../types/types");
+const abilities = require('../_data/abilities.json');
+
+//get all pokemon
+router.get("/", (req, res) => {
+  res.status(200).json(pokemon);
+});
 
 //get pokemon by its name
 router.get('/:name', (req, res) => {
@@ -46,8 +52,9 @@ router.get('/type/:type', (req, res) => {
   }
 });
 
+//get weaknesses of this pokemon
 router.get('/:name/weaknesses', (req, res) => {
-  const name = req.params.name;
+  const name = req.params.name.toLowerCase();
   if (!pokemon[name]) {
     return res.status(400).json({ "error": "pokemon with specified name not found" });
   }
@@ -57,6 +64,29 @@ router.get('/:name/weaknesses', (req, res) => {
     res.status(200).json(obj);
   } else {
     res.status(500).json({ "error": "could not get type defenses" });
+  }
+});
+
+//get pokemon that can have a given ability
+//if query hidden=include then hidden abilities also included
+router.get('/ability/:ability', (req, res) => {
+  const ability = req.params.ability.toLowerCase();
+  const hidden = req.query.hidden;
+  if (!abilities[ability]) {
+    return res.status(400).json({ "error": "specified ability does not exist" });
+  }
+  let arr = [];
+  Object.values(pokemon).forEach((p) => {
+    const a = p.abilities.split(',');
+    const h = p.hidden_abilities.split(',');
+    if (a.includes(ability) || (hidden === 'include' && h.includes(ability))) {
+      arr.push(p);
+    }
+  });
+  if (arr.length > 0) {
+    res.status(200).json({ "pokemon": arr });
+  } else {
+    res.status(404).json({ "error": "no pokemon with specified ability found" });
   }
 });
 

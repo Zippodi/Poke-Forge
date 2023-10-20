@@ -13,11 +13,16 @@ router.use(a.auth);
 
 //data
 const moves = require('../_data/moves.json');
-const types = require('../types/types').typeList;
+const types = require('../types/types');
 
 //that this data might want to be made available to the client off the bat.
 //so it can be provided as offline functionality to browse pokemon.
 //However we should have it in the database/backend anyway
+
+//get all moves
+router.get("/", (req, res) => {
+  res.status(200).json(moves);
+});
 
 //get move based on its name
 router.get("/:name", (req, res) => {
@@ -33,7 +38,7 @@ router.get("/:name", (req, res) => {
 //all moves with a certain type
 router.get("/type/:type", (req, res) => {
   const type = req.params.type.toLowerCase();
-  if (!types.includes(type)) {
+  if (!types.typeList.includes(type)) {
     return res.status(400).json({ "error": "type specified is not a valid type" });
   }
   let arr = [];
@@ -66,6 +71,32 @@ router.get("/category/:category", (req, res) => {
   } else {
     res.status(200).json({ "moves": arr });
   }
+});
+
+//takes 4 queries m1,m2,m3, and m4 for the names of the 4 moves to test. must have m1, other 3 are optional
+router.get("/attack/effectiveness", (req, res) => {
+  const m1 = req.query.m1;
+  if (!m1) {
+    return res.status(400).json({ "error": "must specify a move" });
+  }
+  const m2 = req.query.m2;
+  const m3 = req.query.m3;
+  const m4 = req.query.m4;
+  const moveTypes = [];
+  for (const m of [m1, m2, m3, m4]) {
+    if (!m) {
+      continue;
+    }
+    if (!moves[m.toLowerCase()]) {
+      return res.status(400).json({ "error": "invalid move given" });
+    }
+    moveTypes.push(moves[m.toLowerCase()].type);
+  }
+  let obj = types.getMoveEffectiveness(moveTypes);
+  if (!obj) {
+    return res.status(500).json({ "error": "could not complete request" });
+  }
+  res.status(200).json({ "effectiveness": obj });
 });
 
 module.exports = router;

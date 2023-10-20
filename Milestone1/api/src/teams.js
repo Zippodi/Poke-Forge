@@ -3,6 +3,11 @@ const router = express.Router();
 const a = require('./authentication/auth-middleware');
 router.use(a.auth);
 
+//data
+const pokemon = require("./_data/pokemon.json");
+const types = require("./types/types");
+const items = require('./_data/items.json');
+
 //mimic retrieving from database
 const testTeam1 =
 {
@@ -10,23 +15,26 @@ const testTeam1 =
   "userid": 1,
   "teamid": 1,
   "public": true,
-  "pokemon": [{
-    "mankey": {
+  "pokemon": [
+    {
+      "name": "mankey",
       "moves": ["focuspunch", "bulldoze", "scratch", "dig"],
       "ability": "Vital Spirit",
       "item": null
     },
-    "mankey": {
+    {
+      "name": "mankey",
       "moves": ["seismictoss", "swift", "u-turn"],
       "ability": "Vital Spirit",
       "item": "leftovers"
     },
-    "arceus": {
+    {
+      "name": "arceus",
       "moves": ["judgement", "perishsong", "earthpower", "extremespeed"],
       "ability": "multitype",
       "item": "earthplate"
     }
-  }]
+  ]
 }
 
 const testTeam2 =
@@ -35,13 +43,14 @@ const testTeam2 =
   "userid": 1,
   "teamid": 2,
   "public": false,
-  "pokemon": [{
-    "charizard": {
+  "pokemon": [
+    {
+      "name": "charizard",
       "moves": ["airslash", "flamethrower", "fly", "dragonclaw"],
       "ability": "blaze",
       "item": "charizarditex"
     }
-  }]
+  ]
 }
 
 const testTeam3 =
@@ -50,38 +59,43 @@ const testTeam3 =
   "userid": 2,
   "teamid": 3,
   "public": true,
-  "pokemon": [{
-    "charizard": {
+  "pokemon": [
+    {
+      "name": "charizard",
       "moves": ["flareblitz", "heatwave", "fly", "aerialace"],
       "ability": "solarpower",
       "item": "leftovers"
     },
-    "pikachu": {
+    {
+      "name": "pikachu",
       "moves": ["thunderbolt", "irontail", "quickattack"],
       "ability": "static",
       "item": "lightball"
     }
-  }]
+  ]
 }
 
 const mockData = [testTeam1, testTeam2, testTeam3];
 
-//create a new team: TODO
-router.post('/create', (req, res) => {
-  console.log("body of create team request: ", req.body);
-  res.status(200).json({ "create-success": true });
-});
-
 //get all (public) teams
 /**
- * possible filters (URL queries) for: 
- * - containing certain pokemon
- * - generation cap (would need to add to pokemon.json)
- * - exclude legends/mythicals (would need to manually add to pokemon.json)
+ * TODO: User query p to filter by containing pokemon
+ * EX:
+ * ?p=pikachu
+ * ?p=charizard&p=blastoise&p=venusaur
  */
 router.get('/', (req, res) => {
+  let q = req.query.p;
+  if (!Array.isArray(q)) {
+    q = [q];
+  }
+  let pokeNames = q.filter((p) => pokemon[p]);
   let arr = [];
-  mockData.forEach((t) => { if (t.public) arr.push(t) });
+  mockData.forEach((t) => {
+    if (t.public) {
+      arr.push(t);
+    }
+  });
   if (arr.length > 0) {
     res.status(200).json({ "teams": arr });
   } else {
@@ -89,22 +103,37 @@ router.get('/', (req, res) => {
   }
 });
 
-//edit specific existing team: TODO
-router.put('/:teamid', (req, res) => {
+//create a new team
+router.post('/create', (req, res) => {
+  validateTeam(req).then(result => {
+    //save team to database
+    res.status(200).json({ "success": true });
+  }).catch(error => {
+    res.status(400).json({ "error": error });
+  });
+});
+
+//edit specific existing team
+router.put('/id/:teamid', (req, res) => {
   const id = req.params.teamid;
-  //add logic to test if teamid belongs to user logged in - reject if no, return team if yes
-  res.status(200).json({ "edited-team": id });
+  //TODO test if team already exists and belongs to the logged in user
+  validateTeam(req).then(result => {
+    //save team to database
+    res.status(200).json({ "success": true });
+  }).catch(error => {
+    res.status(400).json({ "error": error });
+  });
 });
 
 //get team via the teamid
-router.get('/:teamid', (req, res) => {
+router.get('/id/:teamid', (req, res) => {
   const id = req.params.teamid;
   for (const t of mockData) {
-    if (t.teamid === id) {
+    if (t.teamid == id) {
       if (t.public || userBelongsToTeam(req.user, id)) {
         return res.status(200).json(t);
       } else {
-        return res.status(401).json({ "error": "you are not authenticated to view this team" });
+        return res.status(403).json({ "error": "you are not authorized to view this team" });
       }
     }
   }
@@ -112,7 +141,7 @@ router.get('/:teamid', (req, res) => {
 });
 
 //delete team TODO: clean up and implement after database introduced
-router.delete('/:teamid', (req, res) => {
+router.delete('/id/:teamid', (req, res) => {
   const id = req.params.teamid;
   if (userBelongsToTeam(req.user, id)) {
     //can response change if needed
@@ -149,8 +178,53 @@ router.get('/myteams', (req, res) => {
 //probably gonna get replaced later so wont bother with proper error checking yet
 function userBelongsToTeam(user, teamId) {
   let team = null;
-  mockData.forEach((t) => { if (t.teamid === teamId) team = t });
-  return team && team.userid === user.id;
+  mockData.forEach((t) => { if (t.teamid == teamId) team = t });
+  return team && team.userid == user.id;
+}
+
+async function validateTeam(req) {
+  return new Promise((resolve, reject) => {
+    //TODO: verify that userid and username exist as users and match each other
+    const body = req.body;
+    if (typeof body.public !== 'boolean') {
+      reject("Invalid request");
+    }
+    if (body.pokemon && Array.isArray(body.pokemon)) {
+      body.pokemon.forEach((p) => {
+        //valid pokemon name check
+        if (!pokemon[p.name]) {
+          reject(`${p.name} is not a valid Pokemon name`);
+        }
+        //valid held item check
+        if (p.item !== null && !items[p.item]) {
+          reject(`${p.item} is not a valid item`);
+        }
+        //valid ability check
+        let abils = pokemon[p.name].abilities.split(',');
+        if (pokemon[p.name].hidden_abilities) {
+          abils = abils.concat(pokemon[p.name].hidden_abilities.split(','));
+        }
+        //can comment out for testing team creation itself if needed so you dont need to look up valid abilities
+        if (!abils.includes(p.ability)) {
+          reject(`${p.ability} is not a valid ability on this Pokemon`);
+        }
+        //valid moves check
+        if (!p.moves || !Array.isArray(p.moves) || !p.moves[0]) {
+          reject("Pokemon must have at least one move");
+        }
+        //can comment out for testing team creation itself if needed so you dont need to look up movesets
+        p.moves.forEach(move => {
+          const pokeMoves = pokemon[p.name].moves.split(',');
+          if (!pokeMoves.includes(move)) {
+            reject(`${move} is not a valid move on this Pokemon`);
+          }
+        });
+      });
+    } else {
+      reject("Invalid request");
+    }
+    resolve();
+  });
 }
 
 module.exports = router;

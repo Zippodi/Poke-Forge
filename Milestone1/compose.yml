@@ -8,6 +8,7 @@ services:
       - "80:80"
 
   api:
+    container_name: api
     build: ./api
     restart: unless-stopped
     volumes:
@@ -16,6 +17,7 @@ services:
       - PORT=80
 
   frontend:
+    container_name: frontend
     build: ./frontend
     restart: unless-stopped
     volumes:
