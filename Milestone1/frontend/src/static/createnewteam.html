@@ -31,90 +31,87 @@
   </body> -->
   <body>
     <div class="container">
-      <h1 class="text-center">Create a New Team</h1>
+      <h1 class="text-center" id="CreateANewTeam">Create a New Team</h1>
     </div>
     
-    <form>
-        <label>
-            Team Slot 1
-            <input list="pokemonlist" id ="teamslot1" name="pokemonlist" required/>
+    <form class="container">
+      <div class="text-center">
+        <label class="my-4" id="mah">
+          Team Slot 1
+          <input list="pokemonlist" id ="teamslot1" name="pokemonlist" required/>
 
-            <datalist id="pokemonlist">
-                <!-- <option value="Pikachu"></option>
-                <option value="Charizard"></option>
-                <option value="Pichu"></option> -->
-            </datalist>   
-          </label>
+          <datalist id="pokemonlist">
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 2
+          <input list="pokemonlist" id ="teamslot2" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <span></span>
+        <br>
+        <label class="my-4">
+          Team Slot 3
+          <input list="pokemonlist" id ="teamslot3" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 4
+          <input list="pokemonlist" id ="teamslot4" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 5
+          <input list="pokemonlist" id ="teamslot5" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 6
+          <input list="pokemonlist" id ="teamslot6" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+          </datalist>   
+        </label>
+        <br>
+        <br>
+        <label class="mx-4">
+          Team Name
+          <input type="text" required/>
+        </label>
+
+        <label class="mx-4">
           <br>
-          <label>
-            Team Slot 2
-            <input list="pokemonlist" id ="teamslot2" name="pokemonlist" required/>
-
-            <datalist id="pokemonlist">
-                <option value="Pikachu"></option>
-                <option value="Charizard"></option>
-                <option value="Pichu"></option>
-            </datalist>   
-          </label>
-          <br>
-          <label>
-            Team Slot 3
-            <input list="pokemonlist" id ="teamslot3" name="pokemonlist" required/>
-
-            <datalist id="pokemonlist">
-                <option value="Pikachu"></option>
-                <option value="Charizard"></option>
-                <option value="Pichu"></option>
-            </datalist>   
-          </label>
-          <br>
-          <label>
-            Team Slot 4
-            <input list="pokemonlist" id ="teamslot4" name="pokemonlist" required/>
-
-            <datalist id="pokemonlist">
-                <option value="Pikachu"></option>
-                <option value="Charizard"></option>
-                <option value="Pichu"></option>
-            </datalist>   
-          </label>
-          <br>
-          <label>
-            Team Slot 5
-            <input list="pokemonlist" id ="teamslot5" name="pokemonlist" required/>
-
-            <datalist id="pokemonlist">
-                <option value="Pikachu"></option>
-                <option value="Charizard"></option>
-                <option value="Pichu"></option>
-            </datalist>   
-          </label>
-          <br>
-          <label>
-            Team Slot 6
-            <input list="pokemonlist" id ="teamslot6" name="pokemonlist" required/>
-
-            <datalist id="pokemonlist">
-            </datalist>   
-          </label>
-          <br>
-          <br>
-          <label>
-            Team Name
-            <input type="text" required/>
-          </label>
-
-          <label>
-            <br>
-            <input type="checkbox" name="teampublic" required/>
-            Make this team public?
-         </label>
-
-         <!-- Don't actually know how to implement this yet. -->
-         <p>Team Stats</p>
-         <input type="submit" id="SaveTeam" value="Save Team">
+          <input type="checkbox" name="teampublic" required/>
+          Make this team public?
+       </label>
+       <br>
+       <!-- Don't actually know how to implement this yet. -->
+       <div class="m-4">
+        <input class="mx-2" type="submit" id="SaveTeam" value="Team Stats">
+        <input class="mx-2" type="submit" id="SaveTeam" value="Save Team">
+       </div>
+       
+      </div>
+        
 
     </form>
+    
   </body>
   
   

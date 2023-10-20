@@ -7,5 +7,9 @@ body {
   background-color: #CD385A;
   color: #FFE600;
   font-family: 'Poppins', sans-serif;
-  
+  font-weight: bold;
+}
+
+#CreateANewTeam {
+    font-weight: bold;
 }
