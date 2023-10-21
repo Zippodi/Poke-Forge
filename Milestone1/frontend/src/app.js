@@ -15,5 +15,9 @@ app.get('/', (req, res) => {
   res.sendFile(getFile('login.html'));
 });
 
+app.get('/register', (req, res) => {
+  res.sendFile(getFile('register.html'));
+});
+
 // As our server to listen for incoming connections
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
