@@ -3,9 +3,7 @@
 
 ### What is Done
 All the html pages have been created (not completely finished, but created). Most of the styling is finished for most pages. 
-All of the pages except for view/edit teams and view other teams are finished/mostly finished on the frontend. Almost all api endpoints have 
-been created but might need touching up on (Matt you can remove this part if it is not true). All Dockerfiles and related files have been created 
-and finished. All of the JSON data we need has been added (Also correct me if I am wrong here Matt). Going from page to page has been implemented
+All of the pages except for view/edit teams and view other teams are finished/mostly finished on the frontend. All API endpoints have been created and all non-authentication based endpoints are completed, some with mock data. Also endpoints that would edit the mock data (POST, PUT, DELETE) do not actually change anything. All Dockerfiles and related files have been created and finished. All of the JSON data we need has been added. Going from page to page has been implemented
 using scripting, instead of <a> tags like before. The logo has also been made and the source of which is linked at the bottom of the page.
 All pages made (not the ones listed earlier) are responsive and mobile-first, using Bootstrap to do this. 
 ### What is not Done
@@ -13,16 +11,16 @@ The view/edit teams and view other teams pages are not finished. Login functiona
 if you are logged in as of yet. The login and register pages as of now also just take you to the home page regardless if 
 you filled in anything or not, but this of course will be implemented later, in the 2nd milestone.
 Wanted to add the sprites being displayed when a user chooses a pokemon to add to their team. Some pages feel a little empty,
-so they will be filled in with either more content or the content will be made larger.
+so they will be filled in with either more content or the content will be made larger. Some pages might also have their style touched up a bit more but the core of what they will look like is completed.
 ### Implementation Status of Pages
 | Pages       | Status      | Wireframe|
 | ----------- | ----------- |----------|
-| Home      | 90%      |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)        |
-| Create Team  | 70%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)         |
-| ViewOtherTeams   | 20%        |    [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)      |
-| ViewEditTeams   | 20%        |   [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/vieweditwireframe.png)       |
-| Login   | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png)        |
-| Register  | 90%        |   [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png)       |
+| Home      | 90%      |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)        |
+| Create Team  | 70%        |          |
+| ViewOtherTeams   | 20%        |          |
+| ViewEditTeams   | 20%        |          |
+| Login   | 90%        |          |
+| Register  | 90%        |          |
 ### API Endpoints
 
 #### Authentication:
@@ -161,3 +159,5 @@ EX: `GET /attack/effectiveness?m=earthquake&m=darkpulse` Shows that a Pokemon kn
 
 
 ### Contributions
+- Matthew: API Sketch, JSON Data, API portion of milestone report
+- Casey: Frontend First Pass, Rest of milestone report
