@@ -78,8 +78,8 @@ router.get('/ability/:ability', (req, res) => {
   let arr = [];
   Object.values(pokemon).forEach((p) => {
     const a = p.abilities.split(',');
-    const h = p.hidden_abilities.split(',');
-    if (a.includes(ability) || (hidden === 'include' && h.includes(ability))) {
+    const h = p.hidden_abilities ? p.hidden_abilities.split(',') : null;
+    if (a.includes(ability) || (h && hidden === 'include' && h.includes(ability))) {
       arr.push(p);
     }
   });
