@@ -15,12 +15,12 @@ so they will be filled in with either more content or the content will be made l
 ### Implementation Status of Pages
 | Pages       | Status      | Wireframe|
 | ----------- | ----------- |----------|
-| Home      | 90%      |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)        |
-| Create Team  | 70%        |          |
-| ViewOtherTeams   | 20%        |          |
-| ViewEditTeams   | 20%        |          |
-| Login   | 90%        |          |
-| Register  | 90%        |          |
+| Home      | 90%      | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)         |
+| Create Team  | 70%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)         |
+| ViewOtherTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/ViewOthersTeamsWireframe.png)|
+| ViewEditTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/vieweditwireframe.png)|
+| Login   | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
+| Register  | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
 ### API Endpoints
 
 #### Authentication:
