@@ -2,11 +2,23 @@
 ## Group J: Milestone 1
 
 ### What is Done
-
+All the html pages have been created (not completely finished, but created). Most of the styling is finished for most pages. 
+All of the pages except for view/edit teams and view other teams are finished/mostly finished on the frontend. Almost all api endpoints have 
+been created but might need touching up on (Matt you can remove this part if it is not true). All Dockerfiles and related files have been created 
+and finished. All of the JSON data we need has been added (Also correct me if I am wrong here Matt). Going from page to page has been implemented
+using scripting, instead of <a> tags like before. The logo has also been made and the source of which is linked at the bottom of the page.
+All pages made (not the ones listed earlier) are responsive and mobile-first, using Bootstrap to do this. 
 ### What is not Done
-
+The view/edit teams and view other teams pages are not finished. Login functionality isn't complete as not every page checks
+if you are logged in as of yet. The login and register pages as of now also just take you to the home page regardless if 
+you filled in anything or not, but this of course will be implemented later, in the 2nd milestone.
+Wanted to add the sprites being displayed when a user chooses a pokemon to add to their team. Some pages feel a little empty,
+so they will be filled in with either more content or the content will be made larger.
 ### Implementation Status of Pages
-
+| Pages       | Status      | Wireframe|
+| ----------- | ----------- |----------|
+| Header      | Title       |          |
+| Paragraph   | Text        |          |
 ### API Endpoints
 
 #### Authentication:
