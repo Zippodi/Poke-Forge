@@ -123,15 +123,15 @@ The following is a list of endpoints are for other data about Pokemon and are gr
 | `GET` | `/moves/category/:category` | Get an array of moves that are a specific category |
 | `GET` | `/moves/attack/effectiveness` | Get a JSON of effectiveness against types for a pokemon with 1-4 specified moves passed via a URL query. All moves will use the query paramter `m`. |
 
-For `GET /attack/effectiveness`, examples of valid use are:
-- `/attack/effectiveness?m=earthquake`
-- `/attack/effectiveness?m=shadowball&m=psychic&m=darkpulse&m=yawn`
+For `GET /moves/attack/effectiveness`, examples of valid use are:
+- `/moves/attack/effectiveness?m=earthquake`
+- `/moves/attack/effectiveness?m=shadowball&m=psychic&m=darkpulse&m=yawn`
 
 The return is a JSON that answers the question: "If a Pokemon knew these moves, what types could they hit, not hit, hit for super effectiveness, and hit but not effectively?".
 - Moves with 0 power are not counted in this metric. If all moves given have 0 power then the JSON returned will show all types as immune
 - OHKO moves and other undetermined power moves are treated as normal moves of their type for now, special treatment might be implemented later
 
-EX: `GET /attack/effectiveness?m=earthquake&m=darkpulse` Shows that a Pokemon knowing these two moves can hit fire, electric, poison, rock, and steel types super effectively. But it cannot hit grass, flying, or bug types effectively.
+EX: `GET /moves/attack/effectiveness?m=earthquake&m=darkpulse` Shows that a Pokemon knowing these two moves can hit fire, electric, poison, rock, and steel types super effectively. But it cannot hit grass, flying, or bug types effectively.
 ```json
 {
     "effectiveness": {
