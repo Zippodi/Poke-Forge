@@ -23,12 +23,13 @@ so they will be filled in with either more content or the content will be made l
 | Register  | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
 ### API Endpoints
 
+All API endpoints are prepended with `/api` but it is not typed out explicitly in this document.  
 #### Authentication:
 There are two POST endpoints for authentication. The exact details of implementation are not specified yet:
 | Method | Route             | Description                                                        |
 |--------|-------------------|--------------------------------------------------------------------|
-| `POST`    | `/auth/login `           | Receives a username and password from the user and will test to see if the credentials are valid.  |
-| `POST`   | `/auth/register `   | Receives a username, password, and password confirmation from the user and will test to see if the username is unique and username/password are allowed.|
+| `POST`    | `/auth/login`           | Receives a username and password from the user and will test to see if the credentials are valid.  |
+| `POST`   | `/auth/register`   | Receives a username, password, and password confirmation from the user and will test to see if the username is unique and username/password are allowed.|
 
 #### Teams:
 Team data will be sent and received using JSON similar to below which is not finalized. The JSON is valid if:
@@ -68,11 +69,11 @@ Team data will be sent and received using JSON similar to below which is not fin
 | Method | Route             | Description                                                        |
 |--------|-------------------|--------------------------------------------------------------------|
 | `GET`    |` /teams`            | Gets an array of all public teams                                  |
-| `POST`   | `/teams/create `    | Creates a new team and returns the generated team's ID             |
+| `POST`   | `/teams/create`    | Creates a new team and returns the generated team's ID             |
 | `PUT`    | `/teams/id/:teamid` | Updates an existing team and returns a success value if successful |
 | `GET`    | `/teams/id/:teamid` | Gets a team by its ID                                              |
 | `DELETE` | `/teams/id/:teamid` | Deletes a team identified by its ID                                |
-| `GET`    | `/teams/myteams  `  | Gets all teams for the logged in user                              |
+| `GET`    | `/teams/myteams`  | Gets all teams for the logged in user                              |
 
 #### Pokemon
 Data about Pokemon (not Pokemon in teams but acutal Pokemon themselves) can be retreived or filtered from [pokemon.json](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Milestone1/api/src/_data/pokemon.json). The endpoint for Pokemon are as follows:
@@ -131,27 +132,27 @@ The return is a JSON that answers the question: "If a Pokemon knew these moves, 
 - Moves with 0 power are not counted in this metric. If all moves given have 0 power then the JSON returned will show all types as immune
 - OHKO moves and other undetermined power moves are treated as normal moves of their type for now, special treatment might be implemented later
 
-EX: `GET /moves/attack/effectiveness?m=earthquake&m=darkpulse` Shows that a Pokemon knowing these two moves can hit fire, electric, poison, rock, and steel types super effectively. But it cannot hit grass, flying, or bug types effectively.
+EX: `GET /moves/attack/effectiveness?m=razorleaf&m=moonblast&m=thunderwave` Shows that a Pokemon knowing these three moves, two of which deal damage, can hit fighting, dragon, and dark types super effectively, but will not be effective against fire, poison, and steel types.
 ```json
 {
     "effectiveness": {
         "normal": 1,
-        "fire": 2,
+        "fire": 0.5,
         "water": 1,
-        "electric": 2,
-        "grass": 0.5,
+        "electric": 1,
+        "grass": 1,
         "ice": 1,
-        "fighting": 1,
-        "poison": 2,
+        "fighting": 2,
+        "poison": 0.5,
         "ground": 1,
-        "flying": 0.5,
+        "flying": 1,
         "psychic": 1,
-        "bug": 0.5,
-        "rock": 2,
+        "bug": 1,
+        "rock": 1,
         "ghost": 1,
-        "dragon": 1,
-        "dark": 1,
-        "steel": 2,
+        "dragon": 2,
+        "dark": 2,
+        "steel": 0.5,
         "fairy": 1
     }
 }
