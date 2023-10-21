@@ -17,8 +17,12 @@ so they will be filled in with either more content or the content will be made l
 ### Implementation Status of Pages
 | Pages       | Status      | Wireframe|
 | ----------- | ----------- |----------|
-| Header      | Title       |          |
-| Paragraph   | Text        |          |
+| Home      | 90%      |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)        |
+| Create Team  | 70%        |          |
+| ViewOtherTeams   | 20%        |          |
+| ViewEditTeams   | 20%        |          |
+| Login   | 90%        |          |
+| Register  | 90%        |          |
 ### API Endpoints
 
 #### Authentication:
