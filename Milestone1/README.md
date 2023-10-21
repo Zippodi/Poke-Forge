@@ -121,7 +121,7 @@ The following is a list of endpoints are for other data about Pokemon and are gr
 | `GET` | `/moves/:name` | Get a move by its name |
 | `GET` | `/moves/type/:type` | Get an array of moves that are a specific type |
 | `GET` | `/moves/category/:category` | Get an array of moves that are a specific category |
-| `GET` | `/attack/effectiveness` | Get a JSON of effectiveness against types for a pokemon with 1-4 specified moves passed via a URL query. All moves will use the query paramter `m`. |
+| `GET` | `/moves/attack/effectiveness` | Get a JSON of effectiveness against types for a pokemon with 1-4 specified moves passed via a URL query. All moves will use the query paramter `m`. |
 
 For `GET /attack/effectiveness`, examples of valid use are:
 - `/attack/effectiveness?m=earthquake`
