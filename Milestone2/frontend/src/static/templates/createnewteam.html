@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Team</title>
+    <link rel="stylesheet" href="/css/pokemon/pokesprite-pokemon-gen8.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/stylescreate.css" />
+    
+    
+    <style type="text/css">
+      body {
+        
+        background-color: #CD385A;
+        color: #FFE600;
+      }
+      a {
+        text-decoration: none;
+        color: #FFE600;
+      }
+    </style>
+  </head>
+  <!-- <body>
+    <p>If you can see this, your frontend is working properly. YAY!</p>
+
+    <p>Check your API <a href="/api" target="_blank">here</a>.</p>
+    <span class="pokesprite pokemon pikachu"></span>
+  </body> -->
+  <body>
+    <div class="container">
+      <h1 class="text-center" id="CreateANewTeam">Create a New Team</h1>
+    </div>
+    
+    <form class="container">
+      <div class="text-center">
+        <label class="my-4" id="mah">
+          Team Slot 1
+          <input list="pokemonlist" id ="teamslot1" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 2
+          <input list="pokemonlist" id ="teamslot2" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <span></span>
+        <br>
+        <label class="my-4">
+          Team Slot 3
+          <input list="pokemonlist" id ="teamslot3" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 4
+          <input list="pokemonlist" id ="teamslot4" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 5
+          <input list="pokemonlist" id ="teamslot5" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+              
+          </datalist>   
+        </label>
+        <br>
+        <label class="my-4">
+          Team Slot 6
+          <input list="pokemonlist" id ="teamslot6" name="pokemonlist" required/>
+
+          <datalist id="pokemonlist">
+          </datalist>   
+        </label>
+        <br>
+        <br>
+        <label class="mx-4">
+          Team Name
+          <input type="text" required/>
+        </label>
+
+        <label class="mx-4">
+          <br>
+          <input type="checkbox" name="teampublic" required/>
+          Make this team public?
+       </label>
+       <br>
+       <!-- Don't actually know how to implement this yet. -->
+       <div class="m-4">
+        <input class="mx-2" type="submit" id="SaveTeam" value="Team Stats">
+        <input class="mx-2" type="submit" id="SaveTeam" value="Save Team">
+       </div>
+       
+      </div>
+        
+
+    </form>
+    
+  </body>
+  
+  
+  
+  <script src="js/createscript.js"></script>
+</html>

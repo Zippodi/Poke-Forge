@@ -1,0 +1,41 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+
+
+
+body {
+  background-color: #CD385A;
+  color: #FFE600;
+  font-family: 'Poppins', sans-serif;
+  
+}
+
+
+a {
+  text-decoration: none;
+  color: #FFE600;
+}
+
+#create {
+  background-color: #091644;
+  border-radius: 10px;
+  
+}
+
+#viewedit {
+  background-color: #091644;
+  border-radius: 10px;
+}
+
+#viewother {
+  background-color: #091644;
+  border-radius: 10px;
+}
+
+.links {
+  background-color: #091644;
+  border-radius: 10px;
+  
+}
