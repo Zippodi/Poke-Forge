@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(16) NOT NULL UNIQUE,
+  `username` varchar(16) NOT NULL UNIQUE CHECK (LENGTH(`username`) > 2),
   `password` varchar(256) NOT NULL,
   `salt` varchar(64) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 CREATE TABLE IF NOT EXISTS `team` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int unsigned NOT NULL,
+  `user_id` int unsigned NOT NULL ,
   `public` boolean NOT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL CHECK (LENGTH(`name`) > 2),
   `last_modified` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),

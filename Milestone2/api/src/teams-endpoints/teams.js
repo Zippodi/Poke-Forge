@@ -1,77 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const a = require('./authentication/auth-middleware');
-router.use(a.auth);
+// const a = require('../auth-endpoints/auth-middleware');
+// router.use(a.auth);
+
+const TeamDAO = require('../data/dao/TeamDAO');
 
 
-//mimic retrieving from database
-const testTeam1 =
-{
-  "username": "testuser",
-  "userid": 1,
-  "teamid": 1,
-  "public": true,
-  "pokemon": [
-    {
-      "name": "mankey",
-      "moves": ["focuspunch", "bulldoze", "scratch", "dig"],
-      "ability": "Vital Spirit",
-      "item": null
-    },
-    {
-      "name": "mankey",
-      "moves": ["seismictoss", "swift", "u-turn"],
-      "ability": "Vital Spirit",
-      "item": "leftovers"
-    },
-    {
-      "name": "arceus",
-      "moves": ["judgement", "perishsong", "earthpower", "extremespeed"],
-      "ability": "multitype",
-      "item": "earthplate"
-    }
-  ]
-}
+//create a new team, returns id of created team
+router.post('/create', (req, res) => {
+  if (req.body) {
+    TeamDAO.createTeam(req.body, 1).then(data => {
+      return res.status(200).json({ id: data });
+    }).catch(err => {
+      handleError(err, res);
+    });
+  } else {
+    return res.status(400).json({ error: "invalid request" });
+  }
+});
 
-const testTeam2 =
-{
-  "username": "testuser",
-  "userid": 1,
-  "teamid": 2,
-  "public": false,
-  "pokemon": [
-    {
-      "name": "charizard",
-      "moves": ["airslash", "flamethrower", "fly", "dragonclaw"],
-      "ability": "blaze",
-      "item": "charizarditex"
-    }
-  ]
-}
-
-const testTeam3 =
-{
-  "username": "testuser2",
-  "userid": 2,
-  "teamid": 3,
-  "public": true,
-  "pokemon": [
-    {
-      "name": "charizard",
-      "moves": ["flareblitz", "heatwave", "fly", "aerialace"],
-      "ability": "solarpower",
-      "item": "leftovers"
-    },
-    {
-      "name": "pikachu",
-      "moves": ["thunderbolt", "irontail", "quickattack"],
-      "ability": "static",
-      "item": "lightball"
-    }
-  ]
-}
-
-const mockData = [testTeam1, testTeam2, testTeam3];
 
 //get all (public) teams
 /**
@@ -97,17 +44,6 @@ router.get('/', (req, res) => {
   } else {
     res.status(404).json({ "error": "no teams found" });
   }
-});
-
-//create a new team
-router.post('/create', (req, res) => {
-  validateTeam(req).then(result => {
-    //save team to database
-    const teamid = 5;
-    res.status(200).json({ "team": 5 });
-  }).catch(error => {
-    res.status(400).json({ "error": error });
-  });
 });
 
 //edit specific existing team
@@ -184,18 +120,14 @@ async function validateTeam(req) {
     //TODO: verify that userid and username exist as users and match each other
     const body = req.body;
     if (typeof body.public !== 'boolean') {
-      reject("Invalid request");
+      reject("public must be a boolean value");
     }
     if (body.pokemon && Array.isArray(body.pokemon)) {
       //between 1-6 pokemon
       if (body.pokemon.length < 1 || body.pokemon.length > 6) {
-        reject(`Must specify between 1-6 pokemon`);
+        reject('Must specify between 1-6 pokemon');
       }
       body.pokemon.forEach((p) => {
-        //valid pokemon name check
-        if (!pokemon[p.name]) {
-          reject(`${p.name} is not a valid Pokemon name`);
-        }
         //valid held item check
         if (p.item && !items[p.item]) {
           reject(`${p.item} is not a valid item`);
@@ -226,6 +158,14 @@ async function validateTeam(req) {
     }
     resolve();
   });
+}
+
+function handleError(err, res) {
+  if (err.message) {
+    return res.status(400).json({ error: err.message });
+  } else {
+    return res.status(500).json({ error: err });
+  }
 }
 
 module.exports = router;

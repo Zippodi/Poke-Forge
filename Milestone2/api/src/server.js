@@ -3,10 +3,10 @@ const path = require('path');
 
 //require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 //api routes
-const auth = require('./authentication/auth');
+const auth = require('./auth-endpoints/auth');
 const pokemon = require('./poke-data-endpoints/pokemon');
 const moves = require('./poke-data-endpoints/moves');
-const teams = require('./teams');
+const teams = require('./teams-endpoints/teams');
 const abilities = require('./poke-data-endpoints/abilities');
 const items = require('./poke-data-endpoints/items');
 
