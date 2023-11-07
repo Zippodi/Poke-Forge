@@ -3,10 +3,6 @@ const router = express.Router();
 const a = require('./authentication/auth-middleware');
 router.use(a.auth);
 
-//data
-const pokemon = require("./_data/pokemon.json");
-const types = require("./types/types");
-const items = require('./_data/items.json');
 
 //mimic retrieving from database
 const testTeam1 =

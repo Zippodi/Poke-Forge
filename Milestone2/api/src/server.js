@@ -4,11 +4,11 @@ const path = require('path');
 //require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 //api routes
 const auth = require('./authentication/auth');
-const pokemon = require('./poke-data/pokemon');
-const moves = require('./poke-data/moves');
+const pokemon = require('./poke-data-endpoints/pokemon');
+const moves = require('./poke-data-endpoints/moves');
 const teams = require('./teams');
-const abilities = require('./poke-data/abilities');
-const items = require('./poke-data/items');
+const abilities = require('./poke-data-endpoints/abilities');
+const items = require('./poke-data-endpoints/items');
 
 const app = express();
 const PORT = process.env.PORT;

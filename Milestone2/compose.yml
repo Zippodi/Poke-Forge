@@ -28,6 +28,7 @@ services:
       - PORT=80
 
   database:
+    container_name: database
     image: mariadb:10.6
     restart: unless-stopped
     ports:

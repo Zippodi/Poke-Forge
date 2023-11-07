@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS `pokemon` (
   `hp` smallint unsigned NOT NULL,
   `attack` smallint unsigned NOT NULL,
   `defense` smallint unsigned NOT NULL,
-  `special_attack` smallint unsigned NOT NULL,
-  `special_defense` smallint unsigned NOT NULL,
+  `sp_attack` smallint unsigned NOT NULL,
+  `sp_defense` smallint unsigned NOT NULL,
   `speed` smallint unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1378,7 +1378,7 @@ INSERT INTO `move` (`id`, `name`, `type`, `category`, `power`, `accuracy`, `pp`,
 delete from `pokemon`;
 delete from `teachable_moves`;
 delete from `pokemon_abilities`;
-INSERT INTO `pokemon` (`id`, `name`, `type1`, `type2`, `hp`, `attack`, `defense`, `special_attack`, `special_defense`, `speed`) VALUES
+INSERT INTO `pokemon` (`id`, `name`, `type1`, `type2`, `hp`, `attack`, `defense`, `sp_attack`, `sp_defense`, `speed`) VALUES
   (1, 'Bulbasaur', 'grass', 'poison', 45, 49, 49, 65, 65, 45),
   (2, 'Ivysaur', 'grass', 'poison', 60, 62, 63, 80, 80, 60),
   (3, 'Venusaur', 'grass', 'poison', 80, 82, 83, 100, 100, 80),
