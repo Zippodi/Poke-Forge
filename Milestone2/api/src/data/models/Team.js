@@ -17,8 +17,8 @@ class Team {
     this.name = data.name;
     this.last_modified = data.last_modified;
     const entryObjs = pokemonData.reduce((acc, curr, idx) => { acc.push(new PokemonEntry(curr, pokemonMoves[idx], pokemonMoveTypes[idx])); return acc; }, []);
-    this.pokemon = entryObjs.map((e) => e.ToJSON());
     this.pokemonData = entryObjs;
+    this.pokemon = entryObjs.map((e) => e.ToJSON());
   }
 
   toJSON() {
@@ -29,7 +29,18 @@ class Team {
       name: this.name,
       last_modified: this.last_modified,
       pokemon: this.pokemon
-    }
+    };
+  }
+
+  toDetailedJSON() {
+    return {
+      id: this.id,
+      user_id: this.user_id,
+      public: this.public,
+      name: this.name,
+      last_modified: this.last_modified,
+      pokemon: this.pokemonData.map(p => p.toDetailedJSON())
+    };
   }
 }
 
@@ -67,7 +78,19 @@ class PokemonEntry {
       type2: this.type2,
       ability: this.ability,
       moves: this.moves
-    }
+    };
+  }
+
+  toDetailedJSON() {
+    return {
+      name: this.name,
+      type1: this.type1,
+      type2: this.type2,
+      ability: this.ability,
+      moves: this.moves,
+      defenses: this.getTypeDefenses(),
+      moveEffectiveness: this.getMoveEffectiveness()
+    };
   }
 }
 

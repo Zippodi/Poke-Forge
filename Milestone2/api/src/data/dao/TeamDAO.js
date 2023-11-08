@@ -258,7 +258,7 @@ function getTeamById(teamId, userId) {
             ability: e.ability_name
           });
           pokemonMovesArr.push(moveNames);
-          pokemonMoveTypesArr.push(moveResults.reduce((acc, curr) => { acc.push(curr.name); return acc; }, []));
+          pokemonMoveTypesArr.push(moveTypeResults.reduce((acc, curr) => { acc.push(curr.type); return acc; }, []));
         }
         let team = new Team(teamResults[0], pokemonDataArr, pokemonMovesArr, pokemonMoveTypesArr);
         resolve(team);

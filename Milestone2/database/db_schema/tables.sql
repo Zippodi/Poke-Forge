@@ -41,5 +41,5 @@ CREATE TABLE IF NOT EXISTS `known_moves` (
   KEY `fk_entry_id` (`entry_id`),
   CONSTRAINT `fk_entry_id` FOREIGN KEY (`entry_id`) REFERENCES `pokemon_entry` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
   KEY `fk_move_id_e` (`move_id`),
-  CONSTRAINT `fk_move_id_e` FOREIGN KEY (`move_id`) REFERENCES `move` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT `fk_move_id_e` FOREIGN KEY (`move_id`) REFERENCES `move` (`id`) ON UPDATE CASCADE ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
