@@ -4,12 +4,14 @@ const router = express.Router();
 // router.use(a.auth);
 
 const TeamDAO = require('../data/dao/TeamDAO');
+const Team = require('../data/models/Team');
 
+const tempUserID = 1;
 
 //create a new team, returns id of created team
 router.post('/create', (req, res) => {
   if (req.body) {
-    TeamDAO.createTeam(req.body, 1).then(data => {
+    TeamDAO.createTeam(req.body, tempUserID).then(data => {
       return res.status(200).json({ id: data });
     }).catch(err => {
       handleError(err, res);
@@ -22,143 +24,64 @@ router.post('/create', (req, res) => {
 
 //get all (public) teams
 /**
- * TODO: User query p to filter by containing pokemon
- * EX:
- * ?p=pikachu
- * ?p=charizard&p=blastoise&p=venusaur
+ * User query p to filter by containing pokemon
+ *  - ?p=pikachu
+ *  - ?p=charizard&p=blastoise&p=venusaur
+ * User query name to filter by teams containing a certain string
+ *  - ?name=gen5
+ *  - ?name=comp
+ * Multiple pokeon queries can be made, only one name query can be made  
  */
 router.get('/', (req, res) => {
-  let q = req.query.p;
-  if (!Array.isArray(q)) {
-    q = [q];
+  let pokemon = req.query.p;
+  if (pokemon && !Array.isArray(pokemon)) {
+    pokemon = [pokemon];
   }
-  let pokeNames = q.filter((p) => pokemon[p]);
-  let arr = [];
-  mockData.forEach((t) => {
-    if (t.public) {
-      arr.push(t);
-    }
+  let name = req.query.name;
+  TeamDAO.getAllTeams(name ? name : false, pokemon ? pokemon : false).then(teams => {
+    return res.status(200).json(teams);
+  }).catch(err => {
+    handleError(err, res);
   });
-  if (arr.length > 0) {
-    res.status(200).json({ "teams": arr });
-  } else {
-    res.status(404).json({ "error": "no teams found" });
-  }
 });
 
 //edit specific existing team
 router.put('/id/:teamid', (req, res) => {
-  const id = req.params.teamid;
-  //TODO test if team already exists and belongs to the logged in user
-  validateTeam(req).then(result => {
-    //save team to database
-    res.status(200).json({ "success": true });
-  }).catch(error => {
-    res.status(400).json({ "error": error });
-  });
+  res.status(503).json({ error: "not yet implemented" });
 });
 
 //get team via the teamid
 router.get('/id/:teamid', (req, res) => {
-  const id = req.params.teamid;
-  for (const t of mockData) {
-    if (t.teamid == id) {
-      if (t.public || userBelongsToTeam(req.user, id)) {
-        return res.status(200).json(t);
-      } else {
-        return res.status(403).json({ "error": "you are not authorized to view this team" });
-      }
-    }
-  }
-  res.status(404).json({ "error": "team with that ID not found" });
+  TeamDAO.getTeamById(req.params.teamid, 1).then(team => {
+    return res.status(200).json(team.toJSON());
+  }).catch(err => {
+    handleError(err, res);
+  });
 });
 
-//delete team TODO: clean up and implement after database introduced
+//delete team 
 router.delete('/id/:teamid', (req, res) => {
-  const id = req.params.teamid;
-  if (userBelongsToTeam(req.user, id)) {
-    //can response change if needed
-    res.status(200).json({ "deleted": id });
-  } else {
-    res.status(400).json({ "error": "could not delete team" });
-  }
+  res.status(503).json({ error: "not yet implemented" });
 });
 
 //get all public teams for a specific user
-router.get('/user/:username', (req, res) => {
-  const username = req.params.username;
-  let arr = [];
-  mockData.forEach((t) => { if (t.public && t.username === username) arr.push(t) });
-  if (arr.length > 0) {
-    res.status(200).json({ "teams": arr });
-  } else {
-    res.status(404).json({ "error": "no teams found" });
-  }
+router.get('/user/:userid', (req, res) => {
+  TeamDAO.getUserTeams(req.params.userid, tempUserID).then(teams => {
+    res.status(200).json(teams);
+  }).catch(err => {
+    handleError(err, res);
+  });
 });
 
 //get all teams (public and private) for the logged in user
 router.get('/myteams', (req, res) => {
-  const userId = req.user.id;
-  let arr = [];
-  mockData.forEach((t) => { if (t.userid === userId) arr.push(t) });
-  if (arr.length > 0) {
-    res.status(200).json({ "teams": arr });
-  } else {
-    res.status(404).json({ "error": "no teams found" });
-  }
+  TeamDAO.getUserTeams(tempUserID, tempUserID).then(teams => {
+    res.status(200).json(teams);
+  }).catch(err => {
+    handleError(err, res);
+  });
 });
 
-//probably gonna get replaced later so wont bother with proper error checking yet
-function userBelongsToTeam(user, teamId) {
-  let team = null;
-  mockData.forEach((t) => { if (t.teamid == teamId) team = t });
-  return team && team.userid == user.id;
-}
-
-async function validateTeam(req) {
-  return new Promise((resolve, reject) => {
-    //TODO: verify that userid and username exist as users and match each other
-    const body = req.body;
-    if (typeof body.public !== 'boolean') {
-      reject("public must be a boolean value");
-    }
-    if (body.pokemon && Array.isArray(body.pokemon)) {
-      //between 1-6 pokemon
-      if (body.pokemon.length < 1 || body.pokemon.length > 6) {
-        reject('Must specify between 1-6 pokemon');
-      }
-      body.pokemon.forEach((p) => {
-        //valid held item check
-        if (p.item && !items[p.item]) {
-          reject(`${p.item} is not a valid item`);
-        }
-        //valid ability check
-        let abils = pokemon[p.name].abilities.split(',');
-        if (pokemon[p.name].hidden_abilities) {
-          abils = abils.concat(pokemon[p.name].hidden_abilities.split(','));
-        }
-        //can comment out for testing team creation itself if needed so you dont need to look up valid abilities
-        if (!abils.includes(p.ability)) {
-          reject(`${p.ability} is not a valid ability on this Pokemon`);
-        }
-        //valid moves check
-        if (!p.moves || !Array.isArray(p.moves) || !p.moves[0]) {
-          reject("Pokemon must have at least one move");
-        }
-        //can comment out for testing team creation itself if needed so you dont need to look up movesets
-        p.moves.forEach(move => {
-          const pokeMoves = pokemon[p.name].moves.split(',');
-          if (!pokeMoves.includes(move)) {
-            reject(`${move} is not a valid move on this Pokemon`);
-          }
-        });
-      });
-    } else {
-      reject("Invalid request");
-    }
-    resolve();
-  });
-}
 
 function handleError(err, res) {
   if (err.message) {
