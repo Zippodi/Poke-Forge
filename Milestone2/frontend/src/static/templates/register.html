@@ -28,26 +28,37 @@
         height: 100vh;
         width: 100vw;
       }
+
+      .registerBoxBorder {
+        background-color: #091644;
+        border-radius: 10px;
+        
+      }
+      
+      
     </style>
   </head>
 
   <body>
-    <div
-      class="square-box d-flex flex-column justify-content-center align-items-center">
-      <h1>Register</h1>
-      <label class="my-4">
-        Username
-        <input type="text" />
-      </label>
-      <label class="my-4">
-        Password
-        <input type="text" />
-      </label>
-      <label class="my-4">
-        Confirm Password
-        <input type="text" />
-      </label>
-      <input type="submit" id="Send" value="Submit" />
+    <div class="square-box d-flex flex-column justify-content-center">
+      <div class="registerBoxBorder p-5 mx-auto">
+        <h1 class="text-center">Register</h1>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <label class="my-4">
+            Username
+            <input type="text" />
+          </label>
+          <label class="mb-4">
+            Password
+            <input type="text" />
+          </label>
+          <label class="mb-4">
+            Confirm Password
+            <input type="text" />
+          </label>
+          <input class="mx-5" type="submit" id="Send" value="Submit" />
+        </div>
+      </div>  
     </div>
   </body>
 </html>
