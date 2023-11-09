@@ -28,11 +28,16 @@ router.post('/create', (req, res) => {
  * User query p to filter by containing pokemon
  *  - ?p=pikachu
  *  - ?p=charizard&p=blastoise&p=venusaur
+ * ---------------------------------------------------
  * User query name to filter by teams containing a certain string. 
  * Expecting that name will be URI encoded
  *  - ?name=gen5
  *  - ?name=my%20team
  * Multiple pokemon queries can be made, only one name query can be made  
+ * ---------------------------------------------------
+ * User query own to include teams belonging to the logged in user
+ *  - ?own=true
+ * By default these teams will be excluded
  */
 router.get('/', (req, res) => {
   let pokemon = req.query.p;
@@ -40,7 +45,8 @@ router.get('/', (req, res) => {
     pokemon = [pokemon];
   }
   let name = req.query.name ? decodeURIComponent(req.query.name) : false;
-  TeamDAO.getAllTeams(name, pokemon ? pokemon : false).then(teams => {
+  let includeOwn = req.query.own == 'true';
+  TeamDAO.getAllTeams(tempUserID, includeOwn, name, pokemon ? pokemon : false).then(teams => {
     return res.status(200).json(teams);
   }).catch(err => {
     handleError(err, res);

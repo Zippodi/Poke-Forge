@@ -94,7 +94,7 @@ function getUserTeams(requesterId, userId) {
  * @param {*} nameIncludes optional - will filter for teams with a name containing the given string. To not use pass a falsy value
  * @param {*} PokemonIncluded optional - will filter for teams that contain the given pokemon names. To not use pass a falsy value. Invalid pokemon names will be ignored
  */
-function getAllTeams(nameIncludes = false, pokemonIncluded = false) {
+function getAllTeams(currentUserID, includeCurrentUser = false, nameIncludes = false, pokemonIncluded = false) {
   return new Promise((resolve, reject) => {
     let connection = db.getDatabaseConnection();
     connection.getConnection(async (err, conn) => {
@@ -115,6 +115,10 @@ function getAllTeams(nameIncludes = false, pokemonIncluded = false) {
           let teamSQL = "SELECT t.* FROM team as t ";
           let idPlaceholders = pokemonIDsToSearch.map(i => '?').join(', ');
           teamSQL += `JOIN pokemon_entry AS pe ON pe.team_id = t.id WHERE pe.pokemon_id IN (${idPlaceholders}) AND t.public = TRUE`;
+          if (!includeCurrentUser) {
+            teamSQL += ' AND t.user_id != ?';
+            pokemonIDsToSearch.push(currentUserID);
+          }
           if (nameIncludes && typeof nameIncludes === 'string') {
             pokemonIDsToSearch.push(`%${nameIncludes}%`);
             teamResults = await executeQuery(conn, `${teamSQL} AND t.name LIKE ?`, pokemonIDsToSearch);
@@ -122,9 +126,17 @@ function getAllTeams(nameIncludes = false, pokemonIncluded = false) {
             teamResults = await executeQuery(conn, teamSQL, pokemonIDsToSearch);
           }
         } else if (nameIncludes && typeof nameIncludes === 'string') {
-          teamResults = await executeQuery(conn, "SELECT * FROM team WHERE public = TRUE AND name LIKE ?", [`%${nameIncludes}%`]);
+          let sql = "SELECT * FROM team WHERE public = TRUE AND name LIKE ?";
+          if (!includeCurrentUser) {
+            sql += " AND user_id != ?";
+          }
+          teamResults = await executeQuery(conn, sql, [`%${nameIncludes}%`, currentUserID]);
         } else {
-          teamResults = await executeQuery(conn, 'SELECT * FROM team WHERE public = TRUE');
+          if (!includeCurrentUser) {
+            teamResults = await executeQuery(conn, 'SELECT * FROM team WHERE public = TRUE AND user_id != ?', [currentUserID]);
+          } else {
+            teamResults = await executeQuery(conn, 'SELECT * FROM team WHERE public = TRUE');
+          }
         }
         if (teamResults.length === 0) {
           reject("Could not find a team with given query");
