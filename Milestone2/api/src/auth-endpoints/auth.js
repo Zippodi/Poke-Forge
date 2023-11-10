@@ -5,7 +5,7 @@ const UserDAO = require('../data/dao/UserDAO');
 
 router.post('/login', (req, res) => {
   console.log("body of login request: ", req.body);
-  if(req.body.username && req.body.password) {
+  if (req.body.username && req.body.password) {
     UserDAO.getUserByCredentials(req.body.username, req.body.password).then(user => {
       let result = {
         user: user
@@ -15,11 +15,11 @@ router.post('/login', (req, res) => {
 
       res.json(result);
     }).catch(err => {
-      res.status(400).json({error: err});
+      res.status(400).json({ error: err });
     });
   }
   else {
-    res.status(401).json({error: 'Not authenticated'});
+    res.status(401).json({ error: 'Not authenticated' });
   }
 
 
@@ -28,7 +28,7 @@ router.post('/login', (req, res) => {
 router.post('/register', (req, res) => {
   //validate registration data
   console.log("body of register request: ", req.body);
-  if(req.body.username && req.body.password) {
+  if (req.body.username && req.body.password) {
     UserDAO.createUser(req.body.username, req.body.password).then(user => {
       let result = {
         user: user
@@ -38,11 +38,11 @@ router.post('/register', (req, res) => {
 
       res.json(result);
     }).catch(err => {
-      res.status(400).json({error: err});
+      res.status(400).json({ error: err });
     });
   }
   else {
-    res.status(401).json({error: 'Not authenticated'});
+    res.status(401).json({ error: 'Not authenticated' });
   }
 
 });
