@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+body {
+  background-color: #cd385a;
+  color: #ffe600;
+}
+
+header {
+  background-color: #9f2b46;
+  color: #ffe600;
+}
+
+.v-border {
+  width: 3px;
+  background-color: rgb(185, 185, 36);
+  border-radius: 99px;
+}
+
+.poke-entry {
+  text-decoration: none;
+}
+
+.poke-link {
+  color: gold;
+  text-decoration: none;
+}
+
+.poke-link:hover {
+  color: rgb(210, 179, 6);
+  text-decoration: underline;
+}
+
+.opacity {
+  opacity: 0.9;
+}

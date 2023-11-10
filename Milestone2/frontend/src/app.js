@@ -27,5 +27,9 @@ app.get('/create', (req, res) => {
   res.sendFile(getFile('createnewteam.html'));
 });
 
+app.get('/pokemon', (req, res) => {
+  res.sendFile(getFile('pokemon-data/pokemon.html'));
+});
+
 // As our server to listen for incoming connections
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
