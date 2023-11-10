@@ -7,10 +7,10 @@ module.exports = class {
   #salt = null;;
 
   constructor(data) {
-    this.id = data.usr_id;
-    this.username = data.usr_username;
-    this.#salt = data.usr_salt;
-    this.#passwordHash = data.usr_password;
+    this.id = data.id;
+    this.username = data.username;
+    this.#salt = data.salt;
+    this.#passwordHash = data.password;
   }
 
   validatePassword(password) {
@@ -19,8 +19,8 @@ module.exports = class {
         if (err) { //problem computing digest, like hash function not available
          reject("Error: " +err);
         }
-
         const digest = derivedKey.toString('hex');
+       
         if (this.#passwordHash == digest) {
           resolve(this);
         }
@@ -30,8 +30,7 @@ module.exports = class {
       });
     });
   }
-  
-  
+
   toJSON() {
     return {
       id: this.id,

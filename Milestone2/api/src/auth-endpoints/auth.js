@@ -11,11 +11,15 @@ router.post('/login', (req, res) => {
         user: user
       }
 
-      generateToken(req, res, user);
-
+      //generateToken(req, res, user);
+      res.status(200);
+      console.log(user);
+      console.log("yes!");
       res.json(result);
+      console.log("yes2!");
+
     }).catch(err => {
-      res.status(400).json({ error: err });
+      res.status(401).json({ error: err });
     });
   }
   else {
@@ -38,7 +42,7 @@ router.post('/register', (req, res) => {
 
       res.json(result);
     }).catch(err => {
-      res.status(400).json({ error: err });
+      res.status(401).json({ error: err });
     });
   }
   else {

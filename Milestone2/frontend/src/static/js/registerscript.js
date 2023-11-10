@@ -6,7 +6,7 @@ addEventListener('DOMContentLoaded', (e) => {
         let password = document.querySelector("#password");
         let confirmpassword = document.querySelector("#confirmpassword");
         if (password.value != confirmpassword.value) {
-            throw(err);
+            alert("Passwords Do Not Match");
         }
         else {
             let data = {
@@ -22,7 +22,13 @@ addEventListener('DOMContentLoaded', (e) => {
                     'Content-Type': 'application/json'
                 }
             }).then((res) => {
-                //window.location.href = '/home';
+                if (res.status == 401) {
+                    alert("Error in Creating User.");
+                }
+                else {
+                    window.location.href = '/home';
+                }
+               
             }).catch(err => {
                 alert(err);
             });

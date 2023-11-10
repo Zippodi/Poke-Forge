@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(16) NOT NULL UNIQUE CHECK (LENGTH(`username`) > 2),
   `password` varchar(256) NOT NULL,
-  `salt` varchar(64) NOT NULL UNIQUE,
+  `salt` varchar(256) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

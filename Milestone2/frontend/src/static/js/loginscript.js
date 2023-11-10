@@ -31,11 +31,22 @@ addEventListener('DOMContentLoaded', (e) => {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then((res) => {
-            window.location.href = '/home';
+        }).then(res => {
+            
+            console.log("panda.");
+            if (res.status == 401) {
+                alert("Error in Logging In User.");
+            }
+            else {
+                console.log("Got here too");
+                window.location.href = '/home';
+            }
+           
         }).catch(err => {
-            console.error(err);
+            alert(err);
         });
+
+      
     });
 });
 
