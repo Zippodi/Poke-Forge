@@ -19,6 +19,15 @@ class HTTPClient {
         return res.json();
       });
     }
+
+    static post(url) {
+      return fetch(url).then(res => {
+        if(!res.ok) {
+          throw new Error("error in request");
+        }
+        return res.json();
+      });
+    }
   }
   
   
@@ -33,6 +42,42 @@ HTTPClient.get('/api/pokemon').then(pokemon => {
             option.value = name;
             list.appendChild(option);
     }
+
+});
+
+HTTPClient.get('/api/moves').then(moves=> {
+  var list = document.getElementById('moveslist');
+  for (key in moves) {
+      let option = document.createElement('option');
+      
+          let name = key[0].toUpperCase() + key.slice(1);
+          option.value = name;
+          list.appendChild(option);
+  }
+
+});
+
+HTTPClient.get('/api/items').then(items=> {
+  var list = document.getElementById('itemslist');
+  for (key in items) {
+      let option = document.createElement('option');
+      
+          let name = key[0].toUpperCase() + key.slice(1);
+          option.value = name;
+          list.appendChild(option);
+  }
+
+});
+
+HTTPClient.get('/api/abilities').then(abilities=> {
+  var list = document.getElementById('abilitylist');
+  for (key in abilities) {
+      let option = document.createElement('option');
+      
+          let name = key[0].toUpperCase() + key.slice(1);
+          option.value = name;
+          list.appendChild(option);
+  }
 
 });
 
