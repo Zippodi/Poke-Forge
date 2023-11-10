@@ -1,17 +1,50 @@
 const express = require('express');
 const router = express.Router();
 
+const UserDAO = require('../data/dao/UserDAO');
+
 router.post('/login', (req, res) => {
   console.log("body of login request: ", req.body);
-  //authenticate user
-  res.status(200).json({ "authenticated": true });
+  if(req.body.username && req.body.password) {
+    UserDAO.getUserByCredentials(req.body.username, req.body.password).then(user => {
+      let result = {
+        user: user
+      }
+
+      generateToken(req, res, user);
+
+      res.json(result);
+    }).catch(err => {
+      res.status(400).json({error: err});
+    });
+  }
+  else {
+    res.status(401).json({error: 'Not authenticated'});
+  }
+
+
 });
 
 router.post('/register', (req, res) => {
   //validate registration data
   console.log("body of register request: ", req.body);
-  //on successful login either log user in and take to homepage or redirect to login page with data saying account made
-  res.status(200).json({ "registered": true });
+  if(req.body.username && req.body.password) {
+    UserDAO.createUser(req.body.username, req.body.password).then(user => {
+      let result = {
+        user: user
+      }
+
+      //generateToken(req, res, user);
+
+      res.json(result);
+    }).catch(err => {
+      res.status(400).json({error: err});
+    });
+  }
+  else {
+    res.status(401).json({error: 'Not authenticated'});
+  }
+
 });
 
 module.exports = router;

@@ -16,13 +16,21 @@ addEventListener('DOMContentLoaded', (e) => {
 addEventListener('DOMContentLoaded', (e) => {
     let btn = document.querySelector("#Send");
     btn.addEventListener('click', (e) => {
+
+        let username = document.querySelector("#username");
+        let password = document.querySelector("#password");
+        
+        let data = {
+            username: username.value,
+            password: password.value
+        }
+
         fetch('/api/auth/login', {
             method: "POST",
+            body: JSON.stringify(data),
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify()
+            }
         }).then((res) => {
             window.location.href = '/home';
         }).catch(err => {
