@@ -81,7 +81,48 @@ HTTPClient.get('/api/abilities').then(abilities=> {
 
 });
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  const form = document.querySelector('form'); 
 
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); 
+
+    // Collecting data for each team slot
+    const teamData = [];
+    for (let i = 1; i <= 6; i++) {
+      teamData.push({
+        name: document.getElementById(`teamslot${i}`).value,
+        moves: [
+          document.getElementById(`teamslot${i}-move1`).value,
+          document.getElementById(`teamslot${i}-move2`).value,
+          document.getElementById(`teamslot${i}-move3`).value,
+          document.getElementById(`teamslot${i}-move4`).value,
+        ].filter(move => move !== ''), // Filter out empty strings if moves are not selected
+        item: document.getElementById(`teamslot${i}-item`).value,
+        ability: document.getElementById(`teamslot${i}-ability`).value
+      });
+    }
+
+    const formData = {
+      name: document.querySelector('[name="teamname"]').value,
+      public: document.querySelector('[name="teampublic"]').checked,
+      pokemonData: teamData
+    };
+
+    HTTPClient.post('/api/teams/create', {
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('Team created successfully!', response);
+    })
+    .catch(error => {
+      console.error('Error creating team:', error);
+    });
+  });
+});
 
 // let btn = document.getElementById("mah");
 //     btn.addEventListener("input", (e) => {
