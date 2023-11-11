@@ -281,7 +281,6 @@ function getTeamById(teamId, userId) {
   });
 }
 
-
 function createTeam(team, userId) {
   return new Promise((resolve, reject) => {
     if (!validateTeamBody(team)) {
@@ -365,22 +364,27 @@ function createTeam(team, userId) {
 }
 
 function validateTeamBody(body) {
-  if (!body.public || typeof body.public !== 'boolean') {
+  if (typeof body.public !== 'boolean') {
+    //console.log(1);
     return false;
   }
   if (!body.name || typeof body.name !== 'string' || body.name.length < 3) {
+    //console.log(2);
     return false;
   }
   if (!body.pokemon || !Array.isArray(body.pokemon) || body.pokemon.length < 1 || body.pokemon.length > 6) {
+    //console.log(3);
     return false;
   }
   for (let p of body.pokemon) {
     if (!p.ability || !p.name) {
+      //console.log(4, p);
       return false;
     }
     p.ability = p.ability.replaceAll(' ', '').toLowerCase();
     p.name = p.name.replaceAll(' ', '').toLowerCase();
     if (!p.moves || !Array.isArray(p.moves) || p.moves.length < 1 || p.moves.length > 4) {
+      //console.log(5, p.moves);
       return false;
     }
     p.moves = p.moves.map(m => m.replaceAll(' ', '').toLowerCase());

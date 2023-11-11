@@ -1,104 +1,83 @@
+import http from './utils/HTTPClient.js';
+
 function insertAfter(referenceNode, newNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
 function addPokemonSprite(node) {
-    let dateSpan = document.createElement('span')
-    let stringName = "pokesprite pokemon ";
-    dateSpan.className = stringName.concat("pikachu");
-
-    insertAfter(node, dateSpan);
+  let dateSpan = document.createElement('span')
+  let stringName = "pokesprite pokemon ";
+  dateSpan.className = stringName.concat("pikachu");
+  insertAfter(node, dateSpan);
 }
 
-class HTTPClient {
-    static get(url) {
-      return fetch(url).then(res => {
-        if(!res.ok) {
-          throw new Error("error in request");
-        }
-        return res.json();
-      });
-    }
-
-    static post(url) {
-      return fetch(url).then(res => {
-        if(!res.ok) {
-          throw new Error("error in request");
-        }
-        return res.json();
-      });
-    }
+http.get('/api/pokemon').then(pokemon => {
+  var list = document.getElementById('pokemonlist');
+  for (let key in pokemon) {
+    let option = document.createElement('option');
+    let name = key[0].toUpperCase() + key.slice(1);
+    option.value = name;
+    list.appendChild(option);
   }
-  
-  
- 
-    
-HTTPClient.get('/api/pokemon').then(pokemon => {
-    var list = document.getElementById('pokemonlist');
-    for (key in pokemon) {
-        let option = document.createElement('option');
-        
-            let name = key[0].toUpperCase() + key.slice(1);
-            option.value = name;
-            list.appendChild(option);
-    }
 
 });
 
-HTTPClient.get('/api/moves').then(moves=> {
+http.get('/api/moves').then(moves => {
   var list = document.getElementById('moveslist');
-  for (key in moves) {
-      let option = document.createElement('option');
-      
-          let name = key[0].toUpperCase() + key.slice(1);
-          option.value = name;
-          list.appendChild(option);
+  for (let key in moves) {
+    let option = document.createElement('option');
+
+    let name = key[0].toUpperCase() + key.slice(1);
+    option.value = name;
+    list.appendChild(option);
   }
 
 });
 
-HTTPClient.get('/api/items').then(items=> {
+http.get('/api/items').then(items => {
   var list = document.getElementById('itemslist');
-  for (key in items) {
-      let option = document.createElement('option');
-      
-          let name = key[0].toUpperCase() + key.slice(1);
-          option.value = name;
-          list.appendChild(option);
+  for (let key in items) {
+    let option = document.createElement('option');
+
+    let name = key[0].toUpperCase() + key.slice(1);
+    option.value = name;
+    list.appendChild(option);
   }
 
 });
 
-HTTPClient.get('/api/abilities').then(abilities=> {
+http.get('/api/abilities').then(abilities => {
   var list = document.getElementById('abilitylist');
-  for (key in abilities) {
-      let option = document.createElement('option');
-      
-          let name = key[0].toUpperCase() + key.slice(1);
-          option.value = name;
-          list.appendChild(option);
+  for (let key in abilities) {
+    let option = document.createElement('option');
+    let name = key[0].toUpperCase() + key.slice(1);
+    option.value = name;
+    list.appendChild(option);
   }
-
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  const form = document.querySelector('form'); 
+  const submitBtn = document.getElementById('SaveTeam');
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault(); 
-
+  submitBtn.addEventListener('click', function (e) {
     // Collecting data for each team slot
     const teamData = [];
     for (let i = 1; i <= 6; i++) {
+      const itemText = document.getElementById(`teamslot${i}-item`).value;
+      const pokeText = document.getElementById(`teamslot${i}`).value;
+      if (!pokeText || pokeText == '') {
+        continue;
+      }
+      const item = itemText == '' ? null : itemText;
       teamData.push({
-        name: document.getElementById(`teamslot${i}`).value,
+        name: pokeText,
         moves: [
           document.getElementById(`teamslot${i}-move1`).value,
           document.getElementById(`teamslot${i}-move2`).value,
           document.getElementById(`teamslot${i}-move3`).value,
           document.getElementById(`teamslot${i}-move4`).value,
         ].filter(move => move !== ''), // Filter out empty strings if moves are not selected
-        item: document.getElementById(`teamslot${i}-item`).value,
+        item: item,
         ability: document.getElementById(`teamslot${i}-ability`).value
       });
     }
@@ -106,31 +85,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const formData = {
       name: document.querySelector('[name="teamname"]').value,
       public: document.querySelector('[name="teampublic"]').checked,
-      pokemonData: teamData
+      pokemon: teamData
     };
-
-    HTTPClient.post('/api/teams/create', {
-      body: JSON.stringify(formData),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
+    console.log(formData);
+    http.post('/api/teams/create', formData).then(response => {
       console.log('Team created successfully!', response);
-    })
-    .catch(error => {
+    }).catch(error => {
       console.error('Error creating team:', error);
     });
   });
 });
 
-// let btn = document.getElementById("mah");
-//     btn.addEventListener("input", (e) => {
-//     // if (btn.textContent == "Pikachu") {
-//     //     addPokemonSprite(document.getElementById("mah"));
-//     // }
-//     console.log(btn.value);
-// });
 
 
-  

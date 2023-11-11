@@ -11,6 +11,7 @@ const tempUserID = 1;
 
 //create a new team, returns id of created team
 router.post('/create', (req, res) => {
+  console.log('BODY IS', req.body);
   if (req.body) {
     TeamDAO.createTeam(req.body, tempUserID).then(data => {
       return res.status(200).json({ id: data });
