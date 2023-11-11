@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const UserDAO = require('../data/dao/UserDAO');
+const {TokenMiddleware, generateToken, removeToken} = require('../auth-endpoints/auth-middleware');
 
 router.post('/login', (req, res) => {
   console.log("body of login request: ", req.body);
@@ -11,12 +12,9 @@ router.post('/login', (req, res) => {
         user: user
       }
 
-      //generateToken(req, res, user);
+      generateToken(req, res, user);
       res.status(200);
-      console.log(user);
-      console.log("yes!");
       res.json(result);
-      console.log("yes2!");
 
     }).catch(err => {
       res.status(401).json({ error: err });
@@ -38,7 +36,7 @@ router.post('/register', (req, res) => {
         user: user
       }
 
-      //generateToken(req, res, user);
+      generateToken(req, res, user);
 
       res.json(result);
     }).catch(err => {
