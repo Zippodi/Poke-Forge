@@ -60,7 +60,7 @@ function getPokemonByType(type) {
 
 function getPokemonMoves(identifier, isName) {
   const field = isName ? 'name' : 'id';
-  return db.query(`SELECT m.* FROM pokemon AS p JOIN teachable_moves AS tm ON tm.pokemon_id = p.id JOIN move AS m ON m.id = tm.move_id WHERE p.${field} = ?`,
+  return db.query(`SELECT m.* FROM pokemon AS p JOIN teachable_moves AS tm ON tm.pokemon_id = p.id JOIN move AS m ON m.id = tm.move_id WHERE p.${field} = ? ORDER BY m.name ASC`,
     [identifier]).then(({ results }) => {
       if (results && results.length > 1) {
         return results.map(data => new Move(data));

@@ -31,5 +31,9 @@ app.get('/pokemon', (req, res) => {
   res.sendFile(getFile('pokemon-data/pokemon.html'));
 });
 
+app.get('/pokemon/info/:name', (req, res) => {
+  res.sendFile(getFile('pokemon-data/pokemonview.html'));
+});
+
 // As our server to listen for incoming connections
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

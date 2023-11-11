@@ -1,13 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
 body {
-  background-color: #cd385a;
-  color: #ffe600;
+  background-color: rgb(205, 56, 90);
+  color: rgb(255, 230, 0);
 }
 
 header {
-  background-color: #9f2b46;
-  color: #ffe600;
+  background-color: rgb(159, 43, 70);
+  color: rgb(255, 230, 0);
+}
+
+.link-info {
+  text-decoration: none;
+}
+
+.link-info:hover {
+  text-decoration: underline;
 }
 
 .v-border {
@@ -16,20 +22,12 @@ header {
   border-radius: 99px;
 }
 
-.poke-entry {
-  text-decoration: none;
+#searchGroup {
+  box-shadow: 5px 5px 5px rgb(97, 25, 25);
+  border-radius: 10px;
 }
 
-.poke-link {
-  color: gold;
-  text-decoration: none;
-}
-
-.poke-link:hover {
-  color: rgb(210, 179, 6);
-  text-decoration: underline;
-}
-
-.opacity {
-  opacity: 0.9;
+.links {
+  background-color: #091644;
+  border-radius: 10px;
 }

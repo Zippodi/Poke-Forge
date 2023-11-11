@@ -1,3 +1,4 @@
+
 addEventListener('DOMContentLoaded', (e) => {
     let btn = document.querySelector("#create");
     btn.addEventListener('click', (e) => {
@@ -13,5 +14,8 @@ addEventListener('DOMContentLoaded', (e) => {
         }).catch(err => {
             console.error(err);
         });
+    });
+    document.getElementById('viewpokedataButton').addEventListener('click', e => {
+        window.location.href = '/pokemon';
     });
 });

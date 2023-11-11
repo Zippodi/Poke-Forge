@@ -4,7 +4,7 @@ const { Move } = require('../models/PokeDataModels');
 const types = require('../types/types');
 
 function getAllMoves() {
-  return db.query('SELECT * FROM move').then(({ results }) => {
+  return db.query('SELECT * FROM move ORDER BY name ASC').then(({ results }) => {
     return results.map(data => new Move(data));
   });
 }
@@ -35,7 +35,7 @@ function getMoveById(id) {
 }
 
 function getMoveByType(type) {
-  return db.query("SELECT * FROM move WHERE type = ?", [type.toLowerCase()]).then(({ results }) => {
+  return db.query("SELECT * FROM move WHERE type = ? ORDER BY name ASC", [type.toLowerCase()]).then(({ results }) => {
     if (results) {
       return results.map(data => new Move(data));
     } else {
@@ -51,7 +51,7 @@ function getMoveByType(type) {
 
 function getMoveByCategory(category) {
   const cat = category.toLowerCase();
-  return db.query("SELECT * FROM move WHERE category = ?", [cat]).then(({ results }) => {
+  return db.query("SELECT * FROM move WHERE category = ? ORDER BY name ASC", [cat]).then(({ results }) => {
     if (results) {
       return results.map(data => new Move(data));
     } else {
