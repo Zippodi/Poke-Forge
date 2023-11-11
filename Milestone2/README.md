@@ -25,10 +25,13 @@ There are two POST endpoints for authentication. Register creates a user based o
 
 Method | Route                 | Description
 ------ | --------------------- | ---------
-`POST` | `/login`              | Receives an email and password
-`POST` | `/register`           | Creates a new user account and returns the new user object
-`GET`  | `/users`              | Retrieves an array of all active users in the system
-`GET`  | `/users/:userId`      | Retrieves a user by its Id
+`POST` | `/api/auth/login`              | Receives a username and password and creates a token if the user exists
+`POST` | `/api/auth/register`           | Creates a new user account and creates a token if the provided username and password are valid
+`POST`  | `/api/teams/create`              | Creates a pokemon team with the logged in user's id
+`GET`  | `/api/abilities`      | Retrieves all abilities
+`GET`  | `/api/items`      | Retrieves all items
+`GET`  | `/api/moves`      | Retrieves all moves
+`GET`  | `/api/pokemon`      | Retrieves all pokemon
 
 #### Teams:
 Team data will be sent and received using JSON similar to below which is not finalized. The JSON is valid if:
