@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 // const a = require('../auth-endpoints/auth-middleware');
+const {TokenMiddleware, generateToken, removeToken} = require('../auth-endpoints/auth-middleware');
+
 // router.use(a.auth);
 
 const TeamDAO = require('../data/dao/TeamDAO');
 const Team = require('../data/models/Team');
 
-//placeholder for current user making request
-const tempUserID = 1;
 
 //create a new team, returns id of created team
-router.post('/create', (req, res) => {
+router.post('/create', TokenMiddleware, (req, res) => {
   if (req.body) {
-    TeamDAO.createTeam(req.body, tempUserID).then(data => {
+    TeamDAO.createTeam(req.body, req.user.id).then(data => {
       return res.status(200).json({ id: data });
     }).catch(err => {
       handleError(err, res);
@@ -39,14 +39,14 @@ router.post('/create', (req, res) => {
  *  - ?own=true
  * By default these teams will be excluded
  */
-router.get('/', (req, res) => {
+router.get('/', TokenMiddleware, (req, res) => {
   let pokemon = req.query.p;
   if (pokemon && !Array.isArray(pokemon)) {
     pokemon = [pokemon];
   }
   let name = req.query.name ? decodeURIComponent(req.query.name) : false;
   let includeOwn = req.query.own == 'true';
-  TeamDAO.getAllTeams(tempUserID, includeOwn, name, pokemon ? pokemon : false).then(teams => {
+  TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
     return res.status(200).json(teams);
   }).catch(err => {
     handleError(err, res);
@@ -54,13 +54,13 @@ router.get('/', (req, res) => {
 });
 
 //edit specific existing team
-router.put('/id/:teamid', (req, res) => {
+router.put('/id/:teamid', TokenMiddleware,(req, res) => {
   res.status(503).json({ error: "not yet implemented" });
 });
 
 //get team via the teamid
 //query ?detailed=true gets type defenses and move effectiveness information for each pokemon in team
-router.get('/id/:teamid', (req, res) => {
+router.get('/id/:teamid', TokenMiddleware, (req, res) => {
   TeamDAO.getTeamById(req.params.teamid, 1).then(team => {
     if (req.query.detailed == 'true') {
       return res.status(200).json(team.toDetailedJSON());
@@ -73,13 +73,13 @@ router.get('/id/:teamid', (req, res) => {
 });
 
 //delete team 
-router.delete('/id/:teamid', (req, res) => {
+router.delete('/id/:teamid', TokenMiddleware, (req, res) => {
   res.status(503).json({ error: "not yet implemented" });
 });
 
 //get all public teams for a specific user
-router.get('/user/:userid', (req, res) => {
-  TeamDAO.getUserTeams(req.params.userid, tempUserID).then(teams => {
+router.get('/user/:userid', TokenMiddleware, (req, res) => {
+  TeamDAO.getUserTeams(req.params.userid, req.user.id).then(teams => {
     res.status(200).json(teams);
   }).catch(err => {
     handleError(err, res);
@@ -87,8 +87,8 @@ router.get('/user/:userid', (req, res) => {
 });
 
 //get all teams (public and private) for the logged in user
-router.get('/myteams', (req, res) => {
-  TeamDAO.getUserTeams(tempUserID, tempUserID).then(teams => {
+router.get('/myteams', TokenMiddleware, (req, res) => {
+  TeamDAO.getUserTeams(req.user.id, req.user.id).then(teams => {
     res.status(200).json(teams);
   }).catch(err => {
     handleError(err, res);

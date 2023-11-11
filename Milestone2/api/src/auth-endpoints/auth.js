@@ -56,4 +56,9 @@ router.post('/logout', (req,  res) => {
   res.json({success: true});
 });
 
+
+router.get('/currentuser', TokenMiddleware, (req,  res) => {
+  res.json(req.user);
+});
+
 module.exports = router;
