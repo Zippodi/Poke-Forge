@@ -2,34 +2,33 @@
 ## Group J: Milestone 2
 
 ### What is Done
-All the html pages have been created (not completely finished, but created). Most of the styling is finished for most pages. 
-All of the pages except for view/edit teams and view other teams are finished/mostly finished on the frontend. All API endpoints have been created and all non-authentication based endpoints are completed, some with mock data. Also endpoints that would edit the mock data (POST, PUT, DELETE) do not actually change anything. All Dockerfiles and related files have been created and finished. All of the JSON data we need has been added. Going from page to page has been implemented
-using scripting, instead of <a> tags like before. The logo has also been made and the source of which is linked at the bottom of the page.
-All pages made (not the ones listed earlier) are responsive and mobile-first, using Bootstrap to do this. 
+As before, all HTML pages are created, not complete yet. Namely view/other and viiew/edit pages have not been touched as of yet, because it would not be worth working on until createTeam was finished. Speaking of which, createTeam is completely finished, so is the home page, login page, register page, and two new pages, Pokemon.html and viewPokemon.html. The login and register pages are completely done, so the user can login, logout, and create an account, as well as tokens being created or deleted for this. Each method that requires the user to be logged in requires the authetication middleware (which is also finished) to be completed. The two new pages, are for looking at all of the pokemon in the database, and then clicking on these pokemon allows the user to see more details about the pokemon. All of the pokemon and team endpoints are finished as well. 
 ### What is not Done
-The view/edit teams and view other teams pages are not finished. Login functionality isn't complete as not every page checks
-if you are logged in as of yet. The login and register pages as of now also just take you to the home page regardless if 
-you filled in anything or not, but this of course will be implemented later, in the 2nd milestone.
-Wanted to add the sprites being displayed when a user chooses a pokemon to add to their team. Some pages feel a little empty,
-so they will be filled in with either more content or the content will be made larger. Some pages might also have their style touched up a bit more but the core of what they will look like is completed.
+The view/edit teams and view other teams pages are not finished.
+Still want to add the sprites being displayed when a user chooses a pokemon to add to their team.  Some pages might also have their style touched up a bit more but the core of what they will look like is completed. The view/edit and view other team pages would have been at least nearly finished if not for running into issues with docker and dependencies. These have been fixed but now we will have to implement these next iteration. There will also be pages for items, moves and abilities, that will be added very soon.
 ### Implementation Status of Pages
 | Pages       | Status      | Wireframe|
 | ----------- | ----------- |----------|
-| Home      | 90%      | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)         |
-| Create Team  | 70%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)         |
+| Home      | 100%      | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)         |
+| Create Team  | 100%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)         |
 | ViewOtherTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/ViewOthersTeamsWireframe.png)|
 | ViewEditTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/vieweditwireframe.png)|
-| Login   | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
-| Register  | 90%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
+| Login   | 100%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
+| Register  | 10%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
+| Pokemon  | 60%        |  (N/A) |
+| ViewPokemon  | 100%        |  (N/A) |
 ### API Endpoints
 
 All API endpoints are prepended with `/api` but it is not typed out explicitly in this document.  
 #### Authentication:
-There are two POST endpoints for authentication. The exact details of implementation are not specified yet:
-| Method | Route             | Description                                                        |
-|--------|-------------------|--------------------------------------------------------------------|
-| `POST`    | `/auth/login`           | Receives a username and password from the user and will test to see if the credentials are valid.  |
-| `POST`   | `/auth/register`   | Receives a username, password, and password confirmation from the user and will test to see if the username is unique and username/password are allowed.|
+There are two POST endpoints for authentication. Register creates a user based on the data given from the user (as long as the username doesn't already exist), and then creates a token for the user. Also hashes their password and creates a salt for them. The Login endpoint simply checks if the user with the username and hashed version of the password the user typed in exists in the database, and then if they do, creates a token for them. Each endpoint being user requires the middleware to check if the user is logged in, and uses the info from the token to do whatever the user is trying to do if they are (creating a team uses the user's id).
+
+Method | Route                 | Description
+------ | --------------------- | ---------
+`POST` | `/login`              | Receives an email and password
+`POST` | `/register`           | Creates a new user account and returns the new user object
+`GET`  | `/users`              | Retrieves an array of all active users in the system
+`GET`  | `/users/:userId`      | Retrieves a user by its Id
 
 #### Teams:
 Team data will be sent and received using JSON similar to below which is not finalized. The JSON is valid if:
