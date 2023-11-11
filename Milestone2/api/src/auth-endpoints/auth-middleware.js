@@ -10,10 +10,10 @@ exports.TokenMiddleware = (req, res, next) => {
   // 1. A cookie in case of a browser
   // 2. The Authorization header in case of a different client
   let token = null;
-  if(!req.cookies[TOKEN_COOKIE_NAME]) {
+  if (!req.cookies[TOKEN_COOKIE_NAME]) {
     //No cookie, so let's check Authorization header
     const authHeader = req.get('Authorization');
-    if(authHeader && authHeader.startsWith("Bearer ")) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
       //Format should be "Bearer token" but we only need the token
       token = authHeader.split(" ")[1];
     }
@@ -22,8 +22,8 @@ exports.TokenMiddleware = (req, res, next) => {
     token = req.cookies[TOKEN_COOKIE_NAME]; //Get session Id from cookie
   }
 
-  if(!token) { // If we don't have a token
-    res.status(401).json({error: 'Not authenticated'});
+  if (!token) { // If we don't have a token
+    res.status(401).json({ error: 'Not authenticated' });
     return;
   }
 
@@ -34,8 +34,8 @@ exports.TokenMiddleware = (req, res, next) => {
     req.user = decoded.user;
     next(); //Make sure we call the next middleware
   }
-  catch(err) { //Token is invalid
-    res.status(401).json({error: 'Not authenticated'});
+  catch (err) { //Token is invalid
+    res.status(401).json({ error: 'Not authenticated' });
     return;
   }
 

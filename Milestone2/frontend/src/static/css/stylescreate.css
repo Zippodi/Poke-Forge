@@ -1,15 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
-
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 body {
-  background-color: #CD385A;
-  color: #FFE600;
-  font-family: 'Poppins', sans-serif;
+  background-color: #cd385a;
+  color: #ffe600;
+  font-family: "Poppins", sans-serif;
   font-weight: bold;
 }
 
 #CreateANewTeam {
-    font-weight: bold;
+  font-weight: bold;
 }
