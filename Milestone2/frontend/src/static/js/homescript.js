@@ -18,4 +18,19 @@ addEventListener('DOMContentLoaded', (e) => {
     document.getElementById('viewpokedataButton').addEventListener('click', e => {
         window.location.href = '/pokemon';
     });
+    document.getElementById('logoutButton').addEventListener('click', e => {
+        fetch('/api/auth/logout', {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify()
+        }).then((res) => {
+            window.location.href = '/';
+        }).catch(err => {
+            console.error(err);
+        });
+    });
+
 });

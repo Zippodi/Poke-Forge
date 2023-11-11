@@ -49,4 +49,16 @@ router.post('/register', (req, res) => {
 
 });
 
+
+router.post('/logout', (req,  res) => {
+  removeToken(req, res);
+
+  res.json({success: true});
+});
+
+
+router.get('/currentuser', TokenMiddleware, (req,  res) => {
+  res.json(req.user);
+});
+
 module.exports = router;
