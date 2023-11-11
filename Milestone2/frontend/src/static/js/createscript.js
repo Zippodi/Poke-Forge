@@ -13,9 +13,12 @@ function addPokemonSprite(node) {
 
 http.get('/api/pokemon').then(pokemon => {
   var list = document.getElementById('pokemonlist');
+  let i = 0;
   for (let key in pokemon) {
     let option = document.createElement('option');
-    let name = key[0].toUpperCase() + key.slice(1);
+    let name = pokemon[i].name;
+    ++i;
+    // let name = key[0].toUpperCase() + key.slice(1);
     option.value = name;
     list.appendChild(option);
   }
@@ -24,10 +27,13 @@ http.get('/api/pokemon').then(pokemon => {
 
 http.get('/api/moves').then(moves => {
   var list = document.getElementById('moveslist');
+  let i = 0;
   for (let key in moves) {
     let option = document.createElement('option');
 
-    let name = key[0].toUpperCase() + key.slice(1);
+    // let name = key[0].toUpperCase() + key.slice(1);
+    let name = moves[i].name;
+    ++i;
     option.value = name;
     list.appendChild(option);
   }
@@ -36,10 +42,13 @@ http.get('/api/moves').then(moves => {
 
 http.get('/api/items').then(items => {
   var list = document.getElementById('itemslist');
+  let i = 0;
   for (let key in items) {
     let option = document.createElement('option');
 
-    let name = key[0].toUpperCase() + key.slice(1);
+    // let name = key[0].toUpperCase() + key.slice(1);
+    let name = items[i].name;
+    ++i;
     option.value = name;
     list.appendChild(option);
   }
@@ -48,9 +57,12 @@ http.get('/api/items').then(items => {
 
 http.get('/api/abilities').then(abilities => {
   var list = document.getElementById('abilitylist');
+  let i = 0;
   for (let key in abilities) {
     let option = document.createElement('option');
-    let name = key[0].toUpperCase() + key.slice(1);
+    // let name = key[0].toUpperCase() + key.slice(1);
+    let name = abilities[i].name;
+    ++i;
     option.value = name;
     list.appendChild(option);
   }
