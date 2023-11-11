@@ -48,6 +48,10 @@ Method | Route                 | Description
 `GET`  | `/api/pokemon/identifier/:defenses`      | Retrieves the pokemon's weaknesses
 `GET`  | `/api/pokemon/identifier/:moves`      | Retrieves the moves a pokemon can learn
 `GET`  | `/api/pokemon/identifier/:abilities`      | Retrieves the abilities a pokemon can learn
+`GET`  | `/api/pokemon/teams`      | Retrieves all public teams, can be filtered to give teams with specific pokemon
+`GET`  | `/api/pokemon/teams/id/:teamid`      | Retrieves team with given id
+`GET`  | `/api/pokemon/teams/myteams`      | Retrieves the teams of the logged in user, private and public
+
 
 
 #### Teams:
