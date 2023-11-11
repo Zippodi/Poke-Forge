@@ -22,6 +22,8 @@
     <header class="text-center pb-2 fs-6 container-fluid">
       <img src="../../images/Pokemon-Info-Title.png" class="img-fluid" width="500vw" />
       <nav class="d-flex justify-content-center gap-1">
+        <a class="link-info" href="../../home"> Home </a>
+        <span class="v-border mx-4"></span>
         <a class="link-info" href="../../pokemon"> Pokemon </a>
         <span class="v-border mx-4"></span>
         <a class="link-info" href="#"> Moves </a>
@@ -70,7 +72,7 @@
                     <col span="1" />
                     <col span="1" />
                   </colgroup>
-                  <thead id="abil-tbl-head">
+                  <thead class="tbl-head">
                     <th>Name</th>
                     <th>Description</th>
                     <th>Hidden Ability?</th>
@@ -94,7 +96,100 @@
             </button>
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
-            <div class="accordion-body">Defenses Body</div>
+            <div class="accordion-body">
+              <div class="d-flex flex-wrap justify-content-center align-items-center">
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/normal.png" alt="normal" />
+                  <p id="normal" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/fire.png" alt="fire" />
+                  <p id="fire" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/water.png" alt="water" />
+                  <p id="water" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/electric.png" alt="electric" />
+                  <p id="electric" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/grass.png" alt="grass" />
+                  <p id="grass" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/ice.png" alt="ice" />
+                  <p id="ice" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/fighting.png" alt="fighting" />
+                  <p id="fighting" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/poison.png" alt="poison" />
+                  <p id="poison" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/ground.png" alt="ground" />
+                  <p id="ground" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/flying.png" alt="flying" />
+                  <p id="flying" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/psychic.png" alt="psychic" />
+                  <p id="psychic" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/bug.png" alt="bug" />
+                  <p id="bug" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/rock.png" alt="rock" />
+                  <p id="rock" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/ghost.png" alt="ghost" />
+                  <p id="ghost" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/dragon.png" alt="dragon" />
+                  <p id="dragon" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/dark.png" alt="dark" />
+                  <p id="dark" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/steel.png" alt="steel" />
+                  <p id="steel" class="w-100 text-center"></p>
+                </div>
+                <div
+                  class="type-defense d-flex justify-content-center align-items-center flex-column mb-4">
+                  <img src="../../images/types/fairy.png" alt="fairy" />
+                  <p id="fairy" class="w-100 text-center"></p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="accordion-item">
@@ -113,10 +208,36 @@
             id="collapseThree"
             class="accordion-collapse collapse"
             data-bs-parent="infoAccordian">
-            <div class="accordion-body">Moves Body</div>
+            <div class="accordion-body">
+              <div class="table-responsive">
+                <table id="movesTbl" class="table table-striped">
+                  <colgroup id="moves-colgroup">
+                    <col span="1" />
+                    <col span="1" />
+                    <col span="1" />
+                  </colgroup>
+                  <thead class="tbl-head">
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Power</th>
+                    <th>Accuracy</th>
+                  </thead>
+                  <tbody id="movesTbody"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <footer class="container">
+      <div class="links mt-4">
+        <h2 class="mt-4 py-4 text-center">Links</h2>
+        <h3 class="mt-4 py-4 text-center">
+          <a href="https://www.textstudio.com/">Pokemon text effect</a>
+        </h3>
+      </div>
+    </footer>
   </body>
 </html>

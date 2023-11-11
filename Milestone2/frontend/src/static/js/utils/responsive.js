@@ -2,7 +2,11 @@ export var small = false;
 
 export const toggleSmall = (pageString) => {
   const pageArr = pageString.split('/');
-
+  let borders = document.getElementsByClassName('v-border');
+  for (let b of borders) {
+    b.classList.toggle('mx-4');
+    b.classList.toggle('mx-2');
+  }
   if (pageArr[pageArr.length - 1] == 'pokemon') {  //all pokemon viewpage
     let searchContainer = document.getElementById('searchContainer');
     let entryList = document.getElementsByClassName('poke-entry');

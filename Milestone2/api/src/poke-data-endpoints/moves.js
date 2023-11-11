@@ -13,6 +13,17 @@ Notes about move data:
 //get all moves
 router.get('/', (req, res) => {
   MoveDAO.getAllMoves().then(moves => {
+    for (let m of moves) {
+      if (m.accuracy < 1) {
+        m.accuracy = '---';
+      }
+      if (m.power == 0) {
+        m.power = '---';
+      }
+      if (m.power == 1) {
+        m.power = '???';
+      }
+    }
     res.status(200).json(moves);
   }).catch(err => {
     res.status(500).json({ error: err });
@@ -23,6 +34,15 @@ router.get('/', (req, res) => {
 router.get("/:name", (req, res) => {
   MoveDAO.getMoveByName(req.params.name).then(move => {
     if (move) {
+      if (move.accuracy < 1) {
+        move.accuracy = '---';
+      }
+      if (move.power == 0) {
+        move.power = '---';
+      }
+      if (move.power == 1) {
+        move.power = '???';
+      }
       res.status(200).json(move);
     } else {
       res.status(404).json({ error: "Move not found" });
@@ -36,6 +56,15 @@ router.get("/:name", (req, res) => {
 router.get("/id/:id", (req, res) => {
   MoveDAO.getMoveById(req.params.id).then(move => {
     if (move) {
+      if (move.accuracy < 1) {
+        move.accuracy = '---';
+      }
+      if (move.power == 0) {
+        move.power = '---';
+      }
+      if (move.power == 1) {
+        move.power = '???';
+      }
       res.status(200).json(move);
     } else {
       res.status(404).json({ error: "Move not found" });
@@ -48,6 +77,17 @@ router.get("/id/:id", (req, res) => {
 router.get("/type/:type", (req, res) => {
   MoveDAO.getMoveByType(req.params.type).then(moves => {
     if (moves) {
+      for (let m of moves) {
+        if (m.accuracy < 1) {
+          m.accuracy = '---';
+        }
+        if (m.power == 0) {
+          m.power = '---';
+        }
+        if (m.power == 1) {
+          m.power = '???';
+        }
+      }
       res.status(200).json(moves);
     } else {
       res.status(404).json({ error: "Move with that type not found" });
@@ -60,6 +100,17 @@ router.get("/type/:type", (req, res) => {
 router.get("/category/:category", (req, res) => {
   MoveDAO.getMoveByCategory(req.params.category).then(moves => {
     if (moves) {
+      for (let m of moves) {
+        if (m.accuracy < 1) {
+          m.accuracy = '---';
+        }
+        if (m.power == 0) {
+          m.power = '---';
+        }
+        if (m.power == 1) {
+          m.power = '???';
+        }
+      }
       res.status(200).json(moves);
     } else {
       res.status(404).json({ error: "Move with that category not found" });

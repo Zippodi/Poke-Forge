@@ -4,6 +4,15 @@ import { small, toggleSmall } from '../utils/responsive.js';
 
 const SMALL_SIZE = 600;
 
+const effectMap = {
+  0: 'no-effect',
+  0.25: 'quarter-effect',
+  0.5: 'half-effect',
+  1: 'normal-effect',
+  2: 'double-effect',
+  4: 'quadruple-effect'
+};
+
 addEventListener('DOMContentLoaded', e => {
   const arr = window.location.href.toString().split('/');
   http.get(`/api/pokemon/${arr[arr.length - 1]}`).then(async (pokemon) => {
@@ -40,10 +49,11 @@ addEventListener('DOMContentLoaded', e => {
     const defensesP = http.get(`/api/pokemon/${pokemonId}/defenses`);
     Promise.all([abilitiesP, movesP, defensesP]).then((values) => {
       let abilTbl = document.getElementById("abilitiesTbody");
+      let movesTbl = document.getElementById("movesTbody");
       const abilities = values[0];
       const moves = values[1];
       const defenses = values[2];
-      //console.log(abilities, moves, defenses);
+      //abilities
       abilities.forEach(a => {
         let tr = document.createElement('tr');
         let nametd = document.createElement('td');
@@ -52,10 +62,49 @@ addEventListener('DOMContentLoaded', e => {
         nametd.innerHTML = a.name;
         desctd.innerHTML = a.description;
         hiddentd.innerHTML = a.is_hidden;
+        if (a.is_hidden) {
+          tr.classList.add('highlight-row');
+        }
         tr.appendChild(nametd);
         tr.appendChild(desctd);
         tr.appendChild(hiddentd);
         abilTbl.appendChild(tr);
+      });
+      //defenses
+      Object.entries(defenses).forEach(([type, effect]) => {
+        let text = document.getElementById(type);
+        text.classList.add(effectMap[effect]);
+        text.innerText = effect;
+      });
+      //moves
+      moves.forEach(m => {
+        let tr = document.createElement('tr');
+        let nametd = document.createElement('td');
+        let typetd = document.createElement('td');
+        let cattd = document.createElement('td');
+        let powertd = document.createElement('td');
+        let acctd = document.createElement('td');
+        nametd.innerHTML = m.name;
+        powertd.innerHTML = m.power;
+        acctd.innerHTML = m.accuracy;
+        //create images
+        let typeimg = document.createElement('img');
+        typeimg.src = `../../images/types/${m.type}.png`;
+        typeimg.alt = m.type;
+        typeimg.classList.add('tbl-icon');
+        typetd.appendChild(typeimg);
+        let catimg = document.createElement('img');
+        catimg.src = `../../images/category/${m.category}.png`;
+        catimg.alt = m.category;
+        catimg.classList.add('tbl-icon');
+        cattd.appendChild(catimg);
+        //append
+        tr.appendChild(nametd);
+        tr.appendChild(typetd);
+        tr.appendChild(cattd);
+        tr.appendChild(powertd);
+        tr.appendChild(acctd);
+        movesTbl.appendChild(tr);
       });
     }).catch(err => {
       document.getElementById('error').innerHTML = "An error occured loading data for this Pokemon";
@@ -64,7 +113,6 @@ addEventListener('DOMContentLoaded', e => {
   }).catch(err => {
     document.getElementById('error').classList.remove('d-none');
   });
-
 });
 
 function makeChart(stats) {

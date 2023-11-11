@@ -84,6 +84,17 @@ router.get('/:identifier/moves', (req, res) => {
   const identifier = req.params.identifier.toLowerCase();
   PokemonDAO.getPokemonMoves(identifier, isNaN(identifier)).then(data => {
     if (data) {
+      for (let d of data) {
+        if (d.accuracy < 1) {
+          d.accuracy = '---';
+        }
+        if (d.power == 0) {
+          d.power = '---';
+        }
+        if (d.power == 1) {
+          d.power = '???';
+        }
+      }
       return res.status(200).json(data);
     } else {
       return res.status(400).json({ error: "Could not get move data for this Pokemon" });
