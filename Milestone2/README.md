@@ -1,5 +1,5 @@
 # Poke-Forge
-## Group J: Milestone 1
+## Group J: Milestone 2
 
 ### What is Done
 All the html pages have been created (not completely finished, but created). Most of the styling is finished for most pages. 
