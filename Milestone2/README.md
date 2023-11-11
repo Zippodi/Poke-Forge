@@ -27,11 +27,28 @@ Method | Route                 | Description
 ------ | --------------------- | ---------
 `POST` | `/api/auth/login`              | Receives a username and password and creates a token if the user exists
 `POST` | `/api/auth/register`           | Creates a new user account and creates a token if the provided username and password are valid
+`POST` | `/api/auth/logout`              | Deletes the token cookie and sends the user back to the login page
 `POST`  | `/api/teams/create`              | Creates a pokemon team with the logged in user's id
+`GET` | `/api/auth/currentuser`              | Gets the user's info that is logged in
 `GET`  | `/api/abilities`      | Retrieves all abilities
+`GET`  | `/api/abilities/:name`      | Retrieves the abilitiy with the given name
+`GET`  | `/api/abilities/id/:id`      | Retrieves the abilitiy with the given id
 `GET`  | `/api/items`      | Retrieves all items
+`GET`  | `/api/items/:name`      | Retrieves the item with the given name
+`GET`  | `/api/items/id/:id`      | Retrieves the item with the given id
 `GET`  | `/api/moves`      | Retrieves all moves
+`GET`  | `/api/moves/:name`      | Retrieves the move with the given name
+`GET`  | `/api/moves/id/:id`      | Retrieves the move with the given id
+`GET`  | `/api/moves/type/:type`      | Retrieves the move of the given type
+`GET`  | `/api/moves/category/:category`      | Retrieves the move in the given category
 `GET`  | `/api/pokemon`      | Retrieves all pokemon
+`GET`  | `/api/pokemon/:name`      | Retrieves the pokemon with the given name
+`GET`  | `/api/pokemon/id/:id`      | Retrieves the pokemon with the given id
+`GET`  | `/api/pokemon/type/:type`      | Retrieves the pokemon with the given type
+`GET`  | `/api/pokemon/identifier/:defenses`      | Retrieves the pokemon's weaknesses
+`GET`  | `/api/pokemon/identifier/:moves`      | Retrieves the moves a pokemon can learn
+`GET`  | `/api/pokemon/identifier/:abilities`      | Retrieves the abilities a pokemon can learn
+
 
 #### Teams:
 Team data will be sent and received using JSON similar to below which is not finalized. The JSON is valid if:
