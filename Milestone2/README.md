@@ -58,5 +58,6 @@ Method | Route                 | Description
 
 
 ### Contributions
-- Matthew: API Sketch, JSON Data, API portion of milestone report
-- Casey: Frontend First Pass, Rest of milestone report
+- Matthew: Teams, Pokemon, Moves, Abilities, and items api endpoints. Pokemon and PokemonView pages
+- Casey: Updated feedback from previous milestone. Login and register functionality. Minor bug fixes
+- Dean: Scripting of Create Team page
