@@ -1,6 +1,6 @@
 export var small = false;
 
-export const toggleSmall = (pageString) => {
+export const pokeDataToggleSmall = (pageString) => {
   const pageArr = pageString.split('/');
   let borders = document.getElementsByClassName('v-border');
   for (let b of borders) {
@@ -29,4 +29,15 @@ export const toggleSmall = (pageString) => {
     accordionWrap.classList.toggle('col-8');
   }
   small = !small;
-} 
+}
+
+export const createToggleSmall = () => {
+  let wrapper = document.getElementById('wrapper');
+  let names_divs = document.getElementsByClassName('poke-name');
+  wrapper.classList.toggle('w-75');
+  for (let name of names_divs) {
+    name.classList.toggle('flex-column');
+    name.classList.toggle('align-items-center');
+  }
+  small = !small;
+}

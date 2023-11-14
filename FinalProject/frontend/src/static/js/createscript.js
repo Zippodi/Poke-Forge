@@ -1,4 +1,6 @@
 import http from './utils/HTTPClient.js';
+import { createToggleSmall, small } from './utils/responsive.js';
+const SMALL_SIZE = 650;
 
 function insertAfter(referenceNode, newNode) {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -12,65 +14,56 @@ function addPokemonSprite(node) {
 }
 
 http.get('/api/pokemon').then(pokemon => {
-  var list = document.getElementById('pokemonlist');
-  let i = 0;
-  for (let key in pokemon) {
+  let list = document.getElementById('pokelist');
+  pokemon.forEach(p => {
     let option = document.createElement('option');
-    let name = pokemon[i].name;
-    ++i;
-    // let name = key[0].toUpperCase() + key.slice(1);
-    option.value = name;
+    option.value = p.name
     list.appendChild(option);
-  }
-
+  });
 });
 
 http.get('/api/moves').then(moves => {
-  var list = document.getElementById('moveslist');
-  let i = 0;
-  for (let key in moves) {
+  let list = document.getElementById('movelist');
+  moves.forEach(m => {
     let option = document.createElement('option');
-
-    // let name = key[0].toUpperCase() + key.slice(1);
-    let name = moves[i].name;
-    ++i;
-    option.value = name;
+    option.value = m.name
     list.appendChild(option);
-  }
-
+  });
 });
 
 http.get('/api/items').then(items => {
-  var list = document.getElementById('itemslist');
-  let i = 0;
-  for (let key in items) {
+  let list = document.getElementById('itemlist');
+  items.forEach(i => {
     let option = document.createElement('option');
-
-    // let name = key[0].toUpperCase() + key.slice(1);
-    let name = items[i].name;
-    ++i;
-    option.value = name;
+    option.value = i.name
     list.appendChild(option);
-  }
-
+  });
 });
 
 http.get('/api/abilities').then(abilities => {
-  var list = document.getElementById('abilitylist');
-  let i = 0;
-  for (let key in abilities) {
+  let list = document.getElementById('abilitylist');
+  abilities.forEach(a => {
     let option = document.createElement('option');
-    // let name = key[0].toUpperCase() + key.slice(1);
-    let name = abilities[i].name;
-    ++i;
-    option.value = name;
+    option.value = a.name
     list.appendChild(option);
-  }
+  });
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  const submitBtn = document.getElementById('SaveTeam');
+  if (window.innerWidth < SMALL_SIZE) {
+    createToggleSmall();
+  }
+  window.addEventListener('resize', e => {
+    if (window.innerWidth < SMALL_SIZE && !small) {
+      createToggleSmall();
+    } else if (window.innerWidth > SMALL_SIZE && small) {
+      createToggleSmall();
+    }
+  });
 
+
+
+  const submitBtn = document.getElementById('SaveTeam');
   submitBtn.addEventListener('click', function (e) {
     // Collecting data for each team slot
     const teamData = [];

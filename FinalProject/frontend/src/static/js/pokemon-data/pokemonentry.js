@@ -1,5 +1,5 @@
 import http from '../utils/HTTPClient.js';
-import { small, toggleSmall } from '../utils/poke-data-responsive.js';
+import { pokeDataToggleSmall, small } from '../utils/responsive.js';
 
 const SMALL_SIZE = 600;
 
@@ -17,14 +17,14 @@ addEventListener('DOMContentLoaded', e => {
   http.get(`/api/pokemon/${arr[arr.length - 1]}`).then(async (pokemon) => {
     const stats = [pokemon.hp, pokemon.attack, pokemon.defense, pokemon.sp_attack, pokemon.sp_defense, pokemon.speed];
     if (window.innerWidth < SMALL_SIZE) {
-      toggleSmall(window.location.href.toString());
+      pokeDataToggleSmall(window.location.href.toString());
     }
     window.addEventListener('resize', e => {
       if (window.innerWidth < SMALL_SIZE && !small) {
-        toggleSmall(window.location.href.toString());
+        pokeDataToggleSmall(window.location.href.toString());
         createLabels(stats);
       } else if (window.innerWidth > SMALL_SIZE && small) {
-        toggleSmall(window.location.href.toString());
+        pokeDataToggleSmall(window.location.href.toString());
         createLabels(stats);
       }
     });
