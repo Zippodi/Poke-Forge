@@ -35,5 +35,9 @@ app.get('/pokemon/info/:name', (req, res) => {
   res.sendFile(getFile('pokemon-data/pokemonview.html'));
 });
 
+app.get('/viewotherteams', (req, res) => {
+  res.sendFile(getFile('viewotherteams.html'));
+});
+
 // As our server to listen for incoming connections
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

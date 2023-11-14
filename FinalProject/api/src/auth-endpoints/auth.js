@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const UserDAO = require('../data/dao/UserDAO');
 const { TokenMiddleware, generateToken, removeToken } = require('../auth-endpoints/auth-middleware');
 router.use(cookieParser());
+router.use(express.json());
+
+
 
 router.post('/login', (req, res) => {
   //console.log("body of login request: ", req.body);

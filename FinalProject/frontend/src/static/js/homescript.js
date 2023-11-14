@@ -18,6 +18,10 @@ addEventListener('DOMContentLoaded', (e) => {
     document.getElementById('viewpokedataButton').addEventListener('click', e => {
         window.location.href = '/pokemon';
     });
+    document.getElementById('viewOtherButton').addEventListener('click', e => {
+        window.location.href = '/viewotherteams';
+    });
+    
     document.getElementById('logoutButton').addEventListener('click', e => {
         fetch('/api/auth/logout', {
             method: "POST",
@@ -32,5 +36,8 @@ addEventListener('DOMContentLoaded', (e) => {
             console.error(err);
         });
     });
+
+
+
 
 });
