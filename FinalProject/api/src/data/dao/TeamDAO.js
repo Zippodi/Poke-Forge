@@ -98,6 +98,7 @@ function getUserTeams(requesterId, userId) {
 function getAllTeams(currentUserID, includeCurrentUser = false, nameIncludes = false, pokemonIncluded = false) {
   return new Promise((resolve, reject) => {
     let connection = db.getDatabaseConnection();
+
     connection.getConnection(async (err, conn) => {
       try {
         //get pokemonIDs if necessary
@@ -287,6 +288,7 @@ function createTeam(team, userId) {
     if (!validateTeamBody(team)) {
       reject(constructError(400, 'Invalid team body'));
     }
+    
     let connection = db.getDatabaseConnection();
     connection.getConnection((err, conn) => {
       conn.beginTransaction(async (err) => {

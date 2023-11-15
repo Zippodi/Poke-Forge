@@ -7,10 +7,22 @@ const TeamDAO = require('../data/dao/TeamDAO');
 router.use(cookieParser());
 
 //create a new team, returns id of created team
-router.post('/create', TokenMiddleware, (req, res) => {
-  console.log(req.user);
+// router.post('/create', TokenMiddleware, (req, res) => {
+//   console.log(req.user);
+//   if (req.body) {
+//     TeamDAO.createTeam(req.body, req.user.id).then(data => {
+//       return res.status(200).json({ id: data });
+//     }).catch(err => {
+//       handleError(err, res);
+//     });
+//   } else {
+//     return res.status(400).json({ error: "invalid request" });
+//   }
+// });
+
+router.post('/create', (req, res) => {
   if (req.body) {
-    TeamDAO.createTeam(req.body, req.user.id).then(data => {
+    TeamDAO.createTeam(req.body, 2).then(data => {
       return res.status(200).json({ id: data });
     }).catch(err => {
       handleError(err, res);
@@ -44,9 +56,11 @@ router.get('/', TokenMiddleware, (req, res) => {
   }
   let name = req.query.name ? decodeURIComponent(req.query.name) : false;
   let includeOwn = req.query.own == 'true';
-  TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
+  // TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
+    TeamDAO.getAllTeams(1, includeOwn, name, pokemon ? pokemon : false).then(teams => {
     return res.status(200).json(teams);
   }).catch(err => {
+    console.log(err);
     handleError(err, res);
   });
 });
