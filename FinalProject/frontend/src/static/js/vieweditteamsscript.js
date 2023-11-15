@@ -1,9 +1,8 @@
-
 import http from './utils/HTTPClient.js';
 const teamList = document.querySelector('#teamsList');
 
 
-http.get('api/teams/').then(teams => { 
+http.get('api/teams/myteams').then(teams => { 
     for (let i = 0; i < teams.length; ++i) {
         const team = document.createElement('div');
         team.className = "container";
@@ -11,7 +10,6 @@ http.get('api/teams/').then(teams => {
         name.innerHTML = teams[i].name;
         team.appendChild(name);
 
-        // for (p in teams[i].pok)
         
         for (let a = 0; a < teams[i].pokemon.length; ++a) {
             const pokemon = document.createElement('div');
@@ -48,7 +46,3 @@ http.get('api/teams/').then(teams => {
 
  });
 
-
-
-
- 
