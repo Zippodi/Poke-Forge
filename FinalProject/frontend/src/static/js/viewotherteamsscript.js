@@ -21,14 +21,29 @@ http.get('api/teams/').then(teams => {
             pokemonName.innerHTML = teams[i].pokemon[a].name;
             pokemon.appendChild(pokemonName);
 
-            const sprite = document.createElement('span')
-            let starterSpriteString =  "pokesprite pokemon ";
+
+
+            let img = document.createElement('img');
+           
+            img.classList.add('mx-4', 'mb-1', 'entry-img');
+            // let id = parseInt(teams[i].pokemon[a].id);
+            // let num = id < 10 ? `00${id}` : id < 100 ? `0${id}` : id;
+            // console.log(num);
+            // console.log(teams[i].pokemon[a].id);
+            img.src = `images/pokemon/001.png`;
+            // img.src = `images/pokemon/001.png`;
+            img.alt = teams[i].pokemon[a].name;
+            // // const sprite = document.createElement('span')
+            // // let starterSpriteString =  "pokesprite pokemon ";
             
-            sprite.className = starterSpriteString.concat(teams[i].pokemon[a].name.toLowerCase());
-            console.log(sprite.className);
+            // // sprite.className = starterSpriteString.concat(teams[i].pokemon[a].name.toLowerCase());
+            // // console.log(sprite.className);
+            let ability = document.createElement('h4');
+            ability.innerHTML =  teams[i].pokemon[a].ability;
 
-
-            pokemon.appendChild(sprite);
+            // // pokemon.appendChild(sprite);
+            pokemon.appendChild(img);
+            pokemon.appendChild(ability);
             team.appendChild(pokemon);
             
         }
