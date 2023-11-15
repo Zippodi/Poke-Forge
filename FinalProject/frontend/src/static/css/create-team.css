@@ -27,3 +27,7 @@
 .accordion {
   --bs-accordion-color: rgb(255, 230, 0);
 }
+
+.form-floating {
+  color: black;
+}

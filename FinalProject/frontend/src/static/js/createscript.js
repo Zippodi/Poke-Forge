@@ -4,12 +4,31 @@ import { createToggleSmall, small } from './utils/responsive.js';
 const SMALL_SIZE = 650;
 
 let setPokemon = [];
-let validMoves = [[], [], [], [], [], []];
-let validAbilities = [[], [], [], [], [], []];
+let allMoves = [];
+let allAbilities = [];
+
 
 const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
 function loadData() {
+  http.get('/api/moves').then(moves => {
+    allMoves = moves.map(m => {
+      let option = document.createElement('option');
+      option.value = m.name;
+      allMoves.push(option);
+    });
+  }).catch(err => {
+    console.error('Could not load move data');
+  });
+  http.get('/api/abilities').then(abils => {
+    allAbilities = abils.map(a => {
+      let option = document.createElement('option');
+      option.value = a.name;
+      allAbilities.push(option);
+    });
+  }).catch(err => {
+    console.error('Could not load move data');
+  });
   return new Promise(async (resolve, reject) => {
     let pokemon = await http.get('/api/pokemon').catch(err => {
       console.error("Could not load Pokemon data");
@@ -56,6 +75,7 @@ function updatePokemonEntry(idx, name = null) {
   if (!name) {
     sprite.classList.add('d-none');
     btn.innerHTML = `Team Slot ${idx + 1}:`;
+    updateLists(idx);
   } else {
     btn.innerHTML = `Team Slot ${idx + 1}: ${name}`;
     let newname = getSpriteName(name);
@@ -66,6 +86,48 @@ function updatePokemonEntry(idx, name = null) {
     if (shiny) {
       sprite.classList.add('shiny');
     }
+    updateLists(idx, name.toLowerCase().replaceAll(' ', ''));
+  }
+}
+
+/**
+ * Update datalist for moves and abilities given index in team of pokemon and the name. 
+ * No/null name means load all moves/abilities
+ * idx not in range of 0-5 (inclusive) - perform action for all indexes
+ */
+function updateLists(idx, name = null) {
+  if (idx < 0 || idx > 5) {
+    for (let i = 0; i < 6; i++) {
+      updateLists(i, name);
+    }
+    return;
+  }
+  let moveList = document.getElementById(`movelist-${idx}`);
+  let abilityList = document.getElementById(`abilitylist-${idx}`);
+  if (!name) {
+    moveList.replaceChildren(allMoves);
+    abilityList.replaceChildren(allAbilities);
+  } else {
+    moveList.replaceChildren();
+    abilityList.replaceChildren();
+    http.get(`/api/pokemon/${name}/moves`).then(moves => {
+      moves.forEach(m => {
+        let option = document.createElement('option');
+        option.value = m.name;
+        moveList.appendChild(option);
+      });
+    }).catch(err => {
+      console.error(`Error loading move data for ${name}`);
+    });
+    http.get(`/api/pokemon/${name}/abilities`).then(abilities => {
+      abilities.forEach(a => {
+        let option = document.createElement('option');
+        option.value = a.name;
+        abilityList.appendChild(option);
+      });
+    }).catch(err => {
+      console.error(`Error loading ability data for ${name}`);
+    });
   }
 }
 
@@ -83,6 +145,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   loadData().then(pokemon => {
     const pokemonNames = pokemon ? pokemon.map(p => p.name) : false;
     let nameInputs = document.getElementsByClassName('poke-name-input');
+    updateLists(-1);
     //console.log('pokemonNames?', pokemonNames);
     if (pokemonNames) {
       for (let i = 0; i < nameInputs.length; i++) {
@@ -110,6 +173,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   }).catch(err => {
     console.info('Could not load Pokemon data, some features may be unavailable');
+    console.log(err);
   });
 });
 
