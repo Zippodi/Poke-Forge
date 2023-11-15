@@ -70,6 +70,7 @@ function getUserTeams(requesterId, userId) {
               reject(constructError(500, `Error fetching team data - Error getting types of moves pokemon "${e.pokemon_name}" knows`));
             }
             pokemonDataArr.push({
+              pokemon_id: e.pokemon_id,
               name: e.pokemon_name,
               type1: typeResults[0].type1,
               type2: typeResults[0].type2,
@@ -190,6 +191,7 @@ function getAllTeams(currentUserID, includeCurrentUser = false, nameIncludes = f
               reject(constructError(500, `Error fetching team data - Error getting types of moves pokemon "${e.pokemon_name}" knows`));
             }
             pokemonDataArr.push({
+              pokemon_id: e.pokemon_id,
               name: e.pokemon_name,
               type1: typeResults[0].type1,
               type2: typeResults[0].type2,
@@ -264,6 +266,7 @@ function getTeamById(teamId, userId) {
             reject(constructError(500, `Error fetching team data - Error getting types of moves pokemon "${e.pokemon_name}" knows`));
           }
           pokemonDataArr.push({
+            pokemon_id: e.pokemon_id,
             name: e.pokemon_name,
             type1: typeResults[0].type1,
             type2: typeResults[0].type2,
