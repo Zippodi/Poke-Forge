@@ -45,6 +45,7 @@ class Team {
 }
 
 class PokemonEntry {
+  pokemon_id = null;
   name = null;
   type1 = null;
   type2 = null;
@@ -54,6 +55,7 @@ class PokemonEntry {
   moveTypes = null;
 
   constructor(data, moves, moveTypes) {
+    this.pokemon_id = data.pokemon_id;
     this.name = data.name;
     this.item = data.item;
     this.type1 = data.type1;
@@ -73,6 +75,7 @@ class PokemonEntry {
 
   ToJSON() {
     return {
+      pokemon_id: this.pokemon_id,
       name: this.name,
       type1: this.type1,
       type2: this.type2,
@@ -83,6 +86,7 @@ class PokemonEntry {
 
   toDetailedJSON() {
     return {
+      pokemon_id: this.pokemon_id,
       name: this.name,
       type1: this.type1,
       type2: this.type2,

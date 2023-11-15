@@ -1,5 +1,5 @@
 import http from '../utils/HTTPClient.js';
-import { small, toggleSmall } from '../utils/poke-data-responsive.js';
+import { pokeDataToggleSmall, small } from '../utils/responsive.js';
 const SMALL_SIZE = 600;
 
 addEventListener('DOMContentLoaded', e => {
@@ -34,13 +34,13 @@ addEventListener('DOMContentLoaded', e => {
       main.appendChild(a);
     });
     if (window.innerWidth < SMALL_SIZE) {
-      toggleSmall(window.location.href.toString());
+      pokeDataToggleSmall(window.location.href.toString());
     }
     window.addEventListener('resize', e => {
       if (window.innerWidth < SMALL_SIZE && !small) {
-        toggleSmall(window.location.href.toString());
+        pokeDataToggleSmall(window.location.href.toString());
       } else if (window.innerWidth > SMALL_SIZE && small) {
-        toggleSmall(window.location.href.toString());
+        pokeDataToggleSmall(window.location.href.toString());
       }
     });
     const entries = document.querySelectorAll('.poke-entry');

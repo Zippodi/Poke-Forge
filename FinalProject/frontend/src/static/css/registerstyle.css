@@ -1,11 +1,8 @@
-body {
-  background-color: #cd385a;
-  color: #ffe600;
-}
 a {
   text-decoration: none;
   color: #ffe600;
 }
+
 .square-box {
   height: 100vh;
   width: 100vw;
