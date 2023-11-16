@@ -67,8 +67,13 @@ function getPokemonByType(type) {
 
 function getPokemonMoves(identifier, isName) {
   return new Promise((resolve, reject) => {
-    const field = isName ? 'name' : 'id';
-    db.query(`SELECT m.* FROM pokemon AS p JOIN teachable_moves AS tm ON tm.pokemon_id = p.id JOIN move AS m ON m.id = tm.move_id WHERE p.${field} = ? ORDER BY m.name ASC`,
+    let insert = '';
+    if (isName) {
+      insert = "LOWER(REPLACE(p.name, ' ', '')) = ?";
+    } else {
+      insert = "p.id = ?"
+    }
+    db.query(`SELECT m.* FROM pokemon AS p JOIN teachable_moves AS tm ON tm.pokemon_id = p.id JOIN move AS m ON m.id = tm.move_id WHERE ${insert} ORDER BY m.name ASC`,
       [identifier]).then(({ results }) => {
         if (results && results.length > 1) {
           resolve(results.map(data => new Move(data)));
@@ -83,8 +88,13 @@ function getPokemonMoves(identifier, isName) {
 
 function getPokemonAbilities(identifier, isName) {
   return new Promise((resolve, reject) => {
-    const field = isName ? 'name' : 'id';
-    db.query(`SELECT a.*, pa.is_hidden FROM pokemon AS p JOIN pokemon_abilities AS pa ON pa.pokemon_id = p.id JOIN ability AS a ON a.id = pa.ability_id WHERE p.${field} = ?`,
+    let insert = '';
+    if (isName) {
+      insert = "LOWER(REPLACE(p.name, ' ', '')) = ?";
+    } else {
+      insert = "p.id = ?"
+    }
+    db.query(`SELECT a.*, pa.is_hidden FROM pokemon AS p JOIN pokemon_abilities AS pa ON pa.pokemon_id = p.id JOIN ability AS a ON a.id = pa.ability_id WHERE ${insert}`,
       [identifier]).then(({ results }) => {
         if (results) {
           resolve(results.map(data => ({ id: data.id, name: data.name, is_hidden: data.is_hidden == 1 ? true : false, description: data.description })));

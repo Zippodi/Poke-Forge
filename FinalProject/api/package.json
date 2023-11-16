@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "pm2 start ./src/server.js --watch --no-daemon --name pokeforge-api",
+    "start": "pm2-runtime start ./src/server.js",
     "stop": "pm2 stop pokeforge-api",
     "restart": "pm2 restart pokeforge-api",
+    "start_dev": "pm2-dev start ./src/server.js --raw",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

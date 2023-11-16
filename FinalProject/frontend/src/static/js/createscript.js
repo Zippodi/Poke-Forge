@@ -3,33 +3,32 @@ import { getSpriteName, nameVariants } from './utils/PokemonNames.js';
 import { createToggleSmall, small } from './utils/responsive.js';
 const SMALL_SIZE = 650;
 
-let setPokemon = [];
-let allMoves = [];
-let allAbilities = [];
+var setPokemon = [];
 
-
-const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'invisible', 'd-none'];
+const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
 function loadData() {
-  http.get('/api/moves').then(moves => {
-    allMoves = moves.map(m => {
-      let option = document.createElement('option');
-      option.value = m.name;
-      allMoves.push(option);
-    });
-  }).catch(err => {
-    console.error('Could not load move data');
-  });
-  http.get('/api/abilities').then(abils => {
-    allAbilities = abils.map(a => {
-      let option = document.createElement('option');
-      option.value = a.name;
-      allAbilities.push(option);
-    });
-  }).catch(err => {
-    console.error('Could not load move data');
-  });
   return new Promise(async (resolve, reject) => {
+    http.get('/api/moves').then(moves => {
+      let list = document.getElementById('all-moves-list');
+      moves.forEach(m => {
+        let option = document.createElement('option');
+        option.value = m.name;
+        list.appendChild(option);
+      });
+    }).catch(err => {
+      console.error('Could not load move data');
+    });
+    http.get('/api/abilities').then(abilities => {
+      let list = document.getElementById('all-abils-list');
+      abilities.forEach(a => {
+        let option = document.createElement('option');
+        option.value = a.name;
+        list.appendChild(option);
+      });
+    }).catch(err => {
+      console.error('Could not load ability data');
+    });
     let pokemon = await http.get('/api/pokemon').catch(err => {
       console.error("Could not load Pokemon data");
       console.error(`Error message: ${err.message}`);
@@ -61,27 +60,34 @@ function loadData() {
       console.error('Could not load item data');
     });
     resolve(pokemon);
+
   });
 }
 
 function updatePokemonEntry(idx, name = null) {
+  //console.log('NAME:', name);
   let sprite = document.getElementById(`sprite-${idx}`);
   let btn = document.getElementById(`btn-${idx}`);
+  let img = document.getElementById(`mystery-${idx}`);
   sprite.classList.forEach(c => {
     if (!spriteClassList.includes(c)) {
       sprite.classList.remove(c);
     }
   });
   if (!name) {
-    sprite.classList.add('invisible');
+    sprite.classList.add('d-none');
+    sprite.parentElement.setAttribute('href', '#');
+    img.classList.remove('d-none');
     btn.innerHTML = `Team Slot ${idx + 1}:`;
     updateLists(idx);
   } else {
     btn.innerHTML = `Team Slot ${idx + 1}: ${name}`;
     let newname = getSpriteName(name);
     //console.log(newname);
-    sprite.classList.remove('invisible');
+    sprite.classList.remove('d-none');
+    img.classList.add('d-none');
     sprite.classList.add(newname);
+    sprite.parentElement.setAttribute('href', `pokemon/`);
     const shiny = false; //TODO
     if (shiny) {
       sprite.classList.add('shiny');
@@ -96,38 +102,47 @@ function updatePokemonEntry(idx, name = null) {
  * idx not in range of 0-5 (inclusive) - perform action for all indexes
  */
 function updateLists(idx, name = null) {
+  if (idx > 0) return; //TEMP
   if (idx < 0 || idx > 5) {
     for (let i = 0; i < 6; i++) {
       updateLists(i, name);
     }
-    return;
-  }
-  let moveList = document.getElementById(`movelist-${idx}`);
-  let abilityList = document.getElementById(`abilitylist-${idx}`);
-  if (!name) {
-    moveList.replaceChildren(allMoves);
-    abilityList.replaceChildren(allAbilities);
   } else {
-    moveList.replaceChildren();
-    abilityList.replaceChildren();
-    http.get(`/api/pokemon/${name}/moves`).then(moves => {
-      moves.forEach(m => {
-        let option = document.createElement('option');
-        option.value = m.name;
-        moveList.appendChild(option);
+    let moveList = document.getElementById(`movelist-${idx}`);
+    let abilityList = document.getElementById(`abilitylist-${idx}`);
+    let abilInput = document.getElementById(`abilityslot-${idx}`);
+    let moveInputs = document.querySelectorAll(`input[id^='moveslot-${idx}']`);
+    if (!name) {
+      abilInput.setAttribute('list', 'all-abils-list');
+      moveInputs.forEach(mi => {
+        mi.setAttribute('list', 'all-moves-list');
       });
-    }).catch(err => {
-      console.error(`Error loading move data for ${name}`);
-    });
-    http.get(`/api/pokemon/${name}/abilities`).then(abilities => {
-      abilities.forEach(a => {
-        let option = document.createElement('option');
-        option.value = a.name;
-        abilityList.appendChild(option);
+    } else {
+      abilInput.setAttribute('list', `abilitylist-${idx}`);
+      moveList.replaceChildren();
+      abilityList.replaceChildren();
+      http.get(`/api/pokemon/${name}/moves`).then(moves => {
+        moves.forEach(m => {
+          let option = document.createElement('option');
+          option.value = m.name;
+          moveList.appendChild(option);
+        });
+      }).catch(err => {
+        console.error(`Error loading move data for ${name}`);
       });
-    }).catch(err => {
-      console.error(`Error loading ability data for ${name}`);
-    });
+      moveInputs.forEach(mi => {
+        mi.setAttribute('list', `movelist-${idx}`);
+      });
+      http.get(`/api/pokemon/${name}/abilities`).then(abilities => {
+        abilities.forEach(a => {
+          let option = document.createElement('option');
+          option.value = a.name;
+          abilityList.appendChild(option);
+        });
+      }).catch(err => {
+        console.error(`Error loading ability data for ${name}`);
+      });
+    }
   }
 }
 
