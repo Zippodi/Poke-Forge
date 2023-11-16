@@ -50,6 +50,6 @@ exports.generateToken = (req, res, user) => {
 
 
 exports.removeToken = (req, res) => {
-  res.clearCookie(COOKIE_NAME);
+  res.clearCookie(TOKEN_COOKIE_NAME);
 }
 

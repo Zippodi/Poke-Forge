@@ -80,6 +80,7 @@ class PokemonEntry {
       type1: this.type1,
       type2: this.type2,
       ability: this.ability,
+      item: this.item,
       moves: this.moves
     };
   }
@@ -92,6 +93,7 @@ class PokemonEntry {
       type2: this.type2,
       ability: this.ability,
       moves: this.moves,
+      item: this.item,
       defenses: this.getTypeDefenses(),
       moveEffectiveness: this.getMoveEffectiveness()
     };
