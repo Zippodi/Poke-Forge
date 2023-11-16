@@ -33,11 +33,6 @@ export const pokeDataToggleSmall = (pageString) => {
 
 export const createToggleSmall = () => {
   let wrapper = document.getElementById('wrapper');
-  let names_divs = document.getElementsByClassName('poke-name');
   wrapper.classList.toggle('w-75');
-  for (let name of names_divs) {
-    name.classList.toggle('flex-column');
-    name.classList.toggle('align-items-center');
-  }
   small = !small;
 }

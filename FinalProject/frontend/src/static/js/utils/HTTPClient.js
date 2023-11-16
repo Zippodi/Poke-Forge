@@ -1,7 +1,7 @@
 //taken/modified from second databases lecture code
-const handleError = (res) => {
+const handleError = (res, data) => {
   if (!res.ok) {
-    let error = new Error(res.statusText);
+    let error = new Error(data.error);
     error.status = res.status;
     throw error;
   }
@@ -11,8 +11,8 @@ export default {
   get: (url) => {
     return new Promise(async (resolve, reject) => {
       const res = await fetch(url);
-      handleError(res);
       const data = await res.json();
+      handleError(res, data);
       resolve(data);
     });
   },
@@ -27,8 +27,8 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      handleError(res);
       const data = await res.json();
+      handleError(res, data);
       resolve(data);
     });
   },
@@ -43,8 +43,8 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      handleError(res);
       const data = await res.json();
+      handleError(res, data);
       resolve(data);
     });
   },
@@ -54,8 +54,8 @@ export default {
       const res = await fetch(url, {
         method: 'DELETE'
       });
-      handleError(res);
       const data = await res.json();
+      handleError(res, data);
       resolve(data);
     });
   }

@@ -54,9 +54,9 @@
             id="collapseOne"
             class="accordion-collapse collapse show"
             data-bs-parent="infoAccordian">
-            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-5">
-              <div class="d-flex justify-content-center">
-                <div class="align-items-center d-flex justify-content-center poke-name">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
                   <label class="me-1 fs-6 name-lbl-1"> Pokemon Name: </label>
                   <input
                     list="pokelist"
@@ -65,25 +65,57 @@
                     class="form-control-sm form-control poke-name-input me-1"
                     required />
                 </div>
-                <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-0"></span>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-0"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-0"></span>
+                </a>
               </div>
-              <div>
-                <div class="align-items-center d-flex justify-content-center">
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
                   <label class="me-1 fs-6 name-lbl-1"> Ability: </label>
                   <input
-                    list="abilitylist-0"
+                    list="all-abils-list"
                     id="abilityslot-0"
-                    class="form-control-sm form-control poke-name-input me-1"
+                    class="form-control-sm form-control poke-text-input me-1"
                     required />
                 </div>
-                <div class="align-items-center d-flex justify-content-center">
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
                   <label class="me-1 fs-6 name-lbl-1"> Item: </label>
                   <input
                     list="itemlist"
                     id="itemslot-0"
-                    class="form-control-sm form-control poke-name-input me-1"
-                    required />
+                    class="form-control-sm form-control poke-text-input me-1" />
                 </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-0-0"
+                  class="form-control-sm form-control poke-text-input"
+                  required />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-0-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-0-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-0-3"
+                  class="form-control-sm form-control poke-text-input" />
               </div>
             </div>
           </div>
@@ -119,6 +151,8 @@
     </div>
     <datalist id="pokelist"> </datalist>
     <datalist id="itemlist"> </datalist>
+    <datalist id="all-moves-list"></datalist>
+    <datalist id="all-abils-list"></datalist>
     <datalist id="movelist-0"> </datalist>
     <datalist id="abilitylist-0"> </datalist>
     <datalist id="movelist-1"> </datalist>
