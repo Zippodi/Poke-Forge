@@ -34,3 +34,9 @@
 .form-floating {
   color: black;
 }
+
+#team-name {
+  max-width: 70%;
+  box-shadow: 3px 3px 3px rgb(81, 28, 28);
+  border: 1px rgb(81, 28, 28) solid;
+}

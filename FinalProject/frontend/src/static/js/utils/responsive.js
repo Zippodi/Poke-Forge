@@ -32,7 +32,5 @@ export const pokeDataToggleSmall = (pageString) => {
 }
 
 export const createToggleSmall = () => {
-  let wrapper = document.getElementById('wrapper');
-  wrapper.classList.toggle('w-75');
   small = !small;
 }

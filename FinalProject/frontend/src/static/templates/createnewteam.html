@@ -25,18 +25,13 @@
       <img src="images/Create-Team-Title.png" class="img-fluid" width="500vw" />
       <a id="home-link" class="link-info fs-5 mb-2" href="home">Home</a>
     </header>
-    <div class="container w-75 justify-content-center mx-auto" id="wrapper">
-      <div id="team-info" class="d-flex justify-content-around align-items-center mb-3">
-        <label>
-          Team Name
-          <input type="text" name="teamname" required />
-        </label>
-        <label>
-          <input type="checkbox" name="teampublic" />
-          Make this team public?
-        </label>
+    <div class="container col-lg-8 justify-content-center mx-auto" id="wrapper">
+      <div id="team-info" class="d-flex justify-content-center align-items-center mb-3">
+        <label class="fs-5 text-nowrap me-2"> Team Name: </label>
+        <input id="team-name" name="pokemonlist" class="form-control form-control me-1" required />
       </div>
       <div class="mx-4 accordion mb-5" id="create-accordion">
+        <!-- POKE SLOT 1-->
         <div class="accordion-item">
           <h2 class="accordian-header">
             <button
@@ -44,20 +39,20 @@
               class="accordion-button collapsed"
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="false"
-              aria-controls="collapseOne">
+              data-bs-target="#collapse0"
+              aria-expanded="true"
+              aria-controls="collapse0">
               Team Slot 1
             </button>
           </h2>
           <div
-            id="collapseOne"
+            id="collapse0"
             class="accordion-collapse collapse show"
             data-bs-parent="infoAccordian">
             <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
               <div class="d-flex justify-content-center mb-3 poke-name">
                 <div class="align-items-start d-flex flex-column">
-                  <label class="me-1 fs-6 name-lbl-1"> Pokemon Name: </label>
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
                   <input
                     list="pokelist"
                     id="teamslot-0"
@@ -79,7 +74,7 @@
                 class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
                 <div
                   class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
-                  <label class="me-1 fs-6 name-lbl-1"> Ability: </label>
+                  <label class="me-1 fs-6"> Ability: </label>
                   <input
                     list="all-abils-list"
                     id="abilityslot-0"
@@ -88,7 +83,7 @@
                 </div>
                 <div
                   class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
-                  <label class="me-1 fs-6 name-lbl-1"> Item: </label>
+                  <label class="me-1 fs-6"> Item: </label>
                   <input
                     list="itemlist"
                     id="itemslot-0"
@@ -120,35 +115,404 @@
             </div>
           </div>
         </div>
-
-        <div class="text-center">
-          <label class="my-4">
-            Pokemon Name:
-            <input list="pokelist" id="teamslot" required />
-          </label>
-          <label class="my-4">
-            Team Slot 1 Moves:
-            <input list="moveslist" id="teamslot1-move1" name="moveslist" required />
-            <input list="moveslist" id="teamslot1-move2" name="moveslist" />
-            <input list="moveslist" id="teamslot1-move3" name="moveslist" />
-            <input list="moveslist" id="teamslot1-move4" name="moveslist" />
-          </label>
-          <label class="my-4">
-            Team Slot 1 Item:
-            <input list="itemslist" id="teamslot1-item" name="itemslist" />
-          </label>
-          <label class="my-4">
-            Team Slot 1 Ability:
-            <input list="abilitylist" id="teamslot1-ability" name="abilitylist" required />
-          </label>
-          <!-- Don't actually know how to implement this yet. -->
-          <div class="m-4">
-            <input class="mx-2" type="button" id="LoadStats" value="Team Stats" />
-            <input class="mx-2" type="button" id="SaveTeam" value="Save Team" />
+        <!-- POKE SLOT 2-->
+        <div class="accordion-item">
+          <h2 class="accordian-header">
+            <button
+              id="btn-1"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse1"
+              aria-expanded="false"
+              aria-controls="collapse1">
+              Team Slot 2
+            </button>
+          </h2>
+          <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
+                  <input
+                    list="pokelist"
+                    id="teamslot-1"
+                    name="pokemonlist"
+                    class="form-control-sm form-control poke-name-input me-1" />
+                </div>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-1"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-1"></span>
+                </a>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
+                  <label class="me-1 fs-6"> Ability: </label>
+                  <input
+                    list="all-abils-list"
+                    id="abilityslot-1"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
+                  <label class="me-1 fs-6"> Item: </label>
+                  <input
+                    list="itemlist"
+                    id="itemslot-1"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-1-0"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-1-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-1-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-1-3"
+                  class="form-control-sm form-control poke-text-input" />
+              </div>
+            </div>
           </div>
         </div>
+        <!-- POKE SLOT 3-->
+        <div class="accordion-item">
+          <h2 class="accordian-header">
+            <button
+              id="btn-2"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse2"
+              aria-expanded="false"
+              aria-controls="collapse2">
+              Team Slot 3
+            </button>
+          </h2>
+          <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
+                  <input
+                    list="pokelist"
+                    id="teamslot-2"
+                    name="pokemonlist"
+                    class="form-control-sm form-control poke-name-input me-1" />
+                </div>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-2"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-2"></span>
+                </a>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
+                  <label class="me-1 fs-6"> Ability: </label>
+                  <input
+                    list="all-abils-list"
+                    id="abilityslot-2"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
+                  <label class="me-1 fs-6"> Item: </label>
+                  <input
+                    list="itemlist"
+                    id="itemslot-2"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-2-0"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-2-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-2-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-2-3"
+                  class="form-control-sm form-control poke-text-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- POKE SLOT 4-->
+        <div class="accordion-item">
+          <h2 class="accordian-header">
+            <button
+              id="btn-3"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse3"
+              aria-expanded="false"
+              aria-controls="collapse3">
+              Team Slot 4
+            </button>
+          </h2>
+          <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
+                  <input
+                    list="pokelist"
+                    id="teamslot-3"
+                    name="pokemonlist"
+                    class="form-control-sm form-control poke-name-input me-1" />
+                </div>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-3"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-3"></span>
+                </a>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
+                  <label class="me-1 fs-6"> Ability: </label>
+                  <input
+                    list="all-abils-list"
+                    id="abilityslot-3"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
+                  <label class="me-1 fs-6"> Item: </label>
+                  <input
+                    list="itemlist"
+                    id="itemslot-3"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-3-0"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-3-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-3-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-3-3"
+                  class="form-control-sm form-control poke-text-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- POKE SLOT 5-->
+        <div class="accordion-item">
+          <h2 class="accordian-header">
+            <button
+              id="btn-4"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse4"
+              aria-expanded="false"
+              aria-controls="collapse4">
+              Team Slot 5
+            </button>
+          </h2>
+          <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
+                  <input
+                    list="pokelist"
+                    id="teamslot-4"
+                    name="pokemonlist"
+                    class="form-control-sm form-control poke-name-input me-1" />
+                </div>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-4"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-4"></span>
+                </a>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
+                  <label class="me-1 fs-6"> Ability: </label>
+                  <input
+                    list="all-abils-list"
+                    id="abilityslot-4"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
+                  <label class="me-1 fs-6"> Item: </label>
+                  <input
+                    list="itemlist"
+                    id="itemslot-4"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-4-0"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-4-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-4-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-4-3"
+                  class="form-control-sm form-control poke-text-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- POKE SLOT 6-->
+        <div class="accordion-item">
+          <h2 class="accordian-header">
+            <button
+              id="btn-5"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse5"
+              aria-expanded="false"
+              aria-controls="collapse5">
+              Team Slot 6
+            </button>
+          </h2>
+          <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="infoAccordian">
+            <div class="accordion-body container-fluid d-flex flex-column d-flex px-1 px-md-4">
+              <div class="d-flex justify-content-center mb-3 poke-name">
+                <div class="align-items-start d-flex flex-column">
+                  <label class="me-1 fs-6"> Pokemon Name: </label>
+                  <input
+                    list="pokelist"
+                    id="teamslot-5"
+                    name="pokemonlist"
+                    class="form-control-sm form-control poke-name-input me-1" />
+                </div>
+                <img
+                  src="images/mystery.png"
+                  width="68px"
+                  height="68px"
+                  id="mystery-5"
+                  class="sprite-placeholder" />
+                <a target="_blank" href="#">
+                  <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-5"></span>
+                </a>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-evenly abil-item-container mb-3 flex-column gap-2 gap-md-0 flex-md-row">
+                <div
+                  class="align-items-center d-flex justify-content-center ability-container me-2 me-md-0">
+                  <label class="me-1 fs-6"> Ability: </label>
+                  <input
+                    list="all-abils-list"
+                    id="abilityslot-5"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+                <div
+                  class="align-items-center d-flex justify-content-center item-container ms-1 ms-md-0">
+                  <label class="me-1 fs-6"> Item: </label>
+                  <input
+                    list="itemlist"
+                    id="itemslot-5"
+                    class="form-control-sm form-control poke-text-input me-1" />
+                </div>
+              </div>
+              <span class="mb-0 ms-4 ms-lg-1">Moves:</span>
+              <div
+                class="d-flex justify-content-between align-items-center gap-3 flex-lg-row flex-column"
+                class="moves-container">
+                <input
+                  list="all-moves-list"
+                  id="moveslot-5-0"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-5-1"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-5-2"
+                  class="form-control-sm form-control poke-text-input" />
+                <input
+                  list="all-moves-list"
+                  id="moveslot-5-3"
+                  class="form-control-sm form-control poke-text-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end of entries-->
       </div>
     </div>
+    <div class="m-4">
+      <input class="mx-2" type="button" id="LoadStats" value="Team Stats" />
+      <input class="mx-2" type="button" id="SaveTeam" value="Save Team" />
+    </div>
+    <!--various datalists used-->
     <datalist id="pokelist"> </datalist>
     <datalist id="itemlist"> </datalist>
     <datalist id="all-moves-list"></datalist>

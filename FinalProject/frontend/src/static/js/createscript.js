@@ -87,7 +87,7 @@ function updatePokemonEntry(idx, name = null) {
     sprite.classList.remove('d-none');
     img.classList.add('d-none');
     sprite.classList.add(newname);
-    sprite.parentElement.setAttribute('href', `pokemon/`);
+    sprite.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
     const shiny = false; //TODO
     if (shiny) {
       sprite.classList.add('shiny');
@@ -102,7 +102,6 @@ function updatePokemonEntry(idx, name = null) {
  * idx not in range of 0-5 (inclusive) - perform action for all indexes
  */
 function updateLists(idx, name = null) {
-  if (idx > 0) return; //TEMP
   if (idx < 0 || idx > 5) {
     for (let i = 0; i < 6; i++) {
       updateLists(i, name);
@@ -199,7 +198,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //   for (let i = 1; i <= 6; i++) {
 //     const itemText = document.getElementById(`teamslot${i}-item`).value;
 //     const pokeText = document.getElementById(`teamslot${i}`).value;
-//     if (!pokeText || pokeText == '') {
+//     if (!pokeText || pokeText == '')x {
 //       continue;
 //     }
 //     const item = itemText == '' ? null : itemText;
