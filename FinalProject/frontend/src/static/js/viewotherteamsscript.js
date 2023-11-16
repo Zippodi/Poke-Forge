@@ -3,67 +3,105 @@ import http from './utils/HTTPClient.js';
 const teamList = document.querySelector('#teamsList');
 
 
-http.get('api/teams/').then(teams => { 
-    for (let i = 0; i < teams.length; ++i) {
-        const team = document.createElement('div');
-        team.className = "container";
-        let name = document.createElement('h1');
-        name.innerHTML = teams[i].name;
-        team.appendChild(name);
-
-        // for (p in teams[i].pok)
-        
-        for (let a = 0; a < teams[i].pokemon.length; ++a) {
-            const pokemon = document.createElement('div');
-            pokemon.className = "d-flex justify-content-center align-items-center my-5";
-
-            const pokemonName = document.createElement('h3');
-            pokemonName.innerHTML = teams[i].pokemon[a].name;
-            pokemon.appendChild(pokemonName);
+const SMALL_SIZE = 600;
 
 
+addEventListener('DOMContentLoaded', e => {
+    http.get('api/teams/').then(teams => { 
+        for (let i = 0; i < teams.length; ++i) {
+            const team = document.createElement('div');
+            team.className = "container my-5";
+            // let name = document.createElement('h1');
+            let name = document.createElement('h4');
 
-            let img = document.createElement('img');
-           
-            img.classList.add('mx-4', 'mb-1', 'entry-img');
-            // let id = parseInt(teams[i].pokemon[a].id);
-            // let num = id < 10 ? `00${id}` : id < 100 ? `0${id}` : id;
-            // console.log(num);
-            // console.log(teams[i].pokemon[a].id);
-            img.src = `images/pokemon/001.png`;
-            // img.src = `images/pokemon/001.png`;
-            img.alt = teams[i].pokemon[a].name;
-            // // const sprite = document.createElement('span')
-            // // let starterSpriteString =  "pokesprite pokemon ";
+            name.innerHTML = teams[i].name;
+            team.appendChild(name);
+
             
-            // // sprite.className = starterSpriteString.concat(teams[i].pokemon[a].name.toLowerCase());
-            // // console.log(sprite.className);
-            let ability = document.createElement('h4');
-            ability.innerHTML =  teams[i].pokemon[a].ability;
+            for (let a = 0; a < teams[i].pokemon.length; ++a) {
+                const pokemon = document.createElement('div');
+                pokemon.className = "container d-flex justify-content-between align-items-center my-3";
 
-            // // pokemon.appendChild(sprite);
-            pokemon.appendChild(img);
-            pokemon.appendChild(ability);
-            team.appendChild(pokemon);
+                // const pokemonName = document.createElement('h3');
+                const pokemonName = document.createElement('h4');
+                pokemonName.style.fontSize = "%20";
+                pokemonName.innerHTML = teams[i].pokemon[a].name;
+                pokemon.appendChild(pokemonName);
+
+
+
+                let img = document.createElement('img');
             
+                
+                img.style.maxWidth = "20%";
+                img.style.height = "auto";
+                let id = parseInt(teams[i].pokemon[a].pokemon_id);
+                let num = id < 10 ? `00${id}` : id < 100 ? `0${id}` : id;
+                img.src = `images/pokemon/${num}.png`;
+                img.alt = teams[i].pokemon[a].name;
+            
+                // let ability = document.createElement('h5');
+                let ability = document.createElement('h4');
+
+                ability.innerHTML =  teams[i].pokemon[a].ability;
+
+               
+
+                pokemon.appendChild(img);
+                pokemon.appendChild(ability);
+                console.log(teams[i].pokemon[a].pokemon_item);
+                if (teams[i].pokemon[a].item && window.innerWidth > SMALL_SIZE) {
+                    
+                    let item = document.createElement('h4');
+                    item.className = "item";
+                    item.innerHTML = teams[i].pokemon[a].item;
+                    pokemon.appendChild(item);
+                }
+                
+                pokemon.style.backgroundColor = "#112a85";
+                pokemon.style.borderRadius = "5px";
+
+                team.appendChild(pokemon);
+                
+            }
+            team.style.backgroundColor = "#091644";
+            team.style.borderRadius = "5px";
+
+
+
+
+
+
+
+
+            teamList.append(team);
         }
-        team.style.backgroundColor = "#091644";
-        team.style.borderRadius = "5px";
+            
+
+    }).catch(err => {
+        console.error('Could not load teams');
+    });
 
 
-
-
-
-
-
-
-        teamList.append(team);
-        // console.log(teams[i]);
-    }
-
- });
-
-
+     // Change values when window is resized 
+     window.onresize = function() { 
+        let items;
+        if (items = document.querySelectorAll(".item")) {
+            if (items && items.length > 0 && window.innerWidth < SMALL_SIZE) {
+                for (let m = 0; m < items.length; ++m) {
+                    items[m].classList.add("d-none");
+                }
+            }
+            else if (items && items.length > 0) {
+                for (let m = 0; m < items.length; ++m) {
+                    if (items[m].classList.contains("d-none")) {
+                        items[m].classList.remove("d-none");
+                    }
+                }
+            }
+        }
+    }; 
+});
 
 
  
