@@ -11,8 +11,7 @@ addEventListener('DOMContentLoaded', e => {
         for (let i = 0; i < teams.length; ++i) {
             const team = document.createElement('div');
             team.className = "container my-5";
-            // let name = document.createElement('h1');
-            let name = document.createElement('h4');
+            let name = document.createElement('h2');
 
             name.innerHTML = teams[i].name;
             team.appendChild(name);
@@ -22,8 +21,7 @@ addEventListener('DOMContentLoaded', e => {
                 const pokemon = document.createElement('div');
                 pokemon.className = "container d-flex justify-content-between align-items-center my-3";
 
-                // const pokemonName = document.createElement('h3');
-                const pokemonName = document.createElement('h4');
+                const pokemonName = document.createElement('h2');
                 pokemonName.style.fontSize = "%20";
                 pokemonName.innerHTML = teams[i].pokemon[a].name;
                 pokemon.appendChild(pokemonName);
@@ -41,7 +39,7 @@ addEventListener('DOMContentLoaded', e => {
                 img.alt = teams[i].pokemon[a].name;
             
                 // let ability = document.createElement('h5');
-                let ability = document.createElement('h4');
+                let ability = document.createElement('h2');
 
                 ability.innerHTML =  teams[i].pokemon[a].ability;
 
@@ -52,7 +50,7 @@ addEventListener('DOMContentLoaded', e => {
                 console.log(teams[i].pokemon[a].pokemon_item);
                 if (teams[i].pokemon[a].item && window.innerWidth > SMALL_SIZE) {
                     
-                    let item = document.createElement('h4');
+                    let item = document.createElement('h2');
                     item.className = "item";
                     item.innerHTML = teams[i].pokemon[a].item;
                     pokemon.appendChild(item);
