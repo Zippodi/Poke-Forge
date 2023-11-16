@@ -8,7 +8,7 @@ let allMoves = [];
 let allAbilities = [];
 
 
-const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
+const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'invisible', 'd-none'];
 
 function loadData() {
   http.get('/api/moves').then(moves => {
@@ -73,14 +73,14 @@ function updatePokemonEntry(idx, name = null) {
     }
   });
   if (!name) {
-    sprite.classList.add('d-none');
+    sprite.classList.add('invisible');
     btn.innerHTML = `Team Slot ${idx + 1}:`;
     updateLists(idx);
   } else {
     btn.innerHTML = `Team Slot ${idx + 1}: ${name}`;
     let newname = getSpriteName(name);
     //console.log(newname);
-    sprite.classList.remove('d-none');
+    sprite.classList.remove('invisible');
     sprite.classList.add(newname);
     const shiny = false; //TODO
     if (shiny) {
