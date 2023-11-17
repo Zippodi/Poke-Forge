@@ -32,5 +32,6 @@ export const pokeDataToggleSmall = (pageString) => {
 }
 
 export const createToggleSmall = () => {
+  document.getElementById('public-text').innerHTML = small ? 'Make this team public?' : 'Public team?'
   small = !small;
 }

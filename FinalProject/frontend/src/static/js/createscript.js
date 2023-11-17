@@ -1,7 +1,7 @@
 import http from './utils/HTTPClient.js';
 import { getSpriteName, nameVariants } from './utils/PokemonNames.js';
 import { createToggleSmall, small } from './utils/responsive.js';
-const SMALL_SIZE = 650;
+const SMALL_SIZE = 350;
 
 var setPokemon = [];
 

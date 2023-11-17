@@ -25,12 +25,24 @@
       <img src="images/Create-Team-Title.png" class="img-fluid" width="500vw" />
       <a id="home-link" class="link-info fs-5 mb-2" href="home">Home</a>
     </header>
-    <div class="container col-lg-8 justify-content-center mx-auto" id="wrapper">
-      <div id="team-info" class="d-flex justify-content-center align-items-center mb-3">
+    <div class="container-fluid col-lg-8 col-sm-10 justify-content-center mx-auto">
+      <div
+        id="team-info"
+        class="d-flex justify-content-center align-items-center mb-3 mx-3 mx-sm-5">
         <label class="fs-5 text-nowrap me-2"> Team Name: </label>
         <input id="team-name" name="pokemonlist" class="form-control form-control me-1" required />
       </div>
-      <div class="mx-4 accordion mb-5" id="create-accordion">
+      <div class="form-check form-switch d-flex flex-nowrap gap-3 justify-content-center mb-3">
+        <input
+          class="form-check-input custom-switch"
+          type="checkbox"
+          role="switch"
+          id="public-check" />
+        <label class="form-check-label fs-5" for="public-check" id="public-text">
+          Make this team public?
+        </label>
+      </div>
+      <div class="mx-2 mx-lg-4 accordion mb-5" id="create-accordion">
         <!-- POKE SLOT 1-->
         <div class="accordion-item">
           <h2 class="accordian-header">
@@ -508,9 +520,16 @@
         <!--end of entries-->
       </div>
     </div>
-    <div class="m-4">
-      <input class="mx-2" type="button" id="LoadStats" value="Team Stats" />
-      <input class="mx-2" type="button" id="SaveTeam" value="Save Team" />
+    <div class="my-4 d-grid col-8 col-lg-4 mx-auto">
+      <input
+        class="mx-2 btn btn-lg btn-outline-warning my-btn mb-3"
+        type="button"
+        id="upload-btn"
+        value="Upload Team" />
+      <div class="alert alert-danger" role="alert">
+        Error in Team Slot 2: This is a test alert for if information is wrong.
+      </div>
+      <div class="alert alert-success" role="alert">Success! Your team was saved!</div>
     </div>
     <!--various datalists used-->
     <datalist id="pokelist"> </datalist>
