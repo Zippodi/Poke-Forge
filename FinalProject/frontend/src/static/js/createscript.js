@@ -3,8 +3,6 @@ import { getSpriteName, nameVariants } from './utils/PokemonNames.js';
 import { createToggleSmall, small } from './utils/responsive.js';
 const SMALL_SIZE = 350;
 
-var setPokemon = [];
-
 const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
 function loadData() {
@@ -116,6 +114,10 @@ function updateLists(idx, name = null) {
       moveInputs.forEach(mi => {
         mi.setAttribute('list', 'all-moves-list');
       });
+      if (idx != 0) {
+        abilInput.required = false;
+        moveInputs.item(0).required = false;
+      }
     } else {
       abilInput.setAttribute('list', `abilitylist-${idx}`);
       moveList.replaceChildren();
@@ -141,11 +143,16 @@ function updateLists(idx, name = null) {
       }).catch(err => {
         console.error(`Error loading ability data for ${name}`);
       });
+      if (idx != 0) {
+        abilInput.required = true;
+        moveInputs.item(0).required = true;
+      }
     }
   }
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  const submitBtn = document.getElementById('upload-btn');
   if (window.innerWidth < SMALL_SIZE) {
     createToggleSmall();
   }
@@ -185,48 +192,69 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
       }
     }
+    submitBtn.addEventListener('click', (e) => {
+      const teamData = [];
+      const teamName = document.getElementById('team-name').value.trim();
+      if (teamName.length < 2) {
+        return showError("Error: Team name must be at least 2 characters");
+      }
+      for (let i = 0; i < 6; i++) {
+        const pokeName = document.getElementById(`teamslot-${i}`).value.trim();
+        if (pokeName == '') {
+          continue;
+        }
+        const pokeItem = document.getElementById(`itemslot-${i}`).value.trim();
+        const itemName = pokeItem && pokeItem != '' ? pokeItem : null;
+        const abilName = document.getElementById(`abilityslot-${i}`).value.trim();
+        if (abilName == '') {
+          return showError(`Error in Team Slot ${i + 1}: All Pokemon must have an ability`);
+        }
+        let moveNames = [];
+        document.querySelectorAll(`input[id^='moveslot-${i}']`).forEach((m) => {
+          if (m.value && m.value.trim() != '') {
+            moveNames.push(m.value.trim());
+          }
+        });
+        if (moveNames.length == 0) {
+          return showError(`Error in Team Slot ${i + 1}: All Pokemon must have at least one move`);
+        }
+        teamData.push({
+          name: pokeName,
+          moves: moveNames,
+          item: itemName,
+          ability: abilName
+        });
+      }
+      if (teamData.length == 0) {
+        return showError("Error: Team must have at least one Pokemon");
+      }
+      const data = {
+        name: teamName,
+        public: document.getElementById('public-check').checked,
+        pokemon: teamData
+      };
+      console.log(data);
+      http.post('/api/teams/create', data).then(response => {
+        showSuccess();
+        console.log('new id', response.id);
+      }).catch(error => {
+        showError(error, error.status >= 500);
+      });
+    });
   }).catch(err => {
     console.info('Could not load Pokemon data, some features may be unavailable');
     console.log(err);
   });
 });
 
-// const submitBtn = document.getElementById('SaveTeam');
-// submitBtn.addEventListener('click', function (e) {
-//   // Collecting data for each team slot
-//   const teamData = [];
-//   for (let i = 1; i <= 6; i++) {
-//     const itemText = document.getElementById(`teamslot${i}-item`).value;
-//     const pokeText = document.getElementById(`teamslot${i}`).value;
-//     if (!pokeText || pokeText == '')x {
-//       continue;
-//     }
-//     const item = itemText == '' ? null : itemText;
-//     teamData.push({
-//       name: pokeText,
-//       moves: [
-//         document.getElementById(`teamslot${i}-move1`).value,
-//         document.getElementById(`teamslot${i}-move2`).value,
-//         document.getElementById(`teamslot${i}-move3`).value,
-//         document.getElementById(`teamslot${i}-move4`).value,
-//       ].filter(move => move !== ''), // Filter out empty strings if moves are not selected
-//       item: item,
-//       ability: document.getElementById(`teamslot${i}-ability`).value
-//     });
-//   }
+function showError(message, serverError = false) {
+  let error = document.getElementById('upload-err');
+  error.innerHTML = serverError ? `Server Error: ${message}` : message;
+  error.classList.remove('d-none');
+}
 
-//   const formData = {
-//     name: document.querySelector('[name="teamname"]').value,
-//     public: document.querySelector('[name="teampublic"]').checked,
-//     pokemon: teamData
-//   };
-//   console.log(formData);
-//   http.post('/api/teams/create', formData).then(response => {
-//     console.log('Team created successfully!', response);
-//   }).catch(error => {
-//     console.error('Error creating team:', error);
-//   });
-// });
-
-
-
+function showSuccess() {
+  document.getElementById('upload-err').classList.add('d-none');
+  //show modal TODO
+  document.getElementById('upload-succ').classList.remove('d-none');
+}

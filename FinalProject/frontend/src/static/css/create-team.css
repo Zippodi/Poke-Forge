@@ -16,7 +16,9 @@
 }
 
 .poke-name-input:focus,
-.poke-text-input:focus {
+.poke-text-input:focus,
+#upload-err,
+#info-guide {
   box-shadow: 3px 3px 3px rgb(81, 28, 28);
 }
 

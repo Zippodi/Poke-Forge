@@ -1,10 +1,13 @@
 //taken/modified from second databases lecture code
 const handleError = (res, data) => {
-  if (!res.ok) {
-    let error = new Error(data.error);
-    error.status = res.status;
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    if (!res.ok) {
+      let error = new Error(data.error);
+      error.status = res.status;
+      reject(error);
+    }
+    resolve();
+  });
 };
 
 export default {
@@ -12,8 +15,11 @@ export default {
     return new Promise(async (resolve, reject) => {
       const res = await fetch(url);
       const data = await res.json();
-      handleError(res, data);
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -28,8 +34,11 @@ export default {
         }
       });
       const data = await res.json();
-      handleError(res, data);
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -44,8 +53,11 @@ export default {
         }
       });
       const data = await res.json();
-      handleError(res, data);
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -55,8 +67,11 @@ export default {
         method: 'DELETE'
       });
       const data = await res.json();
-      handleError(res, data);
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   }
 };
