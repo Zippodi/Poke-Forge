@@ -78,10 +78,33 @@ function getMoveByCategory(category) {
   });
 }
 
+function getMoveEffectiveness(moves) {
+  return new Promise((resolve, reject) => {
+    const moveNames = moves.map(m => m.replaceAll(' ', '').toLowerCase());
+    const placeholders = moveNames.map(m => '?').join(', ');
+    db.query(`SELECT type, power FROM move WHERE LOWER(REPLACE(name,' ','')) IN (${placeholders})`, moveNames).then(({ results }) => {
+      if (!results || results.length != moveNames.length) {
+        reject(constructError(404, 'At least one of the specified moves do not exist'));
+      }
+      const filteredTypes = results.reduce((acc, curr) => { if (curr.power > 0) { acc.push(curr.type); } return acc; }, []);
+      if (filteredTypes.length == 0) {
+        resolve(types.typeList.reduce((pre, curr) => Object.assign(pre, { [curr]: 0 }), {}));
+      } else {
+        ret = types.getMoveEffectiveness(filteredTypes);
+        if (ret === false) {
+          reject(constructError(500, "Problem getting move data"));
+        }
+        resolve(ret);
+      }
+    });
+  });
+}
+
 module.exports = {
   getAllMoves: getAllMoves,
   getMoveByName: getMoveByName,
   getMoveById: getMoveById,
   getMoveByType: getMoveByType,
-  getMoveByCategory: getMoveByCategory
+  getMoveByCategory: getMoveByCategory,
+  getMoveEffectiveness: getMoveEffectiveness
 };
