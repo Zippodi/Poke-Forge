@@ -8,6 +8,7 @@ header {
   color: rgb(255, 230, 0);
 }
 
+/* Override to bootstrap accordion class */
 .accordion {
   box-shadow: 8px 8px 8px rgb(97, 25, 25);
   border-radius: 10px;
@@ -47,6 +48,7 @@ header {
   outline: 0 !important;
 }
 
+/* Override to bootstrap form-switch class */
 .form-switch .form-check-input:focus {
   border-color: rgba(0, 0, 0, 0.25);
   outline: 0;
@@ -62,4 +64,39 @@ header {
 .form-check-input:focus:not(.form-check-input:checked) {
   /* Modified from Bootstrap docs */
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='rgba(255, 217, 0, 1.0)'/></svg>");
+}
+
+/* Modifiers for type effectiveness */
+.no-effect {
+  background-color: rgb(46, 42, 42) !important;
+  color: gold !important;
+}
+
+.quarter-effect {
+  background-color: rgb(51, 194, 19) !important;
+  color: black !important;
+}
+
+.half-effect {
+  background-color: rgb(28, 92, 14) !important;
+  color: gold !important;
+}
+
+.normal-effect {
+  background-color: rgb(146, 55, 55) !important;
+  color: white !important;
+}
+
+.double-effect {
+  background-color: rgb(73, 73, 237) !important;
+  color: gold !important;
+}
+
+.quadruple-effect {
+  background-color: rgb(41, 41, 135) !important;
+  color: gold !important;
+}
+
+.tbl-icon {
+  width: 3em;
 }

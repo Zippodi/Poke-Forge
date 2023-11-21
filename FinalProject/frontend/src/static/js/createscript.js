@@ -1,10 +1,13 @@
+import { typeList } from './types/types.js';
 import http from './utils/HTTPClient.js';
-import { getSpriteName, nameVariants } from './utils/PokemonNames.js';
+import { effectMap, getSpriteName, nameVariants, typeDefenseModifiers } from './utils/PokemonUtils.js';
 import { createToggleSmall, small } from './utils/responsive.js';
+
 const SMALL_SIZE = 350;
 
 const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
+/** Gets Pokemon, move, ability, and item data and loads them into respective data lists */
 function loadData() {
   return new Promise(async (resolve, reject) => {
     http.get('/api/moves').then(moves => {
@@ -58,57 +61,69 @@ function loadData() {
       console.error('Could not load item data');
     });
     resolve(pokemon);
-
   });
 }
 
-function updatePokemonEntry(idx, name = null) {
-  //console.log('NAME:', name);
+/** 
+ * For when user is done typing in the name of a Pokemon to put into their team.
+ * If name is valid it will put insert the pokemon sprite and update data lists to have move/ability values for that pokemon.
+ * Otherwise displays mystery image and updates data lists to use all move/ability values
+ * */
+function updatePokemonEntry(idx, name = null, types = null) {
   let sprite = document.getElementById(`sprite-${idx}`);
   let btn = document.getElementById(`btn-${idx}`);
-  let img = document.getElementById(`mystery-${idx}`);
+  let imgs = Array.from(document.getElementsByClassName(`mystery-${idx}`));
+  let headRows = Array.from(document.getElementsByClassName('head-row'));
+  //get the sprites in offense/defense tables - DOM moment
+  let sprites = headRows.map(e => e.children.item(idx + 1).children[1].firstElementChild);
+  sprites.push(sprite);
   sprite.classList.forEach(c => {
     if (!spriteClassList.includes(c)) {
-      sprite.classList.remove(c);
+      sprites.forEach(s => s.classList.remove(c)); //remove the class of the old pokemon sprite
     }
   });
   if (!name) {
-    sprite.classList.add('d-none');
-    sprite.parentElement.setAttribute('href', '#');
-    img.classList.remove('d-none');
+    sprites.forEach(s => { s.classList.add('d-none'); s.parentElement.setAttribute('href', '#'); });
+    imgs.forEach(i => i.classList.remove('d-none'));
     btn.innerHTML = `Team Slot ${idx + 1}:`;
-    updateLists(idx);
+    updateTeamEntryData(idx);
   } else {
     btn.innerHTML = `Team Slot ${idx + 1}: ${name}`;
-    let newname = getSpriteName(name);
-    //console.log(newname);
-    sprite.classList.remove('d-none');
-    img.classList.add('d-none');
-    sprite.classList.add(newname);
-    sprite.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
-    const shiny = false; //TODO
-    if (shiny) {
-      sprite.classList.add('shiny');
-    }
-    updateLists(idx, name.toLowerCase().replaceAll(' ', ''));
+    const ability = document.getElementById(`abilityslot-${idx}`).value.toLowerCase().replaceAll(' ', '');
+    const item = document.getElementById(`itemslot-${idx}`).value.toLowerCase().replaceAll(' ', '');
+    const newname = getSpriteName(name, ability, item);
+    imgs.forEach(i => i.classList.add('d-none'));
+    sprites.forEach(s => {
+      s.classList.remove('d-none');
+      s.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
+      s.classList.add(newname);
+      const shiny = false; //TODO
+      if (shiny) {
+        s.classList.add('shiny');
+      }
+    });
+    updateTeamEntryData(idx, name.toLowerCase().replaceAll(' ', ''), types);
   }
 }
 
 /**
  * Update datalist for moves and abilities given index in team of pokemon and the name. 
- * No/null name means load all moves/abilities
- * idx not in range of 0-5 (inclusive) - perform action for all indexes
+ * Null/no name means load all moves/abilities
+ * idx not in range of 0-5 (inclusive) = perform action for all indexes
  */
-function updateLists(idx, name = null) {
+function updateTeamEntryData(idx, name = null, types = null) {
   if (idx < 0 || idx > 5) {
     for (let i = 0; i < 6; i++) {
-      updateLists(i, name);
+      updateTeamEntryData(i, name);
     }
   } else {
     let moveList = document.getElementById(`movelist-${idx}`);
     let abilityList = document.getElementById(`abilitylist-${idx}`);
     let abilInput = document.getElementById(`abilityslot-${idx}`);
     let moveInputs = document.querySelectorAll(`input[id^='moveslot-${idx}']`);
+    typeList.forEach((type) => {
+      resetTypeTotals(type, idx); //reset type totals in case new pokemon name is null and pokemom was only removed
+    });
     if (!name) {
       abilInput.setAttribute('list', 'all-abils-list');
       moveInputs.forEach(mi => {
@@ -119,9 +134,9 @@ function updateLists(idx, name = null) {
         moveInputs.item(0).required = false;
       }
     } else {
-      abilInput.setAttribute('list', `abilitylist-${idx}`);
       moveList.replaceChildren();
       abilityList.replaceChildren();
+      //moves
       http.get(`/api/pokemon/${name}/moves`).then(moves => {
         moves.forEach(m => {
           let option = document.createElement('option');
@@ -134,6 +149,7 @@ function updateLists(idx, name = null) {
       moveInputs.forEach(mi => {
         mi.setAttribute('list', `movelist-${idx}`);
       });
+      //abilities
       http.get(`/api/pokemon/${name}/abilities`).then(abilities => {
         abilities.forEach(a => {
           let option = document.createElement('option');
@@ -143,6 +159,52 @@ function updateLists(idx, name = null) {
       }).catch(err => {
         console.error(`Error loading ability data for ${name}`);
       });
+      abilInput.setAttribute('list', `abilitylist-${idx}`);
+      //type defenses
+      http.get(`/api/pokemon/${name}/defenses`).then((defenses) => {
+        let item = document.getElementById(`itemslot-${idx}`).value;
+        const data = typeDefenseModifiers(defenses, abilInput.value, types, item); //account for abilities and items
+        Object.entries(data).forEach(([type, eff]) => {
+          const row = document.getElementById(`defense-${type}`);
+          const def = row.children.item(idx + 1); //the <td> that displays the value
+          const totalWeak = row.children.item(7);
+          const totalResist = row.children.item(8);
+          let totalWeakNum = parseInt(totalWeak.innerHTML);
+          let totalResistNum = parseInt(totalResist.innerHTML);
+          //add new effect
+          const effect = effectMap(eff);
+          if (effect != 'normal-effect') {
+            def.classList.add(effect);
+            if (eff > 1) {
+              totalWeak.innerHTML = totalWeakNum + 1;
+              totalWeakNum++;
+            } else {
+              totalResist.innerHTML = totalResistNum + 1;
+              totalResistNum++;
+            }
+          }
+          if (totalResistNum > 0) {
+            totalResist.className = 'half-effect';
+          } else if (totalResistNum > 2) {
+            totalResist.className = 'quarter-effect';
+          } else {
+            totalResist.className = '';
+          }
+          if (totalWeakNum > 0) {
+            totalWeak.classList.add('double-effect');
+            totalWeak.classList.remove('quadruple-effect');
+          } else if (totalWeakNum > 2) {
+            totalWeak.classList.add('quadruple-effect');
+            totalWeak.classList.remove('double-effect')
+          } else {
+            totalResist.classList.remove('double-effect', 'quadruple-effect');
+          }
+          def.innerHTML = eff;
+        });
+      }).catch(err => {
+        console.log(err);
+        console.error(`Error loading type defense data for ${name}`);
+      });
       if (idx != 0) {
         abilInput.required = true;
         moveInputs.item(0).required = true;
@@ -151,8 +213,44 @@ function updateLists(idx, name = null) {
   }
 }
 
+function resetTypeTotals(type, idx) {
+  const row = document.getElementById(`defense-${type}`);
+  const def = row.children.item(idx + 1); //the <td> that displays the value
+  const totalWeak = row.children.item(7);
+  const totalResist = row.children.item(8);
+  let totalWeakNum = parseInt(totalWeak.innerHTML);
+  let totalResistNum = parseInt(totalResist.innerHTML);
+  //undo previous pokemon's effect if one was there
+  const oldNum = isNaN(def.innerHTML) ? null : parseFloat(def.innerHTML);
+  if (oldNum !== null && oldNum < 1) {
+    totalResist.innerHTML = totalResistNum - 1;
+    totalResistNum--;
+  } else if (oldNum !== null && oldNum > 1) {
+    totalWeak.innerHTML = totalWeakNum - 1;
+    totalWeakNum--;
+  }
+  def.innerHTML = '-';
+  def.classList.remove(...def.classList);
+  if (totalResistNum > 0) {
+    totalResist.className = 'half-effect';
+  } else if (totalResistNum > 2) {
+    totalResist.className = 'quarter-effect';
+  } else {
+    totalResist.className = '';
+  }
+  if (totalWeakNum > 0) {
+    totalWeak.classList.add('double-effect');
+    totalWeak.classList.remove('quadruple-effect');
+  } else if (totalWeakNum > 2) {
+    totalWeak.classList.add('quadruple-effect');
+    totalWeak.classList.remove('double-effect')
+  } else {
+    totalWeak.classList.remove('double-effect', 'quadruple-effect');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
-  const submitBtn = document.getElementById('upload-btn');
+  //toggles for smaller screens
   if (window.innerWidth < SMALL_SIZE) {
     createToggleSmall();
   }
@@ -164,88 +262,48 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
   loadData().then(pokemon => {
-    const pokemonNames = pokemon ? pokemon.map(p => p.name) : false;
-    let nameInputs = document.getElementsByClassName('poke-name-input');
-    updateLists(-1);
-    //console.log('pokemonNames?', pokemonNames);
-    if (pokemonNames) {
+    const nameInputs = Array.from(document.getElementsByClassName('poke-name-input'));
+    const abilityInputs = Array.from(document.querySelectorAll(`input[id^='abilityslot']`));
+    const itemInputs = Array.from(document.querySelectorAll(`input[id^='itemslot']`));
+    updateTeamEntryData(-1); //initialize lists to use all values at start
+    if (pokemon) {
       for (let i = 0; i < nameInputs.length; i++) {
-        let n = nameInputs[i];
-        n.addEventListener('change', e => {
-          let val = n.value.trim();
-          //check if typed in name is empty
-          if (!val || val == '') {
-            return updatePokemonEntry(i);
-          }
-          //find name in name list or type variant list
-          let find = pokemonNames.filter(n => n.toLowerCase() === val.toLowerCase())[0];
-          if (!find) {
-            find = Object.keys(nameVariants).find(e => e.toLowerCase() === val.toLowerCase());
-            if (!find) {
-              return updatePokemonEntry(i);
-            }
-            find = nameVariants[find];
-          }
-          n.value = find;
-          //using name update button text and show sprite
-          updatePokemonEntry(i, find);
-        });
+        const moveInputs = Array.from(document.querySelectorAll(`input[id^='moveslot-${i}']`));
+        const n = nameInputs[i];
+        n.addEventListener('change', () => textEntryEvent(pokemon, n, i));
+        moveInputs.forEach(m => m.addEventListener('change', () => textEntryEvent(pokemon, n, i)));
+        abilityInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
+        itemInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
       }
     }
-    submitBtn.addEventListener('click', (e) => {
-      const teamData = [];
-      const teamName = document.getElementById('team-name').value.trim();
-      if (teamName.length < 2) {
-        return showError("Error: Team name must be at least 2 characters");
-      }
-      for (let i = 0; i < 6; i++) {
-        const pokeName = document.getElementById(`teamslot-${i}`).value.trim();
-        if (pokeName == '') {
-          continue;
-        }
-        const pokeItem = document.getElementById(`itemslot-${i}`).value.trim();
-        const itemName = pokeItem && pokeItem != '' ? pokeItem : null;
-        const abilName = document.getElementById(`abilityslot-${i}`).value.trim();
-        if (abilName == '') {
-          return showError(`Error in Team Slot ${i + 1}: All Pokemon must have an ability`);
-        }
-        let moveNames = [];
-        document.querySelectorAll(`input[id^='moveslot-${i}']`).forEach((m) => {
-          if (m.value && m.value.trim() != '') {
-            moveNames.push(m.value.trim());
-          }
-        });
-        if (moveNames.length == 0) {
-          return showError(`Error in Team Slot ${i + 1}: All Pokemon must have at least one move`);
-        }
-        teamData.push({
-          name: pokeName,
-          moves: moveNames,
-          item: itemName,
-          ability: abilName
-        });
-      }
-      if (teamData.length == 0) {
-        return showError("Error: Team must have at least one Pokemon");
-      }
-      const data = {
-        name: teamName,
-        public: document.getElementById('public-check').checked,
-        pokemon: teamData
-      };
-      console.log(data);
-      http.post('/api/teams/create', data).then(response => {
-        showSuccess();
-        console.log('new id', response.id);
-      }).catch(error => {
-        showError(error, error.status >= 500);
-      });
-    });
+    setUpSubmit(); //set up the "form" submission for creating a team
+    pokeInfoNav(); //set up the nav showing type defenses / move offenses
   }).catch(err => {
     console.info('Could not load Pokemon data, some features may be unavailable');
     console.log(err);
   });
 });
+
+function textEntryEvent(pokemon, n, i) {
+  let val = n.value.trim();
+  //check if typed in name is empty
+  if (!val || val == '') {
+    return updatePokemonEntry(i);
+  }
+  //find name in name list or type variant list
+  let find = pokemon.find(({ name }) => name.toLowerCase() === val.toLowerCase());
+  if (!find) {
+    find = Object.keys(nameVariants).find(e => e.toLowerCase() === val.toLowerCase());
+    if (!find) {
+      return updatePokemonEntry(i);
+    }
+    find = pokemon.find(({ name }) => name.toLowerCase() === nameVariants[find].toLowerCase());
+  }
+  n.value = find.name;
+  //using name update button text and show sprite
+  const types = find.type2 ? [find.type1, find.type2] : [find.type1];
+  updatePokemonEntry(i, find.name, types);
+}
 
 function showError(message, serverError = false) {
   let error = document.getElementById('upload-err');
@@ -257,4 +315,87 @@ function showSuccess() {
   document.getElementById('upload-err').classList.add('d-none');
   //show modal TODO
   document.getElementById('upload-succ').classList.remove('d-none');
+}
+
+function setUpSubmit() {
+
+  document.getElementById('upload-btn').addEventListener('click', (e) => {
+    const teamData = [];
+    const teamName = document.getElementById('team-name').value.trim();
+    if (teamName.length < 2) {
+      return showError("Error: Team name must be at least 2 characters");
+    }
+    for (let i = 0; i < 6; i++) {
+      const pokeName = document.getElementById(`teamslot-${i}`).value.trim();
+      if (pokeName == '') {
+        continue;
+      }
+      const pokeItem = document.getElementById(`itemslot-${i}`).value.trim();
+      const itemName = pokeItem && pokeItem != '' ? pokeItem : null;
+      const abilName = document.getElementById(`abilityslot-${i}`).value.trim();
+      if (abilName == '') {
+        return showError(`Error in Team Slot ${i + 1}: All Pokemon must have an ability`);
+      }
+      let moveNames = [];
+      document.querySelectorAll(`input[id^='moveslot-${i}']`).forEach((m) => {
+        if (m.value && m.value.trim() != '') {
+          moveNames.push(m.value.trim());
+        }
+      });
+      if (moveNames.length == 0) {
+        return showError(`Error in Team Slot ${i + 1}: All Pokemon must have at least one move`);
+      }
+      teamData.push({
+        name: pokeName,
+        moves: moveNames,
+        item: itemName,
+        ability: abilName
+      });
+    }
+    if (teamData.length == 0) {
+      return showError("Error: Team must have at least one Pokemon");
+    }
+    const data = {
+      name: teamName,
+      public: document.getElementById('public-check').checked,
+      pokemon: teamData
+    };
+    //console.log(data);
+    http.post('/api/teams/create', data).then(response => {
+      showSuccess();
+      console.log('new id', response.id);
+    }).catch(error => {
+      showError(error, error.status >= 500);
+    });
+  });
+}
+
+function pokeInfoNav() {
+  const defense = document.getElementById('defense');
+  const offense = document.getElementById('offense');
+  const defenseNav = document.getElementById('defense-nav');
+  const offenseNav = document.getElementById('offense-nav');
+  const hide = document.getElementById('hide-nav');
+  //add listeners to switch between offense/defense or hide them
+  defenseNav.addEventListener('click', e => {
+    defense.classList.remove('d-none');
+    offense.classList.add('d-none');
+    hide.firstElementChild.classList.remove('active');
+    defenseNav.firstElementChild.classList.add('active');
+    offenseNav.firstElementChild.classList.remove('active');
+  });
+  offenseNav.addEventListener('click', e => {
+    defense.classList.add('d-none');
+    hide.firstElementChild.classList.remove('active');
+    offense.classList.remove('d-none');
+    offenseNav.firstElementChild.classList.add('active');
+    defenseNav.firstElementChild.classList.remove('active');
+  });
+  hide.addEventListener('click', e => {
+    hide.firstElementChild.classList.add('active');
+    defenseNav.firstElementChild.classList.remove('active');
+    offenseNav.firstElementChild.classList.remove('active');
+    offense.classList.add('d-none');
+    defense.classList.add('d-none');
+  });
 }

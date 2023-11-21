@@ -82,11 +82,12 @@ router.get("/category/:category", (req, res) => {
  * - ?m=earthquake
  * - ?m=earthquake&m=earthpower&m=dig&m=bulldoze
  * Returns how well a Pokemon with the specified moves could hit Pokemon of different types
+ * If no moves specified, acts like only 1 non-damaging move was specified
  */
 router.get("/attack/effectiveness", (req, res) => {
   const moveNames = req.query.m;
   if (!moveNames) {
-    return res.status(400).json({ "error": "Must specify at least one move" });
+    moveNames = ['leer'];
   }
   const movesArr = Array.isArray(moveNames) ? moveNames : [moveNames];
   if (movesArr.length > 4) {

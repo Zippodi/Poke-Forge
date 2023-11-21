@@ -110,8 +110,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-0"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-0" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-0"></span>
                 </a>
@@ -190,8 +189,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-1"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-1" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-1"></span>
                 </a>
@@ -268,8 +266,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-2"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-2" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-2"></span>
                 </a>
@@ -346,8 +343,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-3"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-3" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-3"></span>
                 </a>
@@ -424,8 +420,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-4"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-4" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-4"></span>
                 </a>
@@ -502,8 +497,7 @@
                   src="images/mystery.png"
                   width="68px"
                   height="68px"
-                  id="mystery-5"
-                  class="sprite-placeholder" />
+                  class="sprite-placeholder mystery-5" />
                 <a target="_blank" href="#">
                   <span class="mb-3 pokesprite d-none pokemon name-sprite" id="sprite-5"></span>
                 </a>
@@ -553,16 +547,289 @@
         </div>
         <!--end of entries-->
       </div>
-    </div>
-    <div class="mb-4 mt-2 d-grid col-8 col-lg-4 mx-auto">
-      <div class="alert alert-danger d-none" role="alert" id="upload-err"></div>
-      <input
-        class="mx-2 btn btn-lg btn-outline-warning my-btn mb-3"
-        type="button"
-        id="upload-btn"
-        value="Upload Team" />
-      <div class="alert alert-success d-none" role="alert" id="upload-succ">
-        Success! Your team was saved!
+      <!--Start of offense/defense showcase-->
+      <div class="card mb-5 mx-2 mx-lg-4">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item" id="defense-nav">
+              <a class="nav-link active">Defense</a>
+            </li>
+            <li class="nav-item" id="offense-nav">
+              <a class="nav-link">Offense</a>
+            </li>
+            <li class="nav-item" id="hide-nav">
+              <a class="nav-link">Hide</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div id="defense">
+            <div class="table-responsive-md">
+              <table class="table text-center table-striped table-borderless">
+                <colgroup>
+                  <col span="1" />
+                  <col span="6" />
+                  <col span="2" />
+                </colgroup>
+                <thead>
+                  <tr class="justify-content-center head-row">
+                    <th scope="col"></th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-0" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-1" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-2" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-3" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-4" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th scope="col">
+                      <img src="images/mystery.png" width="68px" height="68px" class="mystery-5" />
+                      <a target="_blank" href="#">
+                        <span class="pokesprite pokemon d-none"></span>
+                      </a>
+                    </th>
+                    <th>Total Weak</th>
+                    <th>Total Resist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="defense-normal">
+                    <th scope="row"><img src="images/types/normal.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-fire">
+                    <th scope="row"><img src="images/types/fire.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-water">
+                    <th scope="row"><img src="images/types/water.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-electric">
+                    <th scope="row"><img src="images/types/electric.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-grass">
+                    <th scope="row"><img src="images/types/grass.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-ice">
+                    <th scope="row"><img src="images/types/ice.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-fighting">
+                    <th scope="row"><img src="images/types/fighting.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-poison">
+                    <th scope="row"><img src="images/types/poison.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-ground">
+                    <th scope="row"><img src="images/types/ground.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-flying">
+                    <th scope="row"><img src="images/types/flying.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-psychic">
+                    <th scope="row"><img src="images/types/psychic.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-bug">
+                    <th scope="row"><img src="images/types/bug.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-rock">
+                    <th scope="row"><img src="images/types/rock.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-ghost">
+                    <th scope="row"><img src="images/types/ghost.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-dragon">
+                    <th scope="row"><img src="images/types/dragon.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-dark">
+                    <th scope="row"><img src="images/types/dark.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-steel">
+                    <th scope="row"><img src="images/types/steel.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr id="defense-fairy">
+                    <th scope="row"><img src="images/types/fairy.png" class="tbl-icon" /></th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="divider">0</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="offense" class="d-none">offense</div>
+        </div>
+      </div>
+      <div class="mb-4 mt-2 d-grid col-8 col-lg-6 mx-auto">
+        <div class="alert alert-danger d-none" role="alert" id="upload-err"></div>
+        <input
+          class="mx-2 btn btn-lg btn-outline-warning my-btn mb-3"
+          type="button"
+          id="upload-btn"
+          value="Upload Team" />
+        <div class="alert alert-success d-none" role="alert" id="upload-succ">
+          Success! Your team was saved!
+        </div>
       </div>
     </div>
     <!--various datalists used-->
