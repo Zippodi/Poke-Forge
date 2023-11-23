@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { handleError } = require('../utils');
 const PokemonDAO = require('../data/dao/PokemonDAO');
+const { TokenMiddleware } = require('../auth-endpoints/auth-middleware');
+const cookieParser = require('cookie-parser');
+router.use(cookieParser());
 
 //get all pokemon
-router.get("/", (req, res) => {
+router.get("/", TokenMiddleware, (req, res) => {
   PokemonDAO.getAllPokemon().then(pokemon => {
     res.status(200).json(pokemon);
   }).catch(err => {
@@ -13,7 +16,7 @@ router.get("/", (req, res) => {
 });
 
 //get pokemon by its name
-router.get('/:name', (req, res) => {
+router.get('/:name', TokenMiddleware, (req, res) => {
   PokemonDAO.getPokemonByName(req.params.name).then(pokemon => {
     if (pokemon) {
       res.status(200).json(pokemon);
@@ -26,7 +29,7 @@ router.get('/:name', (req, res) => {
 });
 
 //get pokemon by its id
-router.get('/id/:id', (req, res) => {
+router.get('/id/:id', TokenMiddleware, (req, res) => {
   PokemonDAO.getPokemonById(req.params.id).then(pokemon => {
     if (pokemon) {
       res.status(200).json(pokemon);
@@ -40,7 +43,7 @@ router.get('/id/:id', (req, res) => {
 
 //get all pokemon with a certain type
 //might want to only return names (or names+types or specific data entries needed)
-router.get('/type/:type', (req, res) => {
+router.get('/type/:type', TokenMiddleware, (req, res) => {
   PokemonDAO.getPokemonByType(req.params.type).then(pokemon => {
     if (pokemon) {
       res.status(200).json(pokemon);
@@ -53,7 +56,7 @@ router.get('/type/:type', (req, res) => {
 });
 
 //get weaknesses of this pokemon, can be via id or name
-router.get('/:identifier/defenses', (req, res) => {
+router.get('/:identifier/defenses', TokenMiddleware, (req, res) => {
   const identifier = req.params.identifier.toLowerCase();
   if (isNaN(identifier)) {
     PokemonDAO.getPokemonByName(identifier, true).then(data => {
@@ -79,7 +82,7 @@ router.get('/:identifier/defenses', (req, res) => {
 });
 
 //get moves a pokemon can learn, can be via id or name
-router.get('/:identifier/moves', (req, res) => {
+router.get('/:identifier/moves', TokenMiddleware, (req, res) => {
   const identifier = req.params.identifier.toLowerCase();
   PokemonDAO.getPokemonMoves(identifier, isNaN(identifier)).then(data => {
     if (data) {
@@ -93,7 +96,7 @@ router.get('/:identifier/moves', (req, res) => {
 });
 
 //get abilities a pokemon can have, can be via id or name
-router.get('/:identifier/abilities', (req, res) => {
+router.get('/:identifier/abilities', TokenMiddleware, (req, res) => {
   const identifier = req.params.identifier.toLowerCase();
   PokemonDAO.getPokemonAbilities(identifier, isNaN(identifier)).then(data => {
     if (data) {

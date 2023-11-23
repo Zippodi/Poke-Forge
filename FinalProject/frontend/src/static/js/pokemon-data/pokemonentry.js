@@ -104,6 +104,9 @@ addEventListener('DOMContentLoaded', e => {
       document.getElementById('error').classList.remove('d-none');
     });
   }).catch(err => {
+    if (err.status == 401) {
+      window.location.href = '/';
+    }
     document.getElementById('error').classList.remove('d-none');
   });
 });

@@ -3,6 +3,14 @@ const jwt = require('jsonwebtoken');
 const TOKEN_COOKIE_NAME = "PokeForgeLogin";
 
 exports.TokenMiddleware = (req, res, next) => {
+
+  // //Uncomment for testing to bypass authentication. Change req.user values if needed
+  // req.user = {
+  //   userid: 1,
+  //   username: "usernamehere"
+  // }
+  // return next();
+
   let token = null;
   if (!req.cookies[TOKEN_COOKIE_NAME]) {
     //No cookie, check for Authorization header
@@ -18,8 +26,7 @@ exports.TokenMiddleware = (req, res, next) => {
 
   // no token
   if (!token) {
-    res.status(401).json({ error: 'Not authenticated' });
-    return;
+    return res.status(401).json({ error: 'Not authenticated' });
   }
 
   try {
@@ -28,11 +35,9 @@ exports.TokenMiddleware = (req, res, next) => {
     next();
   }
   catch (err) { //Token is invalid
-    res.status(401).json({ error: 'Invalid Login Session' });
-    return;
+    return res.status(401).json({ error: 'Invalid Login Session' });
   }
 }
-
 
 exports.generateToken = (req, res, user) => {
   let data = {

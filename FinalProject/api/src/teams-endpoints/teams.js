@@ -1,9 +1,9 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const router = express.Router();
 const { TokenMiddleware } = require('../auth-endpoints/auth-middleware');
 const { handleError } = require('../utils');
 const TeamDAO = require('../data/dao/TeamDAO');
+const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
 //create a new team, returns id of created team

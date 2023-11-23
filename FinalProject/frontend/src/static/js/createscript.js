@@ -18,6 +18,10 @@ function loadData() {
         list.appendChild(option);
       });
     }).catch(err => {
+      //first API request on the page
+      if (err.status = 401) {
+        reject(err);
+      }
       console.error('Could not load move data');
     });
     http.get('/api/abilities').then(abilities => {
@@ -392,41 +396,6 @@ function resetTypes(type, idx, offenseOnly) {
   off.innerHTML = '-';
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  //toggles for smaller screens
-  if (window.innerWidth < SMALL_SIZE) {
-    createToggleSmall();
-  }
-  window.addEventListener('resize', e => {
-    if (window.innerWidth < SMALL_SIZE && !small) {
-      createToggleSmall();
-    } else if (window.innerWidth > SMALL_SIZE && small) {
-      createToggleSmall();
-    }
-  });
-  loadData().then(pokemon => {
-    const nameInputs = Array.from(document.getElementsByClassName('poke-name-input'));
-    const abilityInputs = Array.from(document.querySelectorAll(`input[id^='abilityslot']`));
-    const itemInputs = Array.from(document.querySelectorAll(`input[id^='itemslot']`));
-    updateTeamEntryData(-1, false); //initialize lists to use all values at start
-    if (pokemon) {
-      for (let i = 0; i < nameInputs.length; i++) {
-        const moveInputs = Array.from(document.querySelectorAll(`input[id^='moveslot-${i}']`));
-        const n = nameInputs[i];
-        n.addEventListener('change', () => textEntryEvent(pokemon, n, i));
-        moveInputs.forEach(m => m.addEventListener('change', () => textEntryEvent(pokemon, n, i, true)));
-        abilityInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
-        itemInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
-      }
-    }
-    setUpSubmit(); //set up the "form" submission for creating a team
-    pokeInfoNav(); //set up the nav showing type defenses / move offenses
-  }).catch(err => {
-    console.info('Could not load Pokemon data, some features may be unavailable');
-    console.log(err);
-  });
-});
-
 function textEntryEvent(pokemon, n, i, offenseOnly = false) {
   let val = n.value.trim();
   //check if typed in name is empty
@@ -541,3 +510,41 @@ function pokeInfoNav() {
     defense.classList.add('d-none');
   });
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  //toggles for smaller screens
+  if (window.innerWidth < SMALL_SIZE) {
+    createToggleSmall();
+  }
+  window.addEventListener('resize', e => {
+    if (window.innerWidth < SMALL_SIZE && !small) {
+      createToggleSmall();
+    } else if (window.innerWidth > SMALL_SIZE && small) {
+      createToggleSmall();
+    }
+  });
+  loadData().then(pokemon => {
+    const nameInputs = Array.from(document.getElementsByClassName('poke-name-input'));
+    const abilityInputs = Array.from(document.querySelectorAll(`input[id^='abilityslot']`));
+    const itemInputs = Array.from(document.querySelectorAll(`input[id^='itemslot']`));
+    updateTeamEntryData(-1, false); //initialize lists to use all values at start
+    if (pokemon) {
+      for (let i = 0; i < nameInputs.length; i++) {
+        const moveInputs = Array.from(document.querySelectorAll(`input[id^='moveslot-${i}']`));
+        const n = nameInputs[i];
+        n.addEventListener('change', () => textEntryEvent(pokemon, n, i));
+        moveInputs.forEach(m => m.addEventListener('change', () => textEntryEvent(pokemon, n, i, true)));
+        abilityInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
+        itemInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
+      }
+    }
+    setUpSubmit(); //set up the "form" submission for creating a team
+    pokeInfoNav(); //set up the nav showing type defenses / move offenses
+  }).catch(err => {
+    if (err.status = 401) {
+      window.location.href = '/';
+    }
+    console.info('Could not load Pokemon data, some features may be unavailable');
+    console.log(err);
+  });
+});
