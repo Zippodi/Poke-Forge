@@ -43,7 +43,7 @@ router.get('/', TokenMiddleware, (req, res) => {
   let name = req.query.name ? decodeURIComponent(req.query.name) : false;
   let includeOwn = req.query.own == 'true';
   // TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
-  TeamDAO.getAllTeams(1, includeOwn, name, pokemon ? pokemon : false).then(teams => {
+  TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
     return res.status(200).json(teams);
   }).catch(err => {
     console.log(err);
@@ -59,7 +59,7 @@ router.put('/id/:teamid', TokenMiddleware, (req, res) => {
 //get team via the teamid
 //query ?detailed=true gets type defenses and move effectiveness information for each pokemon in team
 router.get('/id/:teamid', TokenMiddleware, (req, res) => {
-  TeamDAO.getTeamById(req.params.teamid, 1).then(team => {
+  TeamDAO.getTeamById(req.params.teamid, req.user.id).then(team => {
     if (req.query.detailed == 'true') {
       return res.status(200).json(team.toDetailedJSON());
     } else {
