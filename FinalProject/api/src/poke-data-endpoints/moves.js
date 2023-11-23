@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const MoveDAO = require('../data/dao/MoveDAO');
 const { handleError } = require('../utils');
+
 /*
 Notes about move data:
  * Move power of 1 = Undetermined power (OHKO, fixed HP, fling, weight based, HP based, counter, reversal, etc.)
  * Move accuracy of 0 means accuracy has no effect (healing moves, stat raising moves, etc.)
  * Move accuracy of -1 means always hits (Aerial Ace, Vital Thorw, etc.)
  * Move power of 0 means no power (stat moves, status moves, healing moves, etc.)
+ * These are updated for display purposes in MoveDAO
 */
 
 //get all moves
@@ -80,38 +82,26 @@ router.get("/category/:category", (req, res) => {
  * - ?m=earthquake
  * - ?m=earthquake&m=earthpower&m=dig&m=bulldoze
  * Returns how well a Pokemon with the specified moves could hit Pokemon of different types
+ * If no moves specified, acts like only 1 non-damaging move was specified
+ * ---
+ * Also takes query i=true (for ignore) that signals to ignore moves if they do not exist
+ * - If not provided, a move that does not exist will throw a 404 error
  */
-// router.get("/attack/effectiveness", (req, res) => {
-//   const moveNames = req.query.m;
-//   if (!moveNames) {
-//     return res.status(400).json({ "error": "must specify a move" });
-//   }
-//   const movesArr = Array.isArray(moveNames) ? moveNames : [moveNames];
-//   if (movesArr.length > 4) {
-//     return res.status(400).json({ "error": "can specify a maximum of 4 moves" });
-//   }
-//   let moveTypes = [];
-//   for (const m of movesArr) {
-//     if (!m) {
-//       continue;
-//     }
-//     const moveData = moves[m.toLowerCase()];
-//     if (!moveData) {
-//       return res.status(400).json({ "error": "invalid move given" });
-//     }
-//     if (moveData.power != 0) {
-//       moveTypes.push(moves[m.toLowerCase()].type);
-//     }
-//   }
-//   if (moveTypes.length === 0) {
-//     let ret = types.typeList.reduce((pre, cur) => Object.assign(pre, { [cur]: 0 }), {});
-//     return res.status(200).json({ "effectiveness": ret });
-//   }
-//   let obj = types.getMoveEffectiveness(moveTypes);
-//   if (!obj) {
-//     return res.status(500).json({ "error": "could not complete request" });
-//   }
-//   res.status(200).json({ "effectiveness": obj });
-// });
+router.get("/attack/effectiveness", (req, res) => {
+  let moveNames = req.query.m;
+  if (!moveNames || moveNames == '') {
+    moveNames = ['leer'];
+  }
+  const ignore404 = req.query.i == 'true';
+  const movesArr = Array.isArray(moveNames) ? moveNames : [moveNames];
+  if (movesArr.length > 4) {
+    return res.status(400).json({ "error": "Can specify a maximum of 4 moves" });
+  }
+  MoveDAO.getMoveEffectiveness(movesArr, ignore404).then((data) => {
+    res.status(200).json({ data });
+  }).catch(err => {
+    handleError(err, res);
+  });
+});
 
 module.exports = router;

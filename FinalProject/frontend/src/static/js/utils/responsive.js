@@ -32,7 +32,6 @@ export const pokeDataToggleSmall = (pageString) => {
 }
 
 export const createToggleSmall = () => {
-  let wrapper = document.getElementById('wrapper');
-  wrapper.classList.toggle('w-75');
+  document.getElementById('public-text').innerHTML = small ? 'Make this team public?' : 'Public team?'
   small = !small;
 }

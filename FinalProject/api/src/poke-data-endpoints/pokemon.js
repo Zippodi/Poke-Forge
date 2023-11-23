@@ -25,7 +25,7 @@ router.get('/:name', (req, res) => {
   });
 });
 
-//get pokemon by it's id
+//get pokemon by its id
 router.get('/id/:id', (req, res) => {
   PokemonDAO.getPokemonById(req.params.id).then(pokemon => {
     if (pokemon) {

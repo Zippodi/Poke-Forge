@@ -8,7 +8,6 @@ router.use(cookieParser());
 
 //create a new team, returns id of created team
 router.post('/create', TokenMiddleware, (req, res) => {
-  console.log(req.user);
   if (req.body) {
     TeamDAO.createTeam(req.body, req.user.id).then(data => {
       return res.status(200).json({ id: data });
@@ -16,7 +15,7 @@ router.post('/create', TokenMiddleware, (req, res) => {
       handleError(err, res);
     });
   } else {
-    return res.status(400).json({ error: "invalid request" });
+    return res.status(400).json({ error: "Invalid request" });
   }
 });
 
