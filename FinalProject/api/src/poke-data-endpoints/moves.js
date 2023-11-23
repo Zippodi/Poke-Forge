@@ -83,17 +83,21 @@ router.get("/category/:category", (req, res) => {
  * - ?m=earthquake&m=earthpower&m=dig&m=bulldoze
  * Returns how well a Pokemon with the specified moves could hit Pokemon of different types
  * If no moves specified, acts like only 1 non-damaging move was specified
+ * ---
+ * Also takes query i=true (for ignore) that signals to ignore moves if they do not exist
+ * - If not provided, a move that does not exist will throw a 404 error
  */
 router.get("/attack/effectiveness", (req, res) => {
-  const moveNames = req.query.m;
-  if (!moveNames) {
+  let moveNames = req.query.m;
+  if (!moveNames || moveNames == '') {
     moveNames = ['leer'];
   }
+  const ignore404 = req.query.i == 'true';
   const movesArr = Array.isArray(moveNames) ? moveNames : [moveNames];
   if (movesArr.length > 4) {
     return res.status(400).json({ "error": "Can specify a maximum of 4 moves" });
   }
-  MoveDAO.getMoveEffectiveness(movesArr).then((data) => {
+  MoveDAO.getMoveEffectiveness(movesArr, ignore404).then((data) => {
     res.status(200).json({ data });
   }).catch(err => {
     handleError(err, res);

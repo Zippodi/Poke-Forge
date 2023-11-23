@@ -186,7 +186,7 @@ export const getDefensesJson = (type1, type2 = undefined) => {
   let ret = Object.assign(base, effectiveness[type1]);
   if (type2) {
     typeList.forEach((type) => {
-      if (Object.hasOwn(effectiveness[type2], type)) {
+      if (Object.hasOwn(effectiveness[type2], type) && ret[type] < 1) {
         ret[type] *= effectiveness[type2][type];
       }
     });

@@ -1,6 +1,6 @@
 import { typeList } from './types/types.js';
 import http from './utils/HTTPClient.js';
-import { effectMap, getSpriteName, nameVariants, typeDefenseModifiers } from './utils/PokemonUtils.js';
+import * as utils from './utils/PokemonUtils.js';
 import { createToggleSmall, small } from './utils/responsive.js';
 
 const SMALL_SIZE = 350;
@@ -45,7 +45,7 @@ function loadData() {
       pokelist.appendChild(option);
     });
     //append more options for different variations of names
-    Object.keys(nameVariants).forEach(k => {
+    Object.keys(utils.nameVariants).forEach(k => {
       let option = document.createElement('option');
       option.value = k;
       pokelist.appendChild(option);
@@ -69,7 +69,7 @@ function loadData() {
  * If name is valid it will put insert the pokemon sprite and update data lists to have move/ability values for that pokemon.
  * Otherwise displays mystery image and updates data lists to use all move/ability values
  * */
-function updatePokemonEntry(idx, name = null, types = null) {
+function updatePokemonEntry(idx, offenseOnly, name = null, types = null) {
   let sprite = document.getElementById(`sprite-${idx}`);
   let btn = document.getElementById(`btn-${idx}`);
   let imgs = Array.from(document.getElementsByClassName(`mystery-${idx}`));
@@ -86,12 +86,12 @@ function updatePokemonEntry(idx, name = null, types = null) {
     sprites.forEach(s => { s.classList.add('d-none'); s.parentElement.setAttribute('href', '#'); });
     imgs.forEach(i => i.classList.remove('d-none'));
     btn.innerHTML = `Team Slot ${idx + 1}:`;
-    updateTeamEntryData(idx);
+    updateTeamEntryData(idx, offenseOnly);
   } else {
     btn.innerHTML = `Team Slot ${idx + 1}: ${name}`;
     const ability = document.getElementById(`abilityslot-${idx}`).value.toLowerCase().replaceAll(' ', '');
     const item = document.getElementById(`itemslot-${idx}`).value.toLowerCase().replaceAll(' ', '');
-    const newname = getSpriteName(name, ability, item);
+    const newname = utils.getSpriteName(name, ability, item);
     imgs.forEach(i => i.classList.add('d-none'));
     sprites.forEach(s => {
       s.classList.remove('d-none');
@@ -102,7 +102,7 @@ function updatePokemonEntry(idx, name = null, types = null) {
         s.classList.add('shiny');
       }
     });
-    updateTeamEntryData(idx, name.toLowerCase().replaceAll(' ', ''), types);
+    updateTeamEntryData(idx, offenseOnly, name.toLowerCase().replaceAll(' ', ''), types);
   }
 }
 
@@ -111,7 +111,7 @@ function updatePokemonEntry(idx, name = null, types = null) {
  * Null/no name means load all moves/abilities
  * idx not in range of 0-5 (inclusive) = perform action for all indexes
  */
-function updateTeamEntryData(idx, name = null, types = null) {
+function updateTeamEntryData(idx, offenseOnly, name = null, types = null) {
   if (idx < 0 || idx > 5) {
     for (let i = 0; i < 6; i++) {
       updateTeamEntryData(i, name);
@@ -121,8 +121,9 @@ function updateTeamEntryData(idx, name = null, types = null) {
     let abilityList = document.getElementById(`abilitylist-${idx}`);
     let abilInput = document.getElementById(`abilityslot-${idx}`);
     let moveInputs = document.querySelectorAll(`input[id^='moveslot-${idx}']`);
+    //reset totals for offense/defense stats in case new pokemon name is null and pokemom was only removed
     typeList.forEach((type) => {
-      resetTypeTotals(type, idx); //reset type totals in case new pokemon name is null and pokemom was only removed
+      resetTypes(type, idx, offenseOnly);
     });
     if (!name) {
       abilInput.setAttribute('list', 'all-abils-list');
@@ -160,51 +161,11 @@ function updateTeamEntryData(idx, name = null, types = null) {
         console.error(`Error loading ability data for ${name}`);
       });
       abilInput.setAttribute('list', `abilitylist-${idx}`);
-      //type defenses
-      http.get(`/api/pokemon/${name}/defenses`).then((defenses) => {
-        let item = document.getElementById(`itemslot-${idx}`).value;
-        const data = typeDefenseModifiers(defenses, abilInput.value, types, item); //account for abilities and items
-        Object.entries(data).forEach(([type, eff]) => {
-          const row = document.getElementById(`defense-${type}`);
-          const def = row.children.item(idx + 1); //the <td> that displays the value
-          const totalWeak = row.children.item(7);
-          const totalResist = row.children.item(8);
-          let totalWeakNum = parseInt(totalWeak.innerHTML);
-          let totalResistNum = parseInt(totalResist.innerHTML);
-          //add new effect
-          const effect = effectMap(eff);
-          if (effect != 'normal-effect') {
-            def.classList.add(effect);
-            if (eff > 1) {
-              totalWeak.innerHTML = totalWeakNum + 1;
-              totalWeakNum++;
-            } else {
-              totalResist.innerHTML = totalResistNum + 1;
-              totalResistNum++;
-            }
-          }
-          if (totalResistNum > 0) {
-            totalResist.className = 'half-effect';
-          } else if (totalResistNum > 2) {
-            totalResist.className = 'quarter-effect';
-          } else {
-            totalResist.className = '';
-          }
-          if (totalWeakNum > 0) {
-            totalWeak.classList.add('double-effect');
-            totalWeak.classList.remove('quadruple-effect');
-          } else if (totalWeakNum > 2) {
-            totalWeak.classList.add('quadruple-effect');
-            totalWeak.classList.remove('double-effect')
-          } else {
-            totalResist.classList.remove('double-effect', 'quadruple-effect');
-          }
-          def.innerHTML = eff;
-        });
-      }).catch(err => {
-        console.log(err);
-        console.error(`Error loading type defense data for ${name}`);
-      });
+      //team detailed information
+      if (!offenseOnly) {
+        updateDefense(idx, name, types, abilInput.value);
+      }
+      updateOffense(idx, name, types, abilInput.value);
       if (idx != 0) {
         abilInput.required = true;
         moveInputs.item(0).required = true;
@@ -213,40 +174,222 @@ function updateTeamEntryData(idx, name = null, types = null) {
   }
 }
 
-function resetTypeTotals(type, idx) {
-  const row = document.getElementById(`defense-${type}`);
-  const def = row.children.item(idx + 1); //the <td> that displays the value
-  const totalWeak = row.children.item(7);
-  const totalResist = row.children.item(8);
-  let totalWeakNum = parseInt(totalWeak.innerHTML);
-  let totalResistNum = parseInt(totalResist.innerHTML);
-  //undo previous pokemon's effect if one was there
-  const oldNum = isNaN(def.innerHTML) ? null : parseFloat(def.innerHTML);
-  if (oldNum !== null && oldNum < 1) {
-    totalResist.innerHTML = totalResistNum - 1;
-    totalResistNum--;
-  } else if (oldNum !== null && oldNum > 1) {
-    totalWeak.innerHTML = totalWeakNum - 1;
-    totalWeakNum--;
+/** Updates the offense tab when viewing team details */
+function updateOffense(idx, name, types, ability) {
+  let item = document.getElementById(`itemslot-${idx}`).value;
+  const moveInputs = Array.from(document.querySelectorAll(`input[id^='moveslot-${idx}']`));
+  //build query string for api call with move names
+  const moveNamesQuery = '?m=' + moveInputs.reduce((pre, curr) => {
+    const lowerItem = item.replaceAll(' ', '').toLowerCase();
+    if (curr.value && curr.value != '') {
+      //do some pre-filtering based on entered ability / move / item
+      let val = curr.value.replaceAll(' ', '').toLowerCase();
+      if (val == 'judgment') {
+        const m = utils.typeToMove[utils.plateToType[lowerItem]];
+        val = m ? m : val;
+      } else if (val == 'technoblast') {
+        const m = utils.typeToMove[utils.driveToType[lowerItem]];
+        val = m ? m : val;
+      } else if (val == 'multi-attack') {
+        const m = utils.typeToMove[typeList.find(t => t === item.replace('memory', ''))];
+        val = m ? m : val;
+      } else if (val == 'naturalgift') {
+        //TODO make a map or something to get the type based on held berry (if applicable)
+      } else if (ability == 'normalize') {
+        val = utils.typeToMove['normal'];
+      }
+      pre.push(val);
+    }
+    return pre;
+  }, []).join('&m=');
+  //offense data with moves user has filled in
+  http.get(`/api/moves/attack/effectiveness${moveNamesQuery}&i=true`).then(offenses => {
+    offenses = offenses.data;
+    const data = utils.typeOffenseModifiers(offenses, ability, types, item);
+    Object.entries(data).forEach(([type, eff]) => {
+      const row = document.getElementById(`offense-${type}`);
+      const off = row.children.item(idx + 1); //the <td> that displays the SVG (or - if normal effectiveness)
+      const totalNoEffect = row.children.item(7);
+      const totalNotEffective = row.children.item(8);
+      const totalSuperEffective = row.children.item(9);
+      let notEffectiveCount = parseInt(totalNotEffective.innerHTML);
+      let superEffectiveCount = parseInt(totalSuperEffective.innerHTML);
+      if (eff == 0) {
+        const svg = document.createElement('img');
+        svg.src = 'images/svg/exclaim.svg';
+        svg.setAttribute('width', '30em');
+        off.innerHTML = '';
+        off.appendChild(svg);
+        totalNoEffect.classList.add('no-effect');
+        totalNoEffect.innerHTML = parseInt(totalNoEffect.innerHTML) + 1;
+      } else if (eff < 1) {
+        const svg = document.createElement('img');
+        svg.src = 'images/svg/x.svg';
+        svg.setAttribute('width', '30em');
+        off.innerHTML = '';
+        off.appendChild(svg);
+        notEffectiveCount++;
+        if (notEffectiveCount > 0) {
+          totalNotEffective.classList.add('double-effect');
+          totalNotEffective.classList.remove('quadruple-effect');
+        } else if (notEffectiveCount > 2) {
+          totalNotEffective.classList.add('quadruple-effect');
+          totalNotEffective.classList.remove('double-effect');
+        } else {
+          totalNotEffective.classList.remove('double-effect', 'quadruple-effect');
+        }
+        totalNotEffective.innerHTML = notEffectiveCount;
+      } else if (eff > 1) {
+        const svg = document.createElement('img');
+        svg.src = 'images/svg/check.svg';
+        svg.setAttribute('width', '30em');
+        off.innerHTML = '';
+        off.appendChild(svg);
+        superEffectiveCount++;
+        if (superEffectiveCount > 0) {
+          totalSuperEffective.classList.add('half-effect');
+          totalSuperEffective.classList.remove('quarter-effect');
+        } else if (superEffectiveCount > 2) {
+          totalSuperEffective.classList.add('quarter-effect');
+          totalSuperEffective.classList.remove('half-effect');
+        } else {
+          totalSuperEffective.classList.remove('half-effect', 'quarter-effect');
+        }
+        totalSuperEffective.innerHTML = superEffectiveCount;
+      }
+    });
+  }).catch(err => {
+    console.log(err);
+    console.error(`Error loading type move offense data for ${name}`);
+  });
+}
+
+/** Updates the defense tab when viewing team details */
+function updateDefense(idx, name, types, ability) {
+  let item = document.getElementById(`itemslot-${idx}`).value;
+  //type defenses
+  http.get(`/api/pokemon/${name}/defenses`).then((defenses) => {
+    const data = utils.typeDefenseModifiers(defenses, ability, types, item); //account for abilities and items
+    Object.entries(data).forEach(([type, eff]) => {
+      const row = document.getElementById(`defense-${type}`);
+      const def = row.children.item(idx + 1); //the <td> that displays the value
+      const totalWeak = row.children.item(7);
+      const totalResist = row.children.item(8);
+      let totalWeakNum = parseInt(totalWeak.innerHTML);
+      let totalResistNum = parseInt(totalResist.innerHTML);
+      //add new effect
+      const effect = utils.effectMap(eff);
+      if (effect != 'normal-effect') {
+        def.classList.add(effect);
+        if (eff > 1) {
+          totalWeak.innerHTML = totalWeakNum + 1;
+          totalWeakNum++;
+        } else {
+          totalResist.innerHTML = totalResistNum + 1;
+          totalResistNum++;
+        }
+      }
+      if (totalResistNum > 0) {
+        totalResist.className = 'half-effect';
+      } else if (totalResistNum > 2) {
+        totalResist.className = 'quarter-effect';
+      } else {
+        totalResist.className = '';
+      }
+      if (totalWeakNum > 0) {
+        totalWeak.classList.add('double-effect');
+        totalWeak.classList.remove('quadruple-effect');
+      } else if (totalWeakNum > 2) {
+        totalWeak.classList.add('quadruple-effect');
+        totalWeak.classList.remove('double-effect')
+      } else {
+        totalResist.classList.remove('double-effect', 'quadruple-effect');
+      }
+      def.innerHTML = eff;
+    });
+  }).catch(err => {
+    // console.log(err);
+    console.error(`Error loading type defense data for ${name}`);
+  });
+}
+
+/** Resets the offense/defense chart entry for the speified index and type */
+function resetTypes(type, idx, offenseOnly) {
+  if (!offenseOnly) {
+    //Defense
+    const row = document.getElementById(`defense-${type}`);
+    const def = row.children.item(idx + 1); //the <td> that displays the value
+    const totalWeak = row.children.item(7);
+    const totalResist = row.children.item(8);
+    let totalWeakNum = parseInt(totalWeak.innerHTML);
+    let totalResistNum = parseInt(totalResist.innerHTML);
+    //undo previous pokemon's effect if one was there
+    const oldNum = isNaN(def.innerHTML) ? null : parseFloat(def.innerHTML);
+    if (oldNum !== null && oldNum < 1) {
+      totalResist.innerHTML = totalResistNum - 1;
+      totalResistNum--;
+    } else if (oldNum !== null && oldNum > 1) {
+      totalWeak.innerHTML = totalWeakNum - 1;
+      totalWeakNum--;
+    }
+    def.innerHTML = '-';
+    def.classList.remove(...def.classList);
+    if (totalResistNum > 0) {
+      totalResist.className = 'half-effect';
+    } else if (totalResistNum > 2) {
+      totalResist.className = 'quarter-effect';
+    } else {
+      totalResist.className = '';
+    }
+    if (totalWeakNum > 0) {
+      totalWeak.classList.add('double-effect');
+      totalWeak.classList.remove('quadruple-effect');
+    } else if (totalWeakNum > 2) {
+      totalWeak.classList.add('quadruple-effect');
+      totalWeak.classList.remove('double-effect')
+    } else {
+      totalWeak.classList.remove('double-effect', 'quadruple-effect');
+    }
   }
-  def.innerHTML = '-';
-  def.classList.remove(...def.classList);
-  if (totalResistNum > 0) {
-    totalResist.className = 'half-effect';
-  } else if (totalResistNum > 2) {
-    totalResist.className = 'quarter-effect';
-  } else {
-    totalResist.className = '';
+  //Offense
+  const row2 = document.getElementById(`offense-${type}`);
+  const off = row2.children.item(idx + 1); //the <td> that displays the SVG (or - if normal effectiveness)
+  //check for svg presence
+  if (off.children.length > 0) {
+    const svgSrc = off.children.item(0).src;
+    const totalNoEffect = row2.children.item(7);
+    const totalNotEffective = row2.children.item(8);
+    const totalSuperEffective = row2.children.item(9);
+    let notEffectiveCount = parseInt(totalNotEffective.innerHTML);
+    let superEffectiveCount = parseInt(totalSuperEffective.innerHTML);
+    let noEffectCount = parseInt(totalNoEffect.innerHTML);
+    if (svgSrc.includes('check')) {
+      if (superEffectiveCount == 3) { //if it's 3 before removing then it will be downgraded
+        totalSuperEffective.classList.add('half-effect');
+        totalSuperEffective.classList.remove('quarter-effect');
+      } else if (superEffectiveCount == 1) { //if it's 1 before removing then it will be removed
+        totalSuperEffective.classList.remove('quarter-effect');
+        totalSuperEffective.classList.remove('half-effect');
+      }
+      totalSuperEffective.innerHTML = superEffectiveCount - 1;
+    } else if (svgSrc.includes('exclaim')) {
+      noEffectCount--;
+      if (noEffectCount == 0) {
+        totalNoEffect.classList.remove('no-effect');
+      }
+      totalNoEffect.innerHTML = noEffectCount;
+    } else if (svgSrc.includes('x')) {
+      if (notEffectiveCount == 3) { //if it's 3 before removing then it will be downgraded
+        totalNotEffective.classList.add('double-effect');
+        totalNotEffective.classList.remove('quadruple-effect');
+      } else if (notEffectiveCount == 1) { //if it's 1 before removing then it will be removed
+        totalNotEffective.classList.remove('quadruple-effect');
+        totalNotEffective.classList.remove('double-effect');
+      }
+      totalNotEffective.innerHTML = notEffectiveCount - 1;
+    }
   }
-  if (totalWeakNum > 0) {
-    totalWeak.classList.add('double-effect');
-    totalWeak.classList.remove('quadruple-effect');
-  } else if (totalWeakNum > 2) {
-    totalWeak.classList.add('quadruple-effect');
-    totalWeak.classList.remove('double-effect')
-  } else {
-    totalWeak.classList.remove('double-effect', 'quadruple-effect');
-  }
+  off.innerHTML = '-';
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -265,13 +408,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const nameInputs = Array.from(document.getElementsByClassName('poke-name-input'));
     const abilityInputs = Array.from(document.querySelectorAll(`input[id^='abilityslot']`));
     const itemInputs = Array.from(document.querySelectorAll(`input[id^='itemslot']`));
-    updateTeamEntryData(-1); //initialize lists to use all values at start
+    updateTeamEntryData(-1, false); //initialize lists to use all values at start
     if (pokemon) {
       for (let i = 0; i < nameInputs.length; i++) {
         const moveInputs = Array.from(document.querySelectorAll(`input[id^='moveslot-${i}']`));
         const n = nameInputs[i];
         n.addEventListener('change', () => textEntryEvent(pokemon, n, i));
-        moveInputs.forEach(m => m.addEventListener('change', () => textEntryEvent(pokemon, n, i)));
+        moveInputs.forEach(m => m.addEventListener('change', () => textEntryEvent(pokemon, n, i, true)));
         abilityInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
         itemInputs[i].addEventListener('change', () => textEntryEvent(pokemon, n, i));
       }
@@ -284,25 +427,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
-function textEntryEvent(pokemon, n, i) {
+function textEntryEvent(pokemon, n, i, offenseOnly = false) {
   let val = n.value.trim();
   //check if typed in name is empty
   if (!val || val == '') {
-    return updatePokemonEntry(i);
+    return updatePokemonEntry(i, offenseOnly);
   }
   //find name in name list or type variant list
   let find = pokemon.find(({ name }) => name.toLowerCase() === val.toLowerCase());
   if (!find) {
-    find = Object.keys(nameVariants).find(e => e.toLowerCase() === val.toLowerCase());
+    find = Object.keys(utils.nameVariants).find(e => e.toLowerCase() === val.toLowerCase());
     if (!find) {
-      return updatePokemonEntry(i);
+      return updatePokemonEntry(i, offenseOnly);
     }
-    find = pokemon.find(({ name }) => name.toLowerCase() === nameVariants[find].toLowerCase());
+    find = pokemon.find(({ name }) => name.toLowerCase() === utils.nameVariants[find].toLowerCase());
   }
   n.value = find.name;
   //using name update button text and show sprite
   const types = find.type2 ? [find.type1, find.type2] : [find.type1];
-  updatePokemonEntry(i, find.name, types);
+  updatePokemonEntry(i, offenseOnly, find.name, types);
 }
 
 function showError(message, serverError = false) {
@@ -318,7 +461,6 @@ function showSuccess() {
 }
 
 function setUpSubmit() {
-
   document.getElementById('upload-btn').addEventListener('click', (e) => {
     const teamData = [];
     const teamName = document.getElementById('team-name').value.trim();

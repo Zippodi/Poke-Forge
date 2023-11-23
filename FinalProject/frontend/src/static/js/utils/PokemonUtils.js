@@ -115,6 +115,28 @@ export const plateToType = {
   zapplate: 'electric'
 }
 
+/** A map of types to a move that is that type. Used for value replacement with moves like Judgement and Techno Blast*/
+export const typeToMove = {
+  normal: 'hyperbeam',
+  fire: 'fireblast',
+  water: 'surf',
+  electric: 'thunder',
+  grass: 'leafstorm',
+  ice: 'blizzard',
+  fighting: 'brickbreak',
+  poison: 'poisonfang',
+  ground: 'earthquake',
+  flying: 'fly',
+  psychic: 'psychic',
+  bug: 'attackorder',
+  rock: 'rockslide',
+  ghost: 'shadowball',
+  dragon: 'dragonclaw',
+  dark: 'darkpulse',
+  steel: 'irontail',
+  fairy: 'moonblast'
+}
+
 /** Returns updated defenses JSON based on the given ability and types of the pokemon (needed for Delta Stream) and item (multitype, etc.) */
 export const typeDefenseModifiers = (defenses, ability, types, item = '') => {
   let a = ability.toLowerCase().replaceAll(' ', '');
@@ -162,11 +184,39 @@ export const typeDefenseModifiers = (defenses, ability, types, item = '') => {
     }
   }
   if (i == 'ringtarget') {
-    //TODO idk how to implement this
+    //TODO - Probably require implementing an "ignore immunities" flag to the endpoint before this is called
   } else if (i == 'airballoon') {
     defenses.ground = 0;
   } else if (i == 'ironball' && defenses.ground == 0) {
     defenses.ground = 1;
   }
   return defenses;
+}
+
+//Theres a few things that don't work with this that probably require backend changes for a later date
+export const typeOffenseModifiers = (offenseData, ability, types, item = '') => {
+  let a = ability.toLowerCase().replaceAll(' ', '');
+  let i = item.toLowerCase().replaceAll(' ', '');
+  if (a == 'deltastream') {
+    if (offenseData.flying == 2) {
+      offenseData.flying = 1;
+    }
+  } else if (a == 'scrappy') {
+    //TODO: Not Reliable - If initial value is 0.5 via dark move and normal move, should change to 1 but will stay at 0.5
+    //willing to go along with this for now since having only dark/normal or dark/fighting moves on a scrappy pokemon are the only ways this is incorrect
+    if (offenseData.ghost == 0) {
+      offenseData.ghost = 1;
+    }
+  } else if (a == 'tintedlens') {
+    for (let o in offenseData) {
+      if (offenseData[o] == 0.5) {
+        offenseData[o] = 1;
+      }
+    }
+  }
+  //TODO: Below abilities require either recalculation or coding optional ability passing to API endpoint
+  //DesolateLand - no water moves, Primordial Sea - no fire moves. 
+  //Aerilate: normal => flying, Pixilate: normal => fairy, Refrigerate: normal => ice
+
+  return offenseData;
 }
