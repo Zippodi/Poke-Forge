@@ -34,37 +34,3 @@
 .highlight-row {
   color: rgb(88, 227, 88);
 }
-
-.no-effect {
-  background-color: rgb(46, 42, 42);
-  color: gold;
-}
-
-.quarter-effect {
-  background-color: rgb(41, 41, 135);
-  color: gold;
-}
-
-.half-effect {
-  background-color: rgb(73, 73, 237);
-  color: gold;
-}
-
-.normal-effect {
-  background-color: rgb(146, 55, 55);
-  color: white;
-}
-
-.double-effect {
-  background-color: rgb(28, 92, 14);
-  color: gold;
-}
-
-.quadruple-effect {
-  background-color: rgb(51, 194, 19);
-  color: black;
-}
-
-.tbl-icon {
-  width: 3em;
-}

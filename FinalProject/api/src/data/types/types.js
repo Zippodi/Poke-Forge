@@ -75,7 +75,7 @@ exports.getMoveEffectiveness = (moveTypes) => {
   let ret = this.typeList.reduce((pre, cur) => Object.assign(pre, { [cur]: -1 }), {});
   this.typeList.forEach((type) => {
     for (const mt of moveTypes) {
-      if (!Object.hasOwn(effectiveness[type], mt)) {
+      if (!Object.hasOwn(effectiveness[type], mt) && ret[type] < 1) {
         ret[type] = 1;
       }
       else if (effectiveness[type][mt] > ret[type]) {

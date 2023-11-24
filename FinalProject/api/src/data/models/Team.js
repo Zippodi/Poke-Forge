@@ -82,6 +82,7 @@ class PokemonEntry {
       ability: this.ability,
       moves: this.moves,
       item: this.item
+
     };
   }
 

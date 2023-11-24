@@ -1,16 +1,8 @@
 import http from '../utils/HTTPClient.js';
+import { effectMap } from '../utils/PokemonUtils.js';
 import { pokeDataToggleSmall, small } from '../utils/responsive.js';
 
 const SMALL_SIZE = 600;
-
-const effectMap = {
-  0: 'no-effect',
-  0.25: 'quarter-effect',
-  0.5: 'half-effect',
-  1: 'normal-effect',
-  2: 'double-effect',
-  4: 'quadruple-effect'
-};
 
 addEventListener('DOMContentLoaded', e => {
   const arr = window.location.href.toString().split('/');
@@ -74,7 +66,7 @@ addEventListener('DOMContentLoaded', e => {
       //defenses
       Object.entries(defenses).forEach(([type, effect]) => {
         let text = document.getElementById(type);
-        text.classList.add(effectMap[effect]);
+        text.classList.add(effectMap(effect));
         text.innerText = effect;
       });
       //moves
@@ -112,6 +104,9 @@ addEventListener('DOMContentLoaded', e => {
       document.getElementById('error').classList.remove('d-none');
     });
   }).catch(err => {
+    if (err.status == 401) {
+      window.location.href = '/';
+    }
     document.getElementById('error').classList.remove('d-none');
   });
 });

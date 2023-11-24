@@ -288,10 +288,11 @@ function getTeamById(teamId, userId) {
 
 function createTeam(team, userId) {
   return new Promise((resolve, reject) => {
-    if (!validateTeamBody(team)) {
-      reject(constructError(400, 'Invalid team body'));
+    let validate_ret = validateTeamBody(team);
+    if (validate_ret !== true) {
+      reject(constructError(400, validate_ret));
     }
-    
+
     let connection = db.getDatabaseConnection();
     connection.getConnection((err, conn) => {
       conn.beginTransaction(async (err) => {
@@ -304,8 +305,7 @@ function createTeam(team, userId) {
         let last_modified = `${first} ${x.getHours()}:${x.getMinutes()}:00`;
         conn.query('INSERT INTO team(user_id, public, name, last_modified) VALUES (?, ?, ?, ?)', [userId, team.public, team.name, last_modified], async (err, results, fields) => {
           if (err) {
-            console.error(`Error in request from ${userId}: ${err}`);
-            return conn.rollback(() => { reject(constructError(400, "Could not create team")); });
+            return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
           }
           const newTeamId = results.insertId;
           for (const p of team.pokemon) {
@@ -355,13 +355,12 @@ function createTeam(team, userId) {
               let bulkVals = moveIds.map(mid => [entryId, mid]);
               await executeQuery(conn, "INSERT INTO known_moves VALUES ?", [bulkVals]);
             } catch (err) {
-              console.error(`Error in request from ${userId}: ${err}`);
-              return conn.rollback(() => { reject(constructError(400, "could not create team")) });
+              return conn.rollback(() => { reject(constructError(500, "Could not create team - error processing move data")) });
             }
           }
           conn.commit((err) => {
             if (err) {
-              return conn.rollback(() => { reject(constructError(500, "server error: could not commit team change")); });
+              return conn.rollback(() => { reject(constructError(500, "Problem saving new team")); });
             }
             resolve(newTeamId);
           });
@@ -386,30 +385,29 @@ function deleteTeam(teamId, currentUserID) {
 
 function validateTeamBody(body) {
   if (typeof body.public !== 'boolean') {
-    //console.log(1);
-    return false;
+    return "Public setting needs to be either true or false";
   }
   if (!body.name || typeof body.name !== 'string' || body.name.length < 3) {
-    //console.log(2);
-    return false;
+    return "Team name must be a string of at least 2 characters";
   }
   if (!body.pokemon || !Array.isArray(body.pokemon) || body.pokemon.length < 1 || body.pokemon.length > 6) {
-    //console.log(3);
-    return false;
+    return "Must specify between 1 and 6 Pokemon";
   }
-  for (let p of body.pokemon) {
-    if (!p.ability || !p.name) {
-      //console.log(4, p);
-      return false;
+  for (let i = 0; i < body.pokemon.length; i++) {
+    let p = body.pokemon[i];
+    if (!p.name) {
+      return `Must specify the Pokemon's name at index ${i}`;
     }
-    p.ability = p.ability.replaceAll(' ', '').toLowerCase();
-    p.name = p.name.replaceAll(' ', '').toLowerCase();
+    if (!p.ability) {
+      return `Must specify the Pokemon's ability at index ${i}`;
+    }
     if (!p.moves || !Array.isArray(p.moves) || p.moves.length < 1 || p.moves.length > 4) {
-      //console.log(5, p.moves);
-      return false;
+      return `Must specify between 1 and 4 moves for the Pokemon at index ${i}`
     }
     p.moves = p.moves.map(m => m.replaceAll(' ', '').toLowerCase());
     p.item = p.item ? p.item.replaceAll(' ', '') : null;
+    p.ability = p.ability.replaceAll(' ', '').toLowerCase();
+    p.name = p.name.replaceAll(' ', '').toLowerCase();
   }
   return true;
 }

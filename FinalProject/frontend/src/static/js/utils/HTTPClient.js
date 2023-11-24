@@ -1,19 +1,25 @@
 //taken/modified from second databases lecture code
-const handleError = (res) => {
-  if (!res.ok) {
-    let error = new Error(res.statusText);
-    error.status = res.status;
-    throw error;
-  }
+const handleError = (res, data) => {
+  return new Promise((resolve, reject) => {
+    if (!res.ok) {
+      let error = new Error(data.error);
+      error.status = res.status;
+      reject(error);
+    }
+    resolve();
+  });
 };
 
 export default {
   get: (url) => {
     return new Promise(async (resolve, reject) => {
       const res = await fetch(url);
-      handleError(res);
       const data = await res.json();
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -27,9 +33,12 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      handleError(res);
       const data = await res.json();
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -43,9 +52,12 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      handleError(res);
       const data = await res.json();
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   },
 
@@ -54,9 +66,12 @@ export default {
       const res = await fetch(url, {
         method: 'DELETE'
       });
-      handleError(res);
       const data = await res.json();
-      resolve(data);
+      handleError(res, data).then(() => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   }
 };
