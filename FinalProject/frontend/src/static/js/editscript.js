@@ -7,7 +7,6 @@ const SMALL_SIZE = 350;
 
 const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
-
 /** Gets Pokemon, move, ability, and item data and loads them into respective data lists */
 function loadData() {
   return new Promise(async (resolve, reject) => {

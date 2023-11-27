@@ -13,8 +13,43 @@ http.get('api/teams/myteams').then(teams => {
 
         name.innerHTML = teams[i].name;
         team.appendChild(name);
-
+        let buttonsContainer = document.createElement('div');
+        buttonsContainer.className = "container d-flex justify-content-around align-items-center my-3";
         
+       
+
+        const link = document.createElement('button');
+        link.innerHTML = "Edit";
+        link.className = "px-5 py-2";
+        link.fontSize = "3em";
+        link.style.fontWeight = "bold";
+        link.style.color = "#ffe600";
+        link.style.textDecoration = "none";
+        link.style.backgroundColor = "#112a85";
+        link.style.borderRadius = "20px";
+        link.style.borderColor = "#091644";
+        link.addEventListener('click', e => {
+            window.location.href = '/editteam?id=' + teams[i].id;
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.innerHTML = "Delete";
+        deleteButton.addEventListener('click', e => {
+            //HERE IT IS
+            console.log("panda");
+        });
+        deleteButton.className = "px-5 py-2";
+        
+        deleteButton.fontSize = "3em";
+        deleteButton.style.color = "#ffe600";
+        deleteButton.style.fontWeight = "bold";
+        deleteButton.style.textDecoration = "none";
+        deleteButton.style.backgroundColor = "#112a85";
+        deleteButton.style.borderRadius = "20px";
+        deleteButton.style.borderColor = "#091644";
+        buttonsContainer.appendChild(link);
+        buttonsContainer.appendChild(deleteButton);
+        team.appendChild(buttonsContainer);
         for (let a = 0; a < teams[i].pokemon.length; ++a) {
             const pokemon = document.createElement('div');
             pokemon.className = "container d-flex justify-content-between align-items-center my-3";
