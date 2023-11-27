@@ -6,6 +6,11 @@ const SMALL_SIZE = 600;
 
 
 http.get('api/teams/myteams').then(teams => { 
+
+    if (teams == null || teams.length == 0) {
+        console.log("empty");
+    }
+
     for (let i = 0; i < teams.length; ++i) {
         const team = document.createElement('div');
         team.className = "container my-5";
@@ -36,7 +41,11 @@ http.get('api/teams/myteams').then(teams => {
         deleteButton.innerHTML = "Delete";
         deleteButton.addEventListener('click', e => {
             //HERE IT IS
-            console.log("panda");
+            let deleteCall = 'api/teams/id/' + teams[i].id;
+            http.delete(deleteCall).catch(err => {
+                console.error('Could not load teams');
+            });
+            location.reload();
         });
         deleteButton.className = "px-5 py-2";
         
