@@ -218,7 +218,9 @@ function getTeamById(teamId, userId) {
     connection.getConnection(async (err, conn) => {
       try {
         //get team info first
-        let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE public = TRUE OR (user_id = ? AND id = ?)", [userId, teamId]);
+        // let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE public = TRUE OR (user_id = ? AND id = ?)", [userId, teamId]);
+        //Was the above query but was changed so only the user can get their own team, may need to be changed in the future for different functionality.
+        let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE (user_id = ? AND id = ?)", [userId, teamId]);
         if (teamResults.length === 0) {
           reject(constructError(400, "Team could not be found or did not have permission to view"));
         }
