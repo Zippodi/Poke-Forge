@@ -218,7 +218,9 @@ function getTeamById(teamId, userId) {
     connection.getConnection(async (err, conn) => {
       try {
         //get team info first
-        let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE public = TRUE OR (user_id = ? AND id = ?)", [userId, teamId]);
+        // let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE public = TRUE OR (user_id = ? AND id = ?)", [userId, teamId]);
+        //Was the above query but was changed so only the user can get their own team, may need to be changed in the future for different functionality.
+        let teamResults = await executeQuery(conn, "SELECT * FROM team WHERE (user_id = ? AND id = ?)", [userId, teamId]);
         if (teamResults.length === 0) {
           reject(constructError(400, "Team could not be found or did not have permission to view"));
         }
@@ -383,6 +385,107 @@ function deleteTeam(teamId, currentUserID) {
   });
 }
 
+function editTeam(team, userId) {
+  return new Promise((resolve, reject) => {
+    let validate_ret = validateTeamBody(team);
+    if (validate_ret !== true) {
+      reject(constructError(400, validate_ret));
+    }
+    
+
+    let connection = db.getDatabaseConnection();
+    connection.getConnection((err, conn) => {
+      conn.beginTransaction(async (err) => {
+        if (err) {
+          reject(constructError(500, "Could not set up database transaction"));
+        }
+        let teamResults = await executeQuery(conn, 'UPDATE team SET name = ? WHERE id = ? AND user_id = ?', [team.name, team.teamId, userId]);
+        if (teamResults.affectedRows == 0) {
+          return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
+        }
+
+        let teamPublicResults = await executeQuery(conn, 'UPDATE team SET public = ? WHERE id = ? AND user_id = ?', [team.public, team.teamId, userId]);
+        if (teamPublicResults.affectedRows == 0) {
+          return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
+        }
+        
+        let deleteResults = await executeQuery(conn, 'DELETE FROM pokemon_entry WHERE team_id = ?', [team.teamId]);
+        if (deleteResults.affectedRows == 0) {
+          return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
+        } 
+
+        const newTeamId = team.teamId;
+        for (const p of team.pokemon) {
+          try {
+            //get ability and pokemon id, while checking that both are valid
+            let abilSQL = "SELECT p.id AS pokemon_id, a.id AS ability_id FROM pokemon AS p JOIN pokemon_abilities AS pa ON p.id = pa.pokemon_id ";
+            abilSQL += "JOIN ability AS a ON a.id = pa.ability_id WHERE LOWER(REPLACE(p.name, ' ', '')) = ? AND LOWER(REPLACE(a.name, ' ', '')) = ?";
+            let abilResults = await executeQuery(conn, abilSQL, [p.name, p.ability]);
+            if (abilResults.length === 0) {
+              return conn.rollback(() => { reject(constructError(400, `Ability ${p.ability} is not valid on ${p.name}, or one of these values does not exist`)); });
+            }
+            const pokeId = abilResults[0].pokemon_id;
+            const abilId = abilResults[0].ability_id;
+            //get held item id, checking that it is valid
+            let itemId = null;
+            if (p.item) {
+              let itemResults = await executeQuery(conn, "SELECT id as item_id FROM item WHERE LOWER(REPLACE(name, ' ', '')) = ?", [p.item]);
+              if (itemResults.length === 0) {
+                return conn.rollback(() => { reject(constructError(400, `Item ${p.item} on ${p.name} is not a valid item`)); });
+              }
+              itemId = itemResults[0].item_id;
+            }
+            //create pokemon entry
+            const entryValues = [newTeamId, pokeId, itemId, abilId];
+              let entryResults = await executeQuery(conn, "INSERT INTO pokemon_entry(team_id, pokemon_id, item_id, ability_id) VALUES (?, ?, ?, ?)", entryValues);
+              let entryId = entryResults.insertId;
+              //get move IDs
+              let moveSelectSQL = "SELECT tm.move_id FROM pokemon AS p JOIN teachable_moves AS tm ON p.id = tm.pokemon_id JOIN move AS m ON m.id = tm.move_id ";
+              let where = " WHERE p.id = ? AND (";
+              let args = [pokeId];
+              const movesLength = p.moves.length;
+              for (let i = 0; i < movesLength; i++) {
+                if (i === movesLength - 1)
+                  where += "LOWER(REPLACE(m.name, ' ', '')) = ?)";
+                else
+                  where += "LOWER(REPLACE(m.name, ' ', '')) = ? OR ";
+                args.push(p.moves[i]);
+              }
+              moveSelectSQL += where;
+              //console.log(moveSelectSQL);
+              let moveSelectResults = await executeQuery(conn, moveSelectSQL, args);
+              if (moveSelectResults.length !== movesLength) {
+                return conn.rollback(() => { reject(constructError(400, `A move on ${p.name} is invalid`)); });
+              }
+              let moveIds = moveSelectResults.map(m => m.move_id);
+              //bulk insert into known_moves
+              let bulkVals = moveIds.map(mid => [entryId, mid]);
+              await executeQuery(conn, "INSERT INTO known_moves VALUES ?", [bulkVals]);
+            } catch (err) {
+              return conn.rollback(() => { reject(constructError(500, "Could not create team - error processing move data")) });
+            }
+          }
+          conn.commit((err) => {
+            if (err) {
+              console.log(err);
+              return conn.rollback(() => { reject(constructError(500, "Problem saving new team")); });
+            }
+            resolve();
+          });
+        
+      });
+    });
+    
+
+
+
+
+
+    
+    
+  });
+}
+
 function validateTeamBody(body) {
   if (typeof body.public !== 'boolean') {
     return "Public setting needs to be either true or false";
@@ -429,5 +532,6 @@ module.exports = {
   getTeamById: getTeamById,
   getAllTeams: getAllTeams,
   getUserTeams: getUserTeams,
-  deleteTeam: deleteTeam
+  deleteTeam: deleteTeam,
+  editTeam: editTeam
 }
