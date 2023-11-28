@@ -43,6 +43,10 @@ app.get('/vieweditteams', (req, res) => {
   res.sendFile(getFile('vieweditteams.html'));
 });
 
+app.get('/editteam', (req, res) => {
+  res.sendFile(getFile('editteam.html'));
+});
+
 app.use((req, res, next) => {
   res.sendFile(getFile('notfound.html'));
 });

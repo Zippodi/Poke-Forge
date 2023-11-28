@@ -1,3 +1,4 @@
+//import { get } from '../../../../api/src/teams-endpoints/teams.js';
 import { typeList } from './types/types.js';
 import http from './utils/HTTPClient.js';
 import * as utils from './utils/PokemonUtils.js';
@@ -7,7 +8,52 @@ const SMALL_SIZE = 350;
 
 const spriteClassList = ['mb-3', 'pokesprite', 'pokemon', 'name-sprite', 'd-none'];
 
+const query = window.location.search;
+let parameters = new URLSearchParams(query);
+let teamId = parameters.get('id');
+let getRequest = '/api/teams/id/' + teamId;
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  http.get(getRequest).then(team => {
+    console.log(team);
+    document.getElementById('team-name').value = team.name;
+    for (let i = 0; i < team.pokemon.length; ++i) {
+      if (team.pokemon[i] && team.pokemon[i].name != "" || team.pokemon[i].name != null) {
+        let slotId = 'teamslot-' + i;
+        document.getElementById(slotId).value = team.pokemon[i].name;
+        let sprite = document.getElementById(`sprite-${i}`);
+        let img = document.getElementsByClassName(`mystery-${i}`);
+        img[0].classList.add('d-none');
+        const newname = utils.getSpriteName(team.pokemon[i].name, team.pokemon[i].ability, team.pokemon[i].item);
+        sprite.classList.remove('d-none');
+        sprite.parentElement.setAttribute('href', `pokemon/info/${team.pokemon[i].name.toLowerCase().replaceAll(' ', '')}`);
+        sprite.classList.add(newname);
+        const shiny = false; //TODO
+        if (shiny) {
+          s.classList.add('shiny');
+        }
+        let abilityId = 'abilityslot-' + i;
+        document.getElementById(abilityId).value = team.pokemon[i].ability;
+        if (team.pokemon[i].item && team.pokemon[i].item != "") {
+          let itemId = 'itemslot-' + i;
+          document.getElementById(itemId).value = team.pokemon[i].item;
+        }
+        if (team.pokemon[i].moves && team.pokemon[i].moves.length > 0) {
+          for (let b = 0; b < team.pokemon[i].moves.length; b++) {
+            let moveId = 'moveslot-' + i + '-' + b;
+            document.getElementById(moveId).value = team.pokemon[i].moves[b];
+          }
+        }
+        const types = team.pokemon[i].type2 ? [team.pokemon[i].type1, team.pokemon[i].type2] : [team.pokemon[i].type1];
+        updatePokemonEntry(i, false, team.pokemon[i].name, types);
+      }
+      
+    }
+    
+  }).catch(err => {
+    console.log("something went wrong.")
+  });
+});
 /** Gets Pokemon, move, ability, and item data and loads them into respective data lists */
 function loadData() {
   return new Promise(async (resolve, reject) => {
@@ -102,7 +148,8 @@ function updatePokemonEntry(idx, offenseOnly, name = null, types = null) {
       s.classList.remove('d-none');
       s.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
       s.classList.add(newname);
-      if (localStorage.getItem('shiny') === 'true') {
+      const shiny = false; //TODO
+      if (shiny) {
         s.classList.add('shiny');
       }
     });
@@ -468,13 +515,16 @@ function setUpSubmit() {
     }
     const data = {
       name: teamName,
+      teamId: teamId,
       public: document.getElementById('public-check').checked,
       pokemon: teamData
     };
-    //console.log(data);
-    http.post('/api/teams/create', data).then(response => {
+    
+    
+    let putRequest = '/api/teams/id/' + teamId; 
+    http.put(putRequest, data).then(response => {
       showSuccess();
-      console.log('new id', response.id);
+      // console.log('new id', response.id);
     }).catch(error => {
       showError(error, error.status >= 500);
     });
