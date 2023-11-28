@@ -391,7 +391,7 @@ function editTeam(team, userId) {
     if (validate_ret !== true) {
       reject(constructError(400, validate_ret));
     }
-    
+
 
     let connection = db.getDatabaseConnection();
     connection.getConnection((err, conn) => {
@@ -408,11 +408,11 @@ function editTeam(team, userId) {
         if (teamPublicResults.affectedRows == 0) {
           return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
         }
-        
+
         let deleteResults = await executeQuery(conn, 'DELETE FROM pokemon_entry WHERE team_id = ?', [team.teamId]);
         if (deleteResults.affectedRows == 0) {
           return conn.rollback(() => { reject(constructError(500, "Could not create team")); });
-        } 
+        }
 
         const newTeamId = team.teamId;
         for (const p of team.pokemon) {
@@ -437,52 +437,52 @@ function editTeam(team, userId) {
             }
             //create pokemon entry
             const entryValues = [newTeamId, pokeId, itemId, abilId];
-              let entryResults = await executeQuery(conn, "INSERT INTO pokemon_entry(team_id, pokemon_id, item_id, ability_id) VALUES (?, ?, ?, ?)", entryValues);
-              let entryId = entryResults.insertId;
-              //get move IDs
-              let moveSelectSQL = "SELECT tm.move_id FROM pokemon AS p JOIN teachable_moves AS tm ON p.id = tm.pokemon_id JOIN move AS m ON m.id = tm.move_id ";
-              let where = " WHERE p.id = ? AND (";
-              let args = [pokeId];
-              const movesLength = p.moves.length;
-              for (let i = 0; i < movesLength; i++) {
-                if (i === movesLength - 1)
-                  where += "LOWER(REPLACE(m.name, ' ', '')) = ?)";
-                else
-                  where += "LOWER(REPLACE(m.name, ' ', '')) = ? OR ";
-                args.push(p.moves[i]);
-              }
-              moveSelectSQL += where;
-              //console.log(moveSelectSQL);
-              let moveSelectResults = await executeQuery(conn, moveSelectSQL, args);
-              if (moveSelectResults.length !== movesLength) {
-                return conn.rollback(() => { reject(constructError(400, `A move on ${p.name} is invalid`)); });
-              }
-              let moveIds = moveSelectResults.map(m => m.move_id);
-              //bulk insert into known_moves
-              let bulkVals = moveIds.map(mid => [entryId, mid]);
-              await executeQuery(conn, "INSERT INTO known_moves VALUES ?", [bulkVals]);
-            } catch (err) {
-              return conn.rollback(() => { reject(constructError(500, "Could not create team - error processing move data")) });
+            let entryResults = await executeQuery(conn, "INSERT INTO pokemon_entry(team_id, pokemon_id, item_id, ability_id) VALUES (?, ?, ?, ?)", entryValues);
+            let entryId = entryResults.insertId;
+            //get move IDs
+            let moveSelectSQL = "SELECT tm.move_id FROM pokemon AS p JOIN teachable_moves AS tm ON p.id = tm.pokemon_id JOIN move AS m ON m.id = tm.move_id ";
+            let where = " WHERE p.id = ? AND (";
+            let args = [pokeId];
+            const movesLength = p.moves.length;
+            for (let i = 0; i < movesLength; i++) {
+              if (i === movesLength - 1)
+                where += "LOWER(REPLACE(m.name, ' ', '')) = ?)";
+              else
+                where += "LOWER(REPLACE(m.name, ' ', '')) = ? OR ";
+              args.push(p.moves[i]);
             }
+            moveSelectSQL += where;
+            //console.log(moveSelectSQL);
+            let moveSelectResults = await executeQuery(conn, moveSelectSQL, args);
+            if (moveSelectResults.length !== movesLength) {
+              return conn.rollback(() => { reject(constructError(400, `A move on ${p.name} is invalid`)); });
+            }
+            let moveIds = moveSelectResults.map(m => m.move_id);
+            //bulk insert into known_moves
+            let bulkVals = moveIds.map(mid => [entryId, mid]);
+            await executeQuery(conn, "INSERT INTO known_moves VALUES ?", [bulkVals]);
+          } catch (err) {
+            return conn.rollback(() => { reject(constructError(500, "Could not create team - error processing move data")) });
           }
-          conn.commit((err) => {
-            if (err) {
-              console.log(err);
-              return conn.rollback(() => { reject(constructError(500, "Problem saving new team")); });
-            }
-            resolve();
-          });
-        
+        }
+        conn.commit((err) => {
+          if (err) {
+            console.log(err);
+            return conn.rollback(() => { reject(constructError(500, "Problem saving new team")); });
+          }
+          resolve();
+        });
+
       });
     });
-    
 
 
 
 
 
-    
-    
+
+
+
   });
 }
 

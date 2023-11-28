@@ -5,7 +5,7 @@ const teamList = document.querySelector('#teamsList');
 const SMALL_SIZE = 600;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    http.get('api/teams/myteams').then(teams => { 
+    http.get('api/teams/myteams').then(teams => {
 
         if (teams == null || teams.length == 0) {
             console.log("empty");
@@ -20,8 +20,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             team.appendChild(name);
             let buttonsContainer = document.createElement('div');
             buttonsContainer.className = "container d-flex justify-content-around align-items-center my-3";
-            
-        
 
             const link = document.createElement('button');
             link.innerHTML = "Edit";
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 location.reload();
             });
             deleteButton.className = "px-5 py-2";
-            
+
             deleteButton.fontSize = "3em";
             deleteButton.style.color = "#ffe600";
             deleteButton.style.fontWeight = "bold";
@@ -71,58 +69,50 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
                 let img = document.createElement('img');
-            
-                
+
+
                 img.style.maxWidth = "20%";
                 img.style.height = "auto";
                 let id = parseInt(teams[i].pokemon[a].pokemon_id);
                 let num = id < 10 ? `00${id}` : id < 100 ? `0${id}` : id;
                 img.src = `images/pokemon/${num}.png`;
                 img.alt = teams[i].pokemon[a].name;
-            
+
                 // let ability = document.createElement('h5');
                 let ability = document.createElement('h2');
 
-                ability.innerHTML =  teams[i].pokemon[a].ability;
+                ability.innerHTML = teams[i].pokemon[a].ability;
 
-            
+
 
                 pokemon.appendChild(img);
                 pokemon.appendChild(ability);
                 console.log(teams[i].pokemon[a].pokemon_item);
                 if (teams[i].pokemon[a].item && window.innerWidth > SMALL_SIZE) {
-                    
+
                     let item = document.createElement('h2');
                     item.className = "item";
                     item.innerHTML = teams[i].pokemon[a].item;
                     pokemon.appendChild(item);
                 }
-                
+
                 pokemon.style.backgroundColor = "#112a85";
                 pokemon.style.borderRadius = "5px";
 
                 team.appendChild(pokemon);
-                
+
             }
             team.style.backgroundColor = "#091644";
             team.style.borderRadius = "5px";
+            teamList.append(team);
+        }
+    }).catch(err => {
+        console.error('Could not load teams');
+    });
 
-
-
-
-
-
-
-
-                teamList.append(team);
-            }
-        }).catch(err => {
-            console.error('Could not load teams');
-        });
-        
 
     // Change values when window is resized 
-    window.onresize = function() { 
+    window.onresize = function () {
         let items;
         if (items = document.querySelectorAll(".item")) {
             if (items && items.length > 0 && window.innerWidth < SMALL_SIZE) {
@@ -138,7 +128,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
         }
-    }; 
+    };
 });
 
 

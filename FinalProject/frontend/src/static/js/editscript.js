@@ -1,4 +1,3 @@
-//import { get } from '../../../../api/src/teams-endpoints/teams.js';
 import { typeList } from './types/types.js';
 import http from './utils/HTTPClient.js';
 import * as utils from './utils/PokemonUtils.js';
@@ -28,9 +27,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         sprite.classList.remove('d-none');
         sprite.parentElement.setAttribute('href', `pokemon/info/${team.pokemon[i].name.toLowerCase().replaceAll(' ', '')}`);
         sprite.classList.add(newname);
-        const shiny = false; //TODO
-        if (shiny) {
-          s.classList.add('shiny');
+        if (localStorage.getItem('shiny') === 'true') {
+          sprite.classList.add('shiny');
         }
         let abilityId = 'abilityslot-' + i;
         document.getElementById(abilityId).value = team.pokemon[i].ability;
@@ -47,9 +45,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const types = team.pokemon[i].type2 ? [team.pokemon[i].type1, team.pokemon[i].type2] : [team.pokemon[i].type1];
         updatePokemonEntry(i, false, team.pokemon[i].name, types);
       }
-      
+
     }
-    
+
   }).catch(err => {
     console.log("something went wrong.")
   });
@@ -148,8 +146,7 @@ function updatePokemonEntry(idx, offenseOnly, name = null, types = null) {
       s.classList.remove('d-none');
       s.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
       s.classList.add(newname);
-      const shiny = false; //TODO
-      if (shiny) {
+      if (localStorage.getItem('shiny') === 'true') {
         s.classList.add('shiny');
       }
     });
@@ -519,9 +516,9 @@ function setUpSubmit() {
       public: document.getElementById('public-check').checked,
       pokemon: teamData
     };
-    
-    
-    let putRequest = '/api/teams/id/' + teamId; 
+
+
+    let putRequest = '/api/teams/id/' + teamId;
     http.put(putRequest, data).then(response => {
       showSuccess();
       // console.log('new id', response.id);
