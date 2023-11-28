@@ -47,5 +47,9 @@ app.get('/editteam', (req, res) => {
   res.sendFile(getFile('editteam.html'));
 });
 
+app.use((req, res, next) => {
+  res.sendFile(getFile('notfound.html'));
+});
+
 // As our server to listen for incoming connections
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

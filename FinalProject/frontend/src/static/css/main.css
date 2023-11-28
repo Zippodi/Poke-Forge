@@ -100,3 +100,24 @@ header {
 .tbl-icon {
   width: 3em;
 }
+
+#btn-preferences {
+  /* --bs-btn-active-bg: rgb(24, 47, 131); */
+  background-color: rgb(9, 22, 68);
+  color: goldenrod;
+  border: 1px solid goldenrod;
+}
+
+#btn-preferences:active,
+#btn-preferences.show {
+  background-color: rgb(29, 54, 144);
+  border: 1px solid gold;
+  color: white;
+}
+
+/* Additional styling for the dropdown menu items */
+#preferences {
+  border: 1px solid gold;
+  background-color: rgb(29, 54, 144);
+  color: white;
+}

@@ -15,23 +15,48 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/pokemon-data/main.css" />
     <link rel="stylesheet" href="css/pokemon-data/pokemon.css" />
+    <script src="js/all.js" type="module"></script>
     <script src="js/pokemon-data/pokemon.js" type="module"></script>
     <title>Pokemon - List</title>
   </head>
   <body>
-    <header class="text-center pb-2 fs-6 container-fluid">
-      <img src="images/Pokemon-List-Title.png" class="img-fluid" width="500vw" />
-      <nav class="d-flex justify-content-center gap-1">
-        <a class="link-info" href="home"> Home </a>
-        <span class="v-border mx-4"></span>
-        <a class="link-info" href="pokemon"> Pokemon </a>
-        <span class="v-border mx-4"></span>
-        <a class="link-info" href="#"> Moves </a>
-        <span class="v-border mx-4"></span>
-        <a class="link-info" href="#"> Abilities </a>
-        <span class="v-border mx-4"></span>
-        <a class="link-info" href="#"> Items </a>
-      </nav>
+    <header class="p-2">
+      <div class="text-center pb-2 fs-6 container-fluid">
+        <img src="images/Pokemon-List-Title.png" class="img-fluid" width="500vw" />
+        <nav class="d-flex justify-content-center gap-1">
+          <a class="link-info" href="home"> Home </a>
+          <span class="v-border mx-4"></span>
+          <a class="link-info" href="pokemon"> Pokemon </a>
+          <span class="v-border mx-4"></span>
+          <a class="link-info" href="#"> Moves </a>
+          <span class="v-border mx-4"></span>
+          <a class="link-info" href="#"> Abilities </a>
+          <span class="v-border mx-4"></span>
+          <a class="link-info" href="#"> Items </a>
+        </nav>
+      </div>
+      <div class="dropdown d-flex flex-row-reverse me-3">
+        <button
+          type="button"
+          class="btn dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          data-bs-auto-close="outside"
+          id="btn-preferences">
+          Username
+        </button>
+        <div class="dropdown-menu p-2" id="preferences">
+          <p class="text-center fs-6">User Preferences:</p>
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              class="form-check-input custom-switch"
+              role="switch"
+              id="shiny-check" />
+            <label class="form-check-label" for="shiny-check">Shiny Sprites</label>
+          </div>
+        </div>
+      </div>
     </header>
     <div class="container my-4 justify-content-center col-6" id="searchContainer">
       <div class="input-group opacity input-group-lg" id="searchGroup">
