@@ -1,19 +1,8 @@
+import http from './utils/HTTPClient.js';
 
 addEventListener('DOMContentLoaded', (e) => {
-    let btn = document.querySelector("#create");
-    btn.addEventListener('click', (e) => {
-        fetch('/api/auth/login', {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify()
-        }).then((res) => {
-            window.location.href = '/create';
-        }).catch(err => {
-            console.error(err);
-        });
+    document.getElementById('createButton').addEventListener('click', (e) => {
+        window.location.href = '/create';
     });
     document.getElementById('viewpokedataButton').addEventListener('click', e => {
         window.location.href = '/pokemon';
@@ -25,23 +14,11 @@ addEventListener('DOMContentLoaded', (e) => {
     document.getElementById('viewEditButton').addEventListener('click', e => {
         window.location.href = '/vieweditteams';
     });
-    
     document.getElementById('logoutButton').addEventListener('click', e => {
-        fetch('/api/auth/logout', {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify()
-        }).then((res) => {
+        http.post('/api/auth/logout', {}).then(res => {
             window.location.href = '/';
-        }).catch(err => {
+        }).error(err => {
             console.error(err);
         });
     });
-
-
-
-
 });

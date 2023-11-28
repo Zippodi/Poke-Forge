@@ -101,8 +101,7 @@ function updatePokemonEntry(idx, offenseOnly, name = null, types = null) {
       s.classList.remove('d-none');
       s.parentElement.setAttribute('href', `pokemon/info/${name.toLowerCase().replaceAll(' ', '')}`);
       s.classList.add(newname);
-      const shiny = false; //TODO
-      if (shiny) {
+      if (localStorage.getItem('shiny') === 'true') {
         s.classList.add('shiny');
       }
     });

@@ -15,15 +15,44 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
       crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../../css/main.css" />
+    <script src="js/all.js" type="module"></script>
+    <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/create-team.css" />
     <script src="js/createscript.js" type="module"></script>
   </head>
   <body>
     <header
-      class="text-center container-fluid d-flex flex-column justify-content-center align-items-center mb-4">
+      class="container-fluid d-flex flex-column justify-content-center align-items-center mb-4">
       <img src="images/Create-Team-Title.png" class="img-fluid" width="500vw" />
-      <a id="home-link" class="link-info fs-5 mb-2" href="home">Home</a>
+      <div class="row container">
+        <div class="col ms-5">
+          <a id="home-link" class="link-info fs-5 mb-2" href="home">Home</a>
+        </div>
+        <div class="col d-flex flex-row-reverse me-5">
+          <div class="dropdown me-3 mb-2">
+            <button
+              type="button"
+              class="btn dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              data-bs-auto-close="outside"
+              id="btn-preferences">
+              Username
+            </button>
+            <div class="dropdown-menu p-2" id="preferences">
+              <p class="text-center fs-6">User Preferences:</p>
+              <div class="form-check form-switch">
+                <input
+                  type="checkbox"
+                  class="form-check-input custom-switch"
+                  role="switch"
+                  id="shiny-check" />
+                <label class="form-check-label" for="shiny-check">Shiny Sprites</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
     <div class="container-fluid col-lg-8 col-sm-10 justify-content-center mx-auto">
       <div class="alert alert-primary mx-2 mx-lg-4" role="alert" id="info-guide">
