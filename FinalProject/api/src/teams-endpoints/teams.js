@@ -53,7 +53,16 @@ router.get('/', TokenMiddleware, (req, res) => {
 
 //edit specific existing team
 router.put('/id/:teamid', TokenMiddleware, (req, res) => {
-  res.status(503).json({ error: "not yet implemented" });
+  // res.status(503).json({ error: "not yet implemented" });
+  if (req.body) {
+    TeamDAO.editTeam(req.body, req.user.id).then(data => {
+      return res.status(200).json({ id: data });
+    }).catch(err => {
+      handleError(err, res);
+    });
+  } else {
+    return res.status(400).json({ error: "Invalid request" });
+  }
 });
 
 //get team via the teamid

@@ -515,18 +515,19 @@ function setUpSubmit() {
     }
     const data = {
       name: teamName,
+      teamId: teamId,
       public: document.getElementById('public-check').checked,
       pokemon: teamData
     };
     
     
-    // let putRequest = '/api/teams/id/' + teamId; 
-    // http.put(putRequest, data).then(response => {
-    //   showSuccess();
-    //   // console.log('new id', response.id);
-    // }).catch(error => {
-    //   showError(error, error.status >= 500);
-    // });
+    let putRequest = '/api/teams/id/' + teamId; 
+    http.put(putRequest, data).then(response => {
+      showSuccess();
+      // console.log('new id', response.id);
+    }).catch(error => {
+      showError(error, error.status >= 500);
+    });
   });
 }
 
