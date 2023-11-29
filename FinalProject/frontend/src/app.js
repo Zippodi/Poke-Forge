@@ -47,8 +47,12 @@ app.get('/editteam', (req, res) => {
   res.sendFile(getFile('editteam.html'));
 });
 
-app.use((req, res, next) => {
-  res.sendFile(getFile('notfound.html'));
+app.get('/offline', (req, res) => {
+  res.sendFile(getFile('offline.html'));
+});
+
+app.use((req, res) => {
+  res.status(404).sendFile(getFile('notfound.html'));
 });
 
 // As our server to listen for incoming connections
