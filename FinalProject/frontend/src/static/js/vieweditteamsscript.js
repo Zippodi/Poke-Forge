@@ -107,6 +107,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
             teamList.append(team);
         }
     }).catch(err => {
+        if (err.status == 400) {
+            let errorBox = document.createElement('h1');
+            errorBox.className = "container text-center";
+            errorBox.innerHTML = "No Teams Available";
+            teamList.append(errorBox);
+        }
         console.error('Could not load teams');
     });
 
