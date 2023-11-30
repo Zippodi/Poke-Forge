@@ -7,8 +7,6 @@ const { TokenMiddleware, generateToken, removeToken } = require('../auth-endpoin
 router.use(cookieParser());
 router.use(express.json());
 
-
-
 router.post('/login', (req, res) => {
   //console.log("body of login request: ", req.body);
   if (req.body.username && req.body.password) {

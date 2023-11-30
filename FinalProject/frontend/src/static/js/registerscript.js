@@ -26,9 +26,8 @@ addEventListener('DOMContentLoaded', (e) => {
                     alert("Error in Creating User.");
                 }
                 else {
-                    window.location.href = '/home';
+                    window.location.href = '/';
                 }
-
             }).catch(err => {
                 alert(err);
             });
