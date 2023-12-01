@@ -13,4 +13,4 @@ COPY . ./
 ENV PORT 80
 ENV PM2_NAME pokeforge-api
 
-ENTRYPOINT [ "npm", "run", "start"]
+ENTRYPOINT [ "npm", "run", "start_dev"]

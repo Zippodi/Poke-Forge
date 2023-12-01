@@ -11,6 +11,7 @@ router.get("/", TokenMiddleware, (req, res) => {
   PokemonDAO.getAllPokemon().then(pokemon => {
     res.status(200).json(pokemon);
   }).catch(err => {
+    console.log('The Error is', err);
     res.status(500).json({ error: "Could not get pokemon data" });
   });
 });

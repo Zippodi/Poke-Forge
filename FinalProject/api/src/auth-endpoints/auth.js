@@ -14,7 +14,6 @@ router.post('/login', (req, res) => {
       let result = {
         user: user
       }
-      console.log('USER:', user, "result", result);
       generateToken(req, res, user);
       res.status(200);
       res.json(result);
