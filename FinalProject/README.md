@@ -1,166 +1,82 @@
 # Poke-Forge
-## Group J: Milestone 2
+## Group J: Final Project Report
 
-### What is Done
-As before, all HTML pages are created, not complete yet. Namely view/other and viiew/edit pages have not been touched as of yet, because it would not be worth working on until createTeam was finished. Speaking of which, createTeam is completely finished, so is the home page, login page, register page, and two new pages, Pokemon.html and viewPokemon.html. The login and register pages are completely done, so the user can login, logout, and create an account, as well as tokens being created or deleted for this. Each method that requires the user to be logged in requires the authetication middleware (which is also finished) to be completed. The two new pages, are for looking at all of the pokemon in the database, and then clicking on these pokemon allows the user to see more details about the pokemon. All of the pokemon and team endpoints are finished as well. 
-### What is not Done
-The view/edit teams and view other teams pages are not finished.
-Still want to add the sprites being displayed when a user chooses a pokemon to add to their team.  Some pages might also have their style touched up a bit more but the core of what they will look like is completed. The view/edit and view other team pages would have been at least nearly finished if not for running into issues with docker and dependencies. These have been fixed but now we will have to implement these next iteration. There will also be pages for items, moves and abilities, that will be added very soon.
-### Implementation Status of Pages
-| Pages       | Status      | Wireframe|
-| ----------- | ----------- |----------|
-| Home      | 100%      | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/Home%20Page%20(1).png)         |
-| Create Team  | 100%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/CreateTeamWireFrame.png)         |
-| ViewOtherTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/ViewOthersTeamsWireframe.png)|
-| ViewEditTeams   | 20%        | [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/vieweditwireframe.png)|
-| Login   | 100%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
-| Register  | 10%        |  [Wireframe](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Proposal/Wireframes/LoginRegister.png) |
-| Pokemon  | 60%        |  (N/A) |
-| ViewPokemon  | 100%        |  (N/A) |
+### What Works
+All Pages, API Endpoints, Styling, PWA Functionality, Offline Functionality and Installability is complete. There are no known errors. You can create a team, edit a team, delete a team, view yours and other user's teams, view all the pokemon and their data and you can login, register and logout. You can also install it as an app, as well as view some pages and information offline.
+### Authentication and Authorization
+Authentication and Authorization are implemented the same as before, no changes. When a User registers, their account is added to the database (hashed, with a salt as well, API_SECRET_KEY used but stored in .env file).
+Then they are sent to the login page. When a user logs in, the information is verified to be valid from the user data in the DB, and then a token cookie is made to keep track of how long the user should be logged in. All pages
+aside from the login and register pages require the user be logged in to be accessed, and if they access them without this, it redirects them to the login page. If a user logs out, their cookie is removed, and they are sent to the login page again. The way we check if a user is logged in is by having all pages (besides login and reigster) have a script that checks if they are logged in and if not, redirects them to the login page.
+
+### All Pages
+Login Page: The first page the user will likely come to (going to all other pages besides register redirects them here if they are not logged in.). Simply allows the user to log into their account. Checks in the DB
+if the user info is valid, because of this there is no offline functionality. From this page, you can click the Register button to go to the register page to make an account, and once you log in with a valid account, you go to the 
+home page.
+
+Register: Lets the user make an account. If the user types in a valid username and password, they are added to the DB and sent to the login page. The DB checks if the user already exists in the DB, and if it does, the info is invalid. Because
+this page also requires using the Database, it also has no offline functionality. 
+
+Home Page: After being logged in, the user comes here (if they try to come here without being logged in they are redirected to the login page). The home page displays the basic information about the page at the bottom, and has 4 links to the following pages: Create Team, View Other Teams, View/Edit Teams, View Pokemon Data. There is also a logout button that logs the user out (by removing their token cookie) and redirects them to the login page. The page also displays
+the user's username in the top right and allows them to toggle whether or not they want shiny sprites to be displayed instead of the regular pokemon sprites on the create team page. This page provides the offline functionality of taking you 
+to the other pages (as long as you have previously visited them while online). 
+
+Create Team: the create team page is accessed through the home page as mentioned earlier. It allows you to create a team of 1-6 Pokemon, each with their own moves, ability and item. You can also name your team and make your team public to other
+users. After making a team, you can view a chart of the team's type defenses and offenses, so you can see what types your team is effective and weak against. Once the user is finished making their team, they can press the Upload Team button, and then the team will be added to the database, so they can view and edit their own team, as well as letting other users view it if they marked it as public. This page offers little offline functionality, as its main purpose, creating teams, is impossible offline as it requires interacting with the database. You can also go to the home page from this page.
+
+View Other Teams: This page, also accessed from the home page, lets you see other user's teams, specifically one's that were made public when the user was creating or editing them. Each team displayed show's the team's name, each of their pokemon, and each pokemon's item and abiliity (if they are holding an item). The offline functionality of this page is, if you have visited this page before, then you can view the teams that were on this page when you visited it last. You can also go to the home page from this page.
+
+View/Edit Teams:  This page, also accessed from the home page, let's you view your own teams. You also have the ability to edit a team (change the pokemon in it, or their moves, ability, or item), and delete a team. Each team displayed show's the team's name, each of their pokemon, and each pokemon's item and ability (if they are holding an item). To access the edit page, or to delete a team, each team has a edit and delete button. The edit button takes you to the edit team page, with the team selected being stored into the page. The delete button simply deletes the team from the DB and removes it from the page. The offline functionality of this page is, if you have visited this page before, then you can view the teams that were on this page when you visited it last. You cannot however, delete or edit a team as this requires the Database. You can also go to the home page from this page.
+
+Edit Team: Accessed from the View/Edit Teams page, this page is very similar to the create team page, as they offer similar functionality. This page, unlike the create team page, has the properties of the selected team to edit stored, so you can edit the parts of the team you want to change, and keep the parts you don't want to change. After the user has made the changes they want, they can press upload team, and then the team will be altered to their liking. This page offers no offline functionality, as it requires the database to edit a team. You can also go to the home page from this page.
+
+View Pokemon Data: This page can also be accessed from the home page, but is different from the others, as it does not have anything to do with teams. It allows the user to view all the pokemon stored in the database. It contains all pokemon from the 1st generation of pokemon to the 8th. Each pokemon shown also can be clicked, and doing so will take you to the pokemon's individual page. You can also go to the home page from here as well. The offline functionality for this page allows you to view all the pokemon, and their individual data, as long as you have visited these pages previously while online.
+
+Pokemon Page: This page, accessed from the View Pokemon Data page, allows the user to view the individual pokemon's data. This allows you to view the individual pokemon's abilities (each with a name and a description and if they have a hidden ability), type defenses, and list of moves (each with a name, type, category, power and accuracy) they can learn. There is also a chart thaty displays the pokemon's stats, including their HP, Attack, Defense, SP Attack, SP Defense, and speed.You can also access the home page from here as well. The offline functionality of this page lets you view all of this data as long as you have visited the page before. 
+
+Not Found Page: If the user tries to access a page that doesnt exist (/homer or something). This page tells the user the page they are trying to access does not exist, and provides them links to pages that do.
+
+Offline Page: If the user tries to access a page that requires them to be online, (create team page for example) then this page is displayed telling them to check their internet connection.
+
+### Caching Strategy
+For most cases, we cached data that the user has previously accessed before. This is because there is a lot of data the user may not want to access, as well as data that is specific to the user that they might want to view offline. 
+
 ### API Endpoints
-
-All API endpoints are prepended with `/api` but it is not typed out explicitly in this document.  
-#### Authentication:
-There are two POST endpoints for authentication. Register creates a user based on the data given from the user (as long as the username doesn't already exist), and then creates a token for the user. Also hashes their password and creates a salt for them. The Login endpoint simply checks if the user with the username and hashed version of the password the user typed in exists in the database, and then if they do, creates a token for them. Each endpoint being user requires the middleware to check if the user is logged in, and uses the info from the token to do whatever the user is trying to do if they are (creating a team uses the user's id).
 
 Method | Route                 | Description
 ------ | --------------------- | ---------
 `POST` | `/api/auth/login`              | Receives a username and password and creates a token if the user exists
 `POST` | `/api/auth/register`           | Creates a new user account and creates a token if the provided username and password are valid
+`POST` | `/api/auth/logout`              | Deletes the token cookie and sends the user back to the login page
 `POST`  | `/api/teams/create`              | Creates a pokemon team with the logged in user's id
+`PUT`  | `/api/teams/id/:teamid`              | Edits the pokemon team with the given team id.
+`DELETE`  | `/api/teams/id/:teamid`              | Deletes the pokemon team with the given team id.
+`GET` | `/api/auth/currentuser`              | Gets the user's info that is logged in
 `GET`  | `/api/abilities`      | Retrieves all abilities
+`GET`  | `/api/abilities/:name`      | Retrieves the abilitiy with the given name
+`GET`  | `/api/abilities/id/:id`      | Retrieves the abilitiy with the given id
 `GET`  | `/api/items`      | Retrieves all items
+`GET`  | `/api/items/:name`      | Retrieves the item with the given name
+`GET`  | `/api/items/id/:id`      | Retrieves the item with the given id
 `GET`  | `/api/moves`      | Retrieves all moves
+`GET`  | `/api/moves/:name`      | Retrieves the move with the given name
+`GET`  | `/api/moves/id/:id`      | Retrieves the move with the given id
+`GET`  | `/api/moves/type/:type`      | Retrieves the move of the given type
+`GET`  | `/api/moves/category/:category`      | Retrieves the move in the given category
 `GET`  | `/api/pokemon`      | Retrieves all pokemon
+`GET`  | `/api/pokemon/:name`      | Retrieves the pokemon with the given name
+`GET`  | `/api/pokemon/id/:id`      | Retrieves the pokemon with the given id
+`GET`  | `/api/pokemon/type/:type`      | Retrieves the pokemon with the given type
+`GET`  | `/api/pokemon/identifier/:defenses`      | Retrieves the pokemon's weaknesses
+`GET`  | `/api/pokemon/identifier/:moves`      | Retrieves the moves a pokemon can learn
+`GET`  | `/api/pokemon/identifier/:abilities`      | Retrieves the abilities a pokemon can learn
+`GET`  | `/api/pokemon/teams`      | Retrieves all public teams, can be filtered to give teams with specific pokemon
+`GET`  | `/api/pokemon/teams/id/:teamid`      | Retrieves team with given id
+`GET`  | `/api/pokemon/teams/myteams`      | Retrieves the teams of the logged in user, private and public
 
-#### Teams:
-Team data will be sent and received using JSON similar to below which is not finalized. The JSON is valid if:
-- `username` is a valid user in the system
-- `userid` is the userID that corresponds to the username in the database
-- `teamid` is a unique identifier, not required when creating a team but required when editing a team
-- `public` is a boolean value for if the team can be publicly viewed
-- `pokemon` is an array of 1-6 objects with the following constraints
-  - `name` is that of a Pokemon that exists in Pokemon generations 1-8
-  - `moves` is an array of moves that are compatible with the Pokemon
-  - `ability` is an ability that is compatible with the Pokemon
-  - `item` is a falsy value, is not present, or is a valid item that exists in the list of items (not all Pokemon items are available in this app, but all items that have an effect in battle are) 
 
-```json
-{
-  "username": "testuser",
-  "userid": 1,
-  "teamid": 1,
-  "public": true,
-  "pokemon": [
-    {
-      "name": "mankey",
-      "moves": ["focuspunch", "bulldoze", "scratch"],
-      "ability": "Vital Spirit"
-    },
-    {
-      "name": "arceus",
-      "moves": ["judgement", "perishsong", "earthpower", "extremespeed"],
-      "ability": "multitype",
-      "item": "earthplate"
-    }
-  ]
-}
-```
 
-**The endpoints for Teams are as follows:**
-| Method | Route             | Description                                                        |
-|--------|-------------------|--------------------------------------------------------------------|
-| `GET`    |` /teams`            | Gets an array of all public teams                                  |
-| `POST`   | `/teams/create`    | Creates a new team and returns the generated team's ID             |
-| `PUT`    | `/teams/id/:teamid` | Updates an existing team and returns a success value if successful |
-| `GET`    | `/teams/id/:teamid` | Gets a team by its ID                                              |
-| `DELETE` | `/teams/id/:teamid` | Deletes a team identified by its ID                                |
-| `GET`    | `/teams/myteams`  | Gets all teams for the logged in user                              |
-
-#### Pokemon
-Data about Pokemon (not Pokemon in teams but acutal Pokemon themselves) can be retreived or filtered from [pokemon.json](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Milestone1/api/src/_data/pokemon.json). The endpoint for Pokemon are as follows:
-| Method | Route | Description |
-|---|---|---|
-| `GET` | `/pokemon/` | Get an array of all Pokémon |
-| `GET` | `/pokemon/:name` | Get the data of a Pokémon by its name |
-| `GET` | `/pokemon/type/:type` | Get an array of Pokémon of the specified type, including dual types |
-| `GET` | `/pokemon/weaknesses/:name` | Get a JSON of weaknesses for a Pokémon of the specified name |
-| `GET` | `/pokemon/ability/:ability` | Get an array of Pokémon that can have the specified ability. Can query to   include hidden abilities via `?hidden=include` |
-
-The "JSON of weaknesses" above refers to an object where the keys are Pokemon types and the values are numbers corresponding to how effective a move is against that Pokemon. For example, the returned data for Charizard (fire/flying type) is:
-```json
-{
-    "normal": 1, //normal effectiveness
-    "fire": 0.5, //0.5x effectiveness
-    "water": 2, //2x effectiveness
-    "electric": 2,
-    "grass": 0.25, //0.25x effectiveness
-    "ice": 1,
-    "fighting": 0.5,
-    "poison": 1,
-    "ground": 0, //immune
-    "flying": 1,
-    "psychic": 1,
-    "bug": 0.25,
-    "rock": 4, //4x effectiveness
-    "ghost": 1,
-    "dragon": 1,
-    "dark": 1,
-    "steel": 0.5,
-    "fairy": 0.5
-}
-```
-
-#### Other Pokemon Data
-The following is a list of endpoints are for other data about Pokemon and are grouped together because, like Pokemon data, they are referenced from JSON files. Specifically [abilities.json](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Milestone1/api/src/_data/abilities.json), [items.json](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Milestone1/api/src/_data/items.json), and [moves.json](https://github.ncsu.edu/engr-csc342/csc342-2023Fall-GroupJ/blob/main/Milestone1/api/src/_data/moves.json). The data returned for each is in the same form as an entry in the JSON, similar to the Pokemon endpoints. The endpoints are as follows:
-
-| Method | Route | Description |
-|---|---|---|
-| `GET` | `/abilities` | Get an array of all abilities |
-| `GET` | `/abilities/:name` | Get an ability by its name |
-| `GET` | `/items` | Get an array of all items |
-| `GET` | `/items/:name` | Get an item by its name |
-| `GET` | `/moves` | Get an array of all moves |
-| `GET` | `/moves/:name` | Get a move by its name |
-| `GET` | `/moves/type/:type` | Get an array of moves that are a specific type |
-| `GET` | `/moves/category/:category` | Get an array of moves that are a specific category |
-| `GET` | `/moves/attack/effectiveness` | Get a JSON of effectiveness against types for a pokemon with 1-4 specified moves passed via a URL query. All moves will use the query paramter `m`. |
-
-For `GET /moves/attack/effectiveness`, examples of valid use are:
-- `/moves/attack/effectiveness?m=earthquake`
-- `/moves/attack/effectiveness?m=shadowball&m=psychic&m=darkpulse&m=yawn`
-
-The return is a JSON that answers the question: "If a Pokemon knew these moves, what types could they hit, not hit, hit for super effectiveness, and hit but not effectively?".
-- Moves with 0 power are not counted in this metric. If all moves given have 0 power then the JSON returned will show all types as immune
-- OHKO moves and other undetermined power moves are treated as normal moves of their type for now, special treatment might be implemented later
-
-EX: `GET /moves/attack/effectiveness?m=razorleaf&m=moonblast&m=thunderwave` Shows that a Pokemon knowing these three moves, two of which deal damage, can hit fighting, dragon, and dark types super effectively, but will not be effective against fire, poison, and steel types.
-```json
-{
-    "effectiveness": {
-        "normal": 1,
-        "fire": 0.5,
-        "water": 1,
-        "electric": 1,
-        "grass": 1,
-        "ice": 1,
-        "fighting": 2,
-        "poison": 0.5,
-        "ground": 1,
-        "flying": 1,
-        "psychic": 1,
-        "bug": 1,
-        "rock": 1,
-        "ghost": 1,
-        "dragon": 2,
-        "dark": 2,
-        "steel": 0.5,
-        "fairy": 1
-    }
-}
-```
 
 
 ### Contributions
-- Matthew: API Sketch, JSON Data, API portion of milestone report
-- Casey: Frontend First Pass, Rest of milestone report
+- Matthew: Finished Create Team Page, deployed onto the VM. Created ServiceWorker and did offline functionality. Debugged errors involving deploying and bugs that existed before this milestone. Created and finished the not found page, and offline page.
+- Casey: Made the new Delete Team and Edit Team API Endpoints. Created and finished the edit team page. Finished the view/edit teams page, and the view other teams page. Made the PWA Installable, as well as creating the manifest, and creating the logo's in Abobe Illustrator. Made the report.
