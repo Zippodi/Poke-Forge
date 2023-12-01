@@ -74,6 +74,7 @@ Method | Route                 | Description
 `GET`  | `/api/pokemon/teams/myteams`      | Retrieves the teams of the logged in user, private and public
 
 
+![ERD](https://media.github.ncsu.edu/user/22316/files/91efbb0e-a859-4232-bb15-04a83f51dbcb)
 
 
 
