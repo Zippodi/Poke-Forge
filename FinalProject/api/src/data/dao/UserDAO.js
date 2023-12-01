@@ -10,7 +10,7 @@ function getUserByCredentials(username, password) {
         reject("User not found");
       }
       const user = new User(results[0]);
-      console.log(user);
+      //console.log(user);
       if (user) { // we found our user
         user.validatePassword(password).then((user) => {
           resolve(user);

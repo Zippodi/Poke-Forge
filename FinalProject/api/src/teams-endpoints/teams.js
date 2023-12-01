@@ -46,7 +46,7 @@ router.get('/', TokenMiddleware, (req, res) => {
   TeamDAO.getAllTeams(req.user.id, includeOwn, name, pokemon ? pokemon : false).then(teams => {
     return res.status(200).json(teams);
   }).catch(err => {
-    console.log(err);
+    //console.log(err);
     handleError(err, res);
   });
 });
