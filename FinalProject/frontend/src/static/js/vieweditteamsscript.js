@@ -5,7 +5,7 @@ const teamList = document.querySelector('#teamsList');
 const SMALL_SIZE = 600;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    http.get('api/teams/myteams').then(teams => {
+    http.get('/api/teams/myteams').then(teams => {
 
         if (teams == null || teams.length == 0) {
             console.log("empty");
@@ -107,12 +107,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
             teamList.append(team);
         }
     }).catch(err => {
-        if (err.status == 400) {
-            let errorBox = document.createElement('h1');
-            errorBox.className = "container text-center";
-            errorBox.innerHTML = "No Teams Available";
-            teamList.append(errorBox);
+        if (err.status == 401) {
+            window.location.href = '/';
         }
+        let errorBox = document.createElement('h1');
+        errorBox.className = "container text-center";
+        errorBox.innerHTML = "No Teams Available";
+        teamList.append(errorBox);
         console.error('Could not load teams');
     });
 

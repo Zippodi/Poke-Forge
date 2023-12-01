@@ -114,7 +114,7 @@ function fetchAndCache(request) {
     var requestUrl = new URL(request.url);
     //Cache everything except login and register
     if (response.ok && requestUrl.pathname != '/' && !requestUrl.pathname.startsWith('/register') && !requestUrl.pathname.startsWith('/create')
-      && !requestUrl.pathname.startsWith('/editteam')) {
+      && !requestUrl.pathname.startsWith('/editteam') && !requestUrl.protocol.startsWith('chrome-extension')) {
       caches.open(STATIC_CACHE_NAME).then((cache) => {
         cache.put(request, response);
       });
