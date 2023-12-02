@@ -86,9 +86,15 @@ self.addEventListener('fetch', event => {
   if (requestUrl.origin === location.origin && requestUrl.pathname.startsWith('/api')) {
     //Intercept calls to API
     if (event.request.method === "GET") {
-      event.respondWith(
-        cacheFirst(event.request)
-      );
+      if (requestUrl.pathname.includes('teams') || requestUrl.pathname.includes('currentuser')) {
+        event.respondWith(
+          cacheLast(event.request)
+        );
+      } else {
+        event.respondWith(
+          cacheFirst(event.request)
+        );
+      }
     }
   }
   else {
@@ -107,6 +113,18 @@ function cacheFirst(request) {
     }).catch(error => {
       return caches.match('/offline');
     });
+}
+
+function cacheLast(request) {
+  return fetchAndCache(request).catch(err => {
+    return caches.match(request)
+      .then(response => {
+        //Return response from cache if exists
+        return response;
+      }).catch(error => {
+        return caches.match('/offline');
+      });
+  });
 }
 
 function fetchAndCache(request) {
